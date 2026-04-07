@@ -15,7 +15,7 @@ namespace MiniSistemaFacturacion
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            
             try
             {
                 // Inicializar la aplicación
@@ -24,9 +24,9 @@ namespace MiniSistemaFacturacion
             catch (Exception ex)
             {
                 // Manejo de errores críticos
-                MessageBox.Show($"Error crítico al iniciar la aplicación: {ex.Message}",
-                              "Error de Inicio",
-                              MessageBoxButtons.OK,
+                MessageBox.Show($"Error crítico al iniciar la aplicación: {ex.Message}", 
+                              "Error de Inicio", 
+                              MessageBoxButtons.OK, 
                               MessageBoxIcon.Error);
             }
         }
