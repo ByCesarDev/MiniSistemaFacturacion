@@ -7,8 +7,6 @@ namespace MiniSistemaFacturacion
     {
         /// <summary>
         /// Punto de entrada principal para la aplicación.
-        /// Created by: Cesar Reyes
-        /// Date: 2026-04-07
         /// </summary>
         [STAThread]
         static void Main()
