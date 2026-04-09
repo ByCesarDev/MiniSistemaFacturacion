@@ -8,8 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Models;
 
-namespace SistemaFacturacion
+namespace MiniSistemaFacturacion.Forms
 {
     public partial class FrmClientes : Form
     {
@@ -24,7 +26,7 @@ namespace SistemaFacturacion
 
         private void CargarClientes()
         {
-            dgvClientes.DataSource = clienteDAL.ObtenerClientes();
+            dgvClientes.DataSource = clienteDAL.ObtenerTodos();
         }
         private void LimpiarCampos()
         {
@@ -50,7 +52,7 @@ namespace SistemaFacturacion
             }
             else
             {
-                dgvClientes.DataSource = clienteDAL.BuscarClientes(txtBuscarCli.Text);
+                dgvClientes.DataSource = clienteDAL.Buscar(txtBuscarCli.Text);
             }
         }
 
@@ -104,16 +106,18 @@ namespace SistemaFacturacion
                     return;
                 }
 
-                bool actualizado = clienteDAL.ActualizarCliente(
-                    idClienteSeleccionado,
-                    txtNombreCli.Text.Trim(),
-                    txtCedulaCli.Text.Trim(),
-                    txtDireccionCli.Text.Trim(),
-                    txtTelefonoCli.Text.Trim(),
-                    txtCorreoCli.Text.Trim()
-                );
+                Cliente cliente = new Cliente
+                {
+                    ID_Cliente = idClienteSeleccionado,
+                    Nombre = txtNombreCli.Text.Trim(),
+                    Cedula = txtCedulaCli.Text.Trim(),
+                    Direccion = txtDireccionCli.Text.Trim(),
+                    Telefono = txtTelefonoCli.Text.Trim(),
+                    Email = txtCorreoCli.Text.Trim()
+                };
+                int actualizado = clienteDAL.Actualizar(cliente);
 
-                if (actualizado)
+                if (actualizado > 0)
                 {
                     MessageBox.Show("Cliente actualizado correctamente.");
                     CargarClientes();
@@ -138,9 +142,9 @@ namespace SistemaFacturacion
                 return;
             }
 
-            bool cambiado = clienteDAL.CambiarEstadoCliente(idClienteSeleccionado, estadoClienteSeleccionado);
+            int cambiado = estadoClienteSeleccionado == 1 ? clienteDAL.Desactivar(idClienteSeleccionado) : clienteDAL.Activar(idClienteSeleccionado);
 
-            if (cambiado)
+            if (cambiado > 0)
             {
                 MessageBox.Show("Estado actualizado.");
 
@@ -175,15 +179,17 @@ namespace SistemaFacturacion
 
             try
             {
-                bool insertado = clienteDAL.InsertarCliente(
-                    txtNombreCli.Text.Trim(),
-                    txtCedulaCli.Text.Trim(),
-                    txtDireccionCli.Text.Trim(),
-                    txtTelefonoCli.Text.Trim(),
-                    txtCorreoCli.Text.Trim()
-                );
+                Cliente cliente = new Cliente
+                {
+                    Nombre = txtNombreCli.Text.Trim(),
+                    Cedula = txtCedulaCli.Text.Trim(),
+                    Direccion = txtDireccionCli.Text.Trim(),
+                    Telefono = txtTelefonoCli.Text.Trim(),
+                    Email = txtCorreoCli.Text.Trim()
+                };
+                int insertado = clienteDAL.Insertar(cliente);
 
-                if (insertado)
+                if (insertado > 0)
                 {
                     MessageBox.Show("Cliente agregado correctamente.");
                     CargarClientes();

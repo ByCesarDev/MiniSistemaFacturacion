@@ -1,4 +1,4 @@
-﻿namespace PruebaProyectoFinalProgIII.Presentacion
+﻿namespace MiniSistemaFacturacion.Forms
 {
     partial class FrmProductos
     {

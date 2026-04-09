@@ -1,4 +1,4 @@
-﻿namespace SistemaFacturacion
+﻿namespace MiniSistemaFacturacion.Forms
 {
     partial class FrmClientes
     {

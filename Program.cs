@@ -19,7 +19,7 @@ namespace MiniSistemaFacturacion
             try
             {
                 // Inicializar la aplicación
-                Application.Run(new Forms.frmMain());
+                Application.Run(new Forms.FrmMain());
             }
             catch (Exception ex)
             {
