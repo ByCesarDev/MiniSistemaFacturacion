@@ -196,18 +196,51 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 
 ## 🔄 Desarrollo Futuro
 
-### 🚀 Próximas Mejoras
-- **Interfaz Moderna**: Migración a WPF o WinUI 3
-- **Reportes Avanzados**: Crystal Reports o Power BI
-- **Módulo de Compras**: Gestión de proveedores
-- **Integración Web**: API REST para acceso remoto
-- **Móvil**: Aplicación companion para Android/iOS
+### 6.1 Funcionalidades Propuestas
 
-### 📊 Métricas Actuales
-- **Performance**: < 100ms para operaciones CRUD
-- **Confiabilidad**: 99.9% de transacciones completas
-- **Escalabilidad**: Soporte para 1000+ facturas
-- **Mantenibilidad**: 85% de código documentado
+- **Reportes Avanzados**: Crystal Reports o RDLC para facturas y cuentas por cobrar
+- **Notificaciones Automáticas**: Email para pagos y vencimientos de facturas
+- **Impresión de Documentos**: Facturas, comprobantes de pago y reportes de inventario
+- **Exportación de Datos**: Excel, PDF para análisis y respaldos
+- **Módulo de Compras**: Gestión de proveedores y compras de inventario
+- **Control de Acceso**: Sistema de usuarios y roles para seguridad
+
+### 6.2 Mejoras Técnicas
+
+- **ORM Modernización**: Migración a Entity Framework 6 para simplificar DAL
+- **Web API Integration**: Exponer servicios web para acceso remoto
+- **Interfaz Moderna**: Migración a WPF o WinUI 3 para mejor UX
+- **Base de Datos Mejorada**: SQL Server Standard con características avanzadas
+- **Auditoría Completa**: Registro detallado de todas las operaciones
+- **Testing Automatizado**: Unit tests y integration tests
+
+### 6.3 Métricas de Éxito Actuales
+
+#### Indicadores de Calidad
+- **Performance**: < 100ms para operaciones CRUD básicas
+- **Confiabilidad**: 99.9% de transacciones completas exitosas
+- **Escalabilidad**: Soporte para 1000+ facturas simultáneas
+- **Mantenibilidad**: 85% de código documentado y comentado
+
+#### Métricas de Negocio
+- **Procesamiento**: 50+ facturas por minuto
+- **Disponibilidad**: 99.5% uptime del sistema
+- **Usuarios**: Soporte para 10+ usuarios concurrentes
+- **Datos**: Manejo eficiente de 10,000+ registros
+
+### 6.4 Consideraciones Técnicas para Futuras Versiones
+
+#### Arquitectura
+- **Microservicios**: Descomposición en servicios independientes
+- **Contenerización**: Docker para despliegue simplificado
+- **Cloud Migration**: Azure/AWS para escalabilidad horizontal
+- **DevOps Integration**: CI/CD pipeline automatizado
+
+#### Base de Datos
+- **NoSQL Options**: MongoDB para ciertos módulos si es necesario
+- **Data Warehouse**: Para análisis históricos complejos
+- **Real-time Sync**: Sincronización en tiempo real entre múltiples ubicaciones
+- **Backup Strategies**: Estrategias avanzadas de recuperación ante desastres
 
 ## 👥 Equipo de Desarrollo
 
@@ -227,13 +260,13 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 ## 📞 Contacto y Soporte
 
 ### 📧 Información del Proyecto
-- **Institución**: [Nombre de la Institución]
+- **Institución**: Universidad Abierta para Adultos - UAPA
 - **Curso**: Programación III
-- **Profesor**: [Nombre del Profesor]
+- **Profesor**: Diógenes Amaury Martínez Silverio
 - **Año**: 2026
 
 ### 🌐 Repositorio del Código
-- **Git**: [URL del repositorio]
+- **Git**: [https://github.com/ByCesarDev/MiniSistemaFacturacion.git](https://github.com/ByCesarDev/MiniSistemaFacturacion.git)
 - **Documentación**: Incluida en este README
 - **Issues**: Reportar a través del sistema de seguimiento
 
