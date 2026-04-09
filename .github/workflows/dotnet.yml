@@ -1,0 +1,35 @@
+name: .NET Framework CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.2.0
+
+    - name: Restore NuGet packages
+      run: nuget restore MiniSistemaFacturacion.slnx
+
+    - name: Build solution
+      run: msbuild MiniSistemaFacturacion.slnx /p:Configuration=Release
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: MiniSistemaFacturacion-Release
+        path: |
+          bin/Release/
+          !bin/Release/*.pdb
