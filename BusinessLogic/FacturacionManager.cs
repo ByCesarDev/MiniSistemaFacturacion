@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using System.Data;
 
 namespace MiniSistemaFacturacion.BusinessLogic
 {
@@ -101,7 +102,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
                         throw new Exception($"Error al crear factura: {ex.Message}", ex);
                     }
                 }
@@ -176,7 +177,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
                         throw new Exception($"Error al agregar detalle: {ex.Message}", ex);
                     }
                 }

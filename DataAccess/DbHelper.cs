@@ -43,7 +43,7 @@ namespace MiniSistemaFacturacion.DataAccess
 
         #region Connection Management
 
-        private readonly string _connectionString;
+        private string _connectionString;
 
         /// <summary>
         /// Constructor privado (Singleton pattern)
@@ -286,7 +286,7 @@ namespace MiniSistemaFacturacion.DataAccess
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    BusinessLogic.TransaccionHelper.Instance.RollbackSeguro(transaction);
                     throw new Exception("Error en la transacción: " + ex.Message, ex);
                 }
             }
@@ -321,7 +321,7 @@ namespace MiniSistemaFacturacion.DataAccess
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    BusinessLogic.TransaccionHelper.Instance.RollbackSeguro(transaction);
                     throw new Exception("Error en la transacción del procedimiento almacenado: " + ex.Message, ex);
                 }
             }

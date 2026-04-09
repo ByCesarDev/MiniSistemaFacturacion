@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using System.Data;
 
 namespace MiniSistemaFacturacion.BusinessLogic
 {
@@ -101,7 +102,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
                         throw new Exception($"Error al registrar pago: {ex.Message}", ex);
                     }
                 }
@@ -163,7 +164,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
                         throw new Exception($"Error al registrar pagos masivos: {ex.Message}", ex);
                     }
                 }
@@ -212,7 +213,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
                         throw new Exception($"Error al anular pago: {ex.Message}", ex);
                     }
                 }

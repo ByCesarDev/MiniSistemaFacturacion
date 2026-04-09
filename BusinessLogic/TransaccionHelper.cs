@@ -91,7 +91,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        RollbackSeguro(transaction);
                         throw new Exception($"Error en la transacción: {ex.Message}", ex);
                     }
                 }
@@ -134,7 +134,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        RollbackSeguro(transaction);
                         throw new Exception($"Error en el procedimiento transaccional '{nombreProcedimiento}': {ex.Message}", ex);
                     }
                 }
@@ -166,7 +166,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        RollbackSeguro(transaction);
                         throw new Exception($"Error en la transacción personalizada: {ex.Message}", ex);
                     }
                 }
@@ -242,8 +242,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                 return false;
 
             return transaction.Connection != null && 
-                   transaction.Connection.State == System.Data.ConnectionState.Open &&
-                   !transaction.IsCompleted;
+                   transaction.Connection.State == System.Data.ConnectionState.Open;
         }
 
         /// <summary>
@@ -261,6 +260,25 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
             if (connection.Database == null || connection.Database.Length == 0)
                 throw new Exception("La conexión no tiene una base de datos asociada");
+        }
+
+        /// <summary>
+        /// Realiza un rollback seguro de una transacción
+        /// </summary>
+        /// <param name="transaction">Transacción a hacer rollback</param>
+        public void RollbackSeguro(SqlTransaction transaction)
+        {
+            if (TransaccionActiva(transaction))
+            {
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch
+                {
+                    // ignorar si ya fue completada
+                }
+            }
         }
 
         #endregion

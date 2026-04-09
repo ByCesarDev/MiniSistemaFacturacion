@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using System.Data.SqlClient;
 
 namespace MiniSistemaFacturacion.DataAccess
 {
