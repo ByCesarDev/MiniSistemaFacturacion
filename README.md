@@ -267,7 +267,7 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 
 ### 🌐 Repositorio del Código
 - **Git**: [https://github.com/ByCesarDev/MiniSistemaFacturacion.git](https://github.com/ByCesarDev/MiniSistemaFacturacion.git)
-- **Documentación**: Incluida en este Repo
+- **Documentación**: Incluida en este Repo y en el código fuente
 - **Issues**: Reportar a través del sistema de seguimiento
 
 ---
