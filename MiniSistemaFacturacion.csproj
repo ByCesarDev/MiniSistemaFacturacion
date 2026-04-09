@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.SqlClient" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Forms\FrmClientes.cs">
@@ -94,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\FrmClientes.resx">
