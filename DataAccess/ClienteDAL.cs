@@ -254,7 +254,7 @@ namespace MiniSistemaFacturacion.DataAccess
                     SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
                            FechaCreacion, Estado
                     FROM Clientes
-                    ORDER BY Nombre";
+                    ORDER BY ID_Cliente";
 
                 DataTable dt = DbHelper.Instance.ExecuteQuery(query);
 
@@ -286,7 +286,7 @@ namespace MiniSistemaFacturacion.DataAccess
                            FechaCreacion, Estado
                     FROM Clientes
                     WHERE Estado = 1
-                    ORDER BY Nombre";
+                    ORDER BY ID_Cliente";
 
                 DataTable dt = DbHelper.Instance.ExecuteQuery(query);
 
@@ -322,7 +322,7 @@ namespace MiniSistemaFacturacion.DataAccess
                            FechaCreacion, Estado
                     FROM Clientes
                     WHERE (Nombre LIKE @TerminoBusqueda OR Cedula LIKE @TerminoBusqueda)
-                    ORDER BY Nombre";
+                    ORDER BY ID_Cliente";
 
                 SqlParameter parameter = DbHelper.Instance.CreateParameter("@TerminoBusqueda", $"%{terminoBusqueda}%");
                 DataTable dt = DbHelper.Instance.ExecuteQuery(query, new SqlParameter[] { parameter });

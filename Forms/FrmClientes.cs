@@ -94,9 +94,9 @@ namespace MiniSistemaFacturacion.Forms
                     return;
                 }
 
-                if (!txtTelefonoCli.Text.All(char.IsDigit))
+                if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
                 {
-                    MessageBox.Show("El teléfono solo debe contener números.");
+                    MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
                     return;
                 }
 
@@ -165,9 +165,9 @@ namespace MiniSistemaFacturacion.Forms
                 return;
             }
 
-            if (!txtTelefonoCli.Text.All(char.IsDigit))
+            if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
             {
-                MessageBox.Show("El teléfono solo debe contener números.");
+                MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
                 return;
             }
 
