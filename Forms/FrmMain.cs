@@ -42,5 +42,11 @@ namespace MiniSistemaFacturacion.Forms
 
         }
 
+        private void facturaciónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmFacturacion frm = new FrmFacturacion();
+
+            frm.ShowDialog();
+        }
     }
 }

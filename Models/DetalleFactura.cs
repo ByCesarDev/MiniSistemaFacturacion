@@ -29,6 +29,9 @@ namespace MiniSistemaFacturacion.Models
         [Required(ErrorMessage = "El producto es requerido")]
         public int ID_Producto { get; set; }
 
+        //Descripción del producto para mostrar en la factura 
+        public string Descripcion { get; set; }
+
         /// <summary>
         /// Cantidad de productos
         /// </summary>

@@ -1,0 +1,341 @@
+﻿namespace MiniSistemaFacturacion.Forms
+{
+    partial class FrmFacturacion
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblNumeroFactura = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.dgvDetalle = new System.Windows.Forms.DataGridView();
+            this.dtpFecha = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbProductos = new System.Windows.Forms.ComboBox();
+            this.btnAnadir = new System.Windows.Forms.Button();
+            this.btnEliminarItem = new System.Windows.Forms.Button();
+            this.numCantidad = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtSubtotal = new System.Windows.Forms.TextBox();
+            this.txtIVA = new System.Windows.Forms.TextBox();
+            this.txtTotalNeto = new System.Windows.Forms.TextBox();
+            this.txtSaldoPendiente = new System.Windows.Forms.TextBox();
+            this.btnGuardarFactura = new System.Windows.Forms.Button();
+            this.btnCancelar = new System.Windows.Forms.Button();
+            this.cmbClientes = new System.Windows.Forms.ComboBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 141);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(87, 22);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Producto:";
+            // 
+            // lblNumeroFactura
+            // 
+            this.lblNumeroFactura.AutoSize = true;
+            this.lblNumeroFactura.Location = new System.Drawing.Point(137, 101);
+            this.lblNumeroFactura.Name = "lblNumeroFactura";
+            this.lblNumeroFactura.Size = new System.Drawing.Size(0, 22);
+            this.lblNumeroFactura.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(578, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(65, 22);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Fecha:";
+            // 
+            // dgvDetalle
+            // 
+            this.dgvDetalle.AllowUserToAddRows = false;
+            this.dgvDetalle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDetalle.Location = new System.Drawing.Point(16, 229);
+            this.dgvDetalle.Name = "dgvDetalle";
+            this.dgvDetalle.ReadOnly = true;
+            this.dgvDetalle.RowHeadersWidth = 62;
+            this.dgvDetalle.RowTemplate.Height = 28;
+            this.dgvDetalle.Size = new System.Drawing.Size(849, 260);
+            this.dgvDetalle.TabIndex = 4;
+            // 
+            // dtpFecha
+            // 
+            this.dtpFecha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpFecha.Location = new System.Drawing.Point(659, 3);
+            this.dtpFecha.Name = "dtpFecha";
+            this.dtpFecha.Size = new System.Drawing.Size(222, 28);
+            this.dtpFecha.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 66);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(168, 22);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Nombre del Cliente:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(12, 179);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(87, 22);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Cantidad:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(12, 101);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(109, 22);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "No. Factura:";
+            // 
+            // cmbProductos
+            // 
+            this.cmbProductos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbProductos.FormattingEnabled = true;
+            this.cmbProductos.Location = new System.Drawing.Point(127, 138);
+            this.cmbProductos.Name = "cmbProductos";
+            this.cmbProductos.Size = new System.Drawing.Size(395, 30);
+            this.cmbProductos.TabIndex = 11;
+            // 
+            // btnAnadir
+            // 
+            this.btnAnadir.Location = new System.Drawing.Point(598, 141);
+            this.btnAnadir.Name = "btnAnadir";
+            this.btnAnadir.Size = new System.Drawing.Size(83, 30);
+            this.btnAnadir.TabIndex = 12;
+            this.btnAnadir.Text = "Añadir";
+            this.btnAnadir.UseVisualStyleBackColor = true;
+            this.btnAnadir.Click += new System.EventHandler(this.btnAnadir_Click_1);
+            // 
+            // btnEliminarItem
+            // 
+            this.btnEliminarItem.Location = new System.Drawing.Point(598, 179);
+            this.btnEliminarItem.Name = "btnEliminarItem";
+            this.btnEliminarItem.Size = new System.Drawing.Size(91, 33);
+            this.btnEliminarItem.TabIndex = 13;
+            this.btnEliminarItem.Text = "Eliminar";
+            this.btnEliminarItem.UseVisualStyleBackColor = true;
+            this.btnEliminarItem.Click += new System.EventHandler(this.btnEliminarItem_Click_1);
+            // 
+            // numCantidad
+            // 
+            this.numCantidad.Location = new System.Drawing.Point(127, 173);
+            this.numCantidad.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numCantidad.Name = "numCantidad";
+            this.numCantidad.Size = new System.Drawing.Size(120, 28);
+            this.numCantidad.TabIndex = 14;
+            this.numCantidad.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 509);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 22);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Subtotal:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(249, 512);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(112, 22);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "ITBIS (18%):";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(526, 512);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(99, 22);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Total Neto:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(768, 512);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(147, 22);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "Saldo Pendiente:";
+            // 
+            // txtSubtotal
+            // 
+            this.txtSubtotal.Location = new System.Drawing.Point(109, 506);
+            this.txtSubtotal.Name = "txtSubtotal";
+            this.txtSubtotal.ReadOnly = true;
+            this.txtSubtotal.Size = new System.Drawing.Size(100, 28);
+            this.txtSubtotal.TabIndex = 19;
+            // 
+            // txtIVA
+            // 
+            this.txtIVA.Location = new System.Drawing.Point(387, 506);
+            this.txtIVA.Name = "txtIVA";
+            this.txtIVA.ReadOnly = true;
+            this.txtIVA.Size = new System.Drawing.Size(100, 28);
+            this.txtIVA.TabIndex = 20;
+            // 
+            // txtTotalNeto
+            // 
+            this.txtTotalNeto.Location = new System.Drawing.Point(640, 506);
+            this.txtTotalNeto.Name = "txtTotalNeto";
+            this.txtTotalNeto.ReadOnly = true;
+            this.txtTotalNeto.Size = new System.Drawing.Size(100, 28);
+            this.txtTotalNeto.TabIndex = 21;
+            // 
+            // txtSaldoPendiente
+            // 
+            this.txtSaldoPendiente.Location = new System.Drawing.Point(921, 506);
+            this.txtSaldoPendiente.Name = "txtSaldoPendiente";
+            this.txtSaldoPendiente.ReadOnly = true;
+            this.txtSaldoPendiente.Size = new System.Drawing.Size(100, 28);
+            this.txtSaldoPendiente.TabIndex = 22;
+            // 
+            // btnGuardarFactura
+            // 
+            this.btnGuardarFactura.Location = new System.Drawing.Point(741, 577);
+            this.btnGuardarFactura.Name = "btnGuardarFactura";
+            this.btnGuardarFactura.Size = new System.Drawing.Size(115, 44);
+            this.btnGuardarFactura.TabIndex = 23;
+            this.btnGuardarFactura.Text = "Guardar";
+            this.btnGuardarFactura.UseVisualStyleBackColor = true;
+            this.btnGuardarFactura.Click += new System.EventHandler(this.btnGuardarFactura_Click_1);
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.Location = new System.Drawing.Point(885, 577);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(113, 44);
+            this.btnCancelar.TabIndex = 24;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = true;
+            // 
+            // cmbClientes
+            // 
+            this.cmbClientes.FormattingEnabled = true;
+            this.cmbClientes.Location = new System.Drawing.Point(187, 66);
+            this.cmbClientes.Name = "cmbClientes";
+            this.cmbClientes.Size = new System.Drawing.Size(307, 30);
+            this.cmbClientes.TabIndex = 25;
+            // 
+            // FrmFacturacion
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1077, 650);
+            this.Controls.Add(this.cmbClientes);
+            this.Controls.Add(this.btnCancelar);
+            this.Controls.Add(this.btnGuardarFactura);
+            this.Controls.Add(this.txtSaldoPendiente);
+            this.Controls.Add(this.txtTotalNeto);
+            this.Controls.Add(this.txtIVA);
+            this.Controls.Add(this.txtSubtotal);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.numCantidad);
+            this.Controls.Add(this.btnEliminarItem);
+            this.Controls.Add(this.btnAnadir);
+            this.Controls.Add(this.cmbProductos);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dtpFecha);
+            this.Controls.Add(this.dgvDetalle);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblNumeroFactura);
+            this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Name = "FrmFacturacion";
+            this.Text = "frmFacturacion";
+            this.Load += new System.EventHandler(this.FrmFacturacion_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblNumeroFactura;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridView dgvDetalle;
+        private System.Windows.Forms.DateTimePicker dtpFecha;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbProductos;
+        private System.Windows.Forms.Button btnAnadir;
+        private System.Windows.Forms.Button btnEliminarItem;
+        private System.Windows.Forms.NumericUpDown numCantidad;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtSubtotal;
+        private System.Windows.Forms.TextBox txtIVA;
+        private System.Windows.Forms.TextBox txtTotalNeto;
+        private System.Windows.Forms.TextBox txtSaldoPendiente;
+        private System.Windows.Forms.Button btnGuardarFactura;
+        private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.ComboBox cmbClientes;
+    }
+}
