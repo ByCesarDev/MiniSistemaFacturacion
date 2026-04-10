@@ -20,6 +20,8 @@ namespace MiniSistemaFacturacion.BusinessLogic
         private static FacturacionManager _instance;
         private static readonly object _lock = new object();
 
+        private FacturacionDAL facturacionDAL = new FacturacionDAL();
+
         /// <summary>
         /// Obtiene la instancia única de FacturacionManager (Singleton)
         /// </summary>
@@ -69,26 +71,40 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
             if (detalles == null || detalles.Count == 0)
                 throw new ArgumentException("La factura debe tener al menos un detalle");
+            
 
-            // Validar factura y detalles
-            ValidarFacturaCompleta(factura, detalles);
+         
 
             try
             {
                 using (SqlConnection connection = DbHelper.Instance.GetConnection())
                 {
+                   
+                    if (connection.State == ConnectionState.Closed)
+                    {
+                        connection.Open();
+                    }
+                    else if (connection.State == ConnectionState.Broken)
+                    {
+                        connection.Close();
+                        connection.Open();
+                    }
+
                     SqlTransaction transaction = connection.BeginTransaction();
 
                     try
                     {
                         // 1. Insertar la factura
-                        int idFactura = InsertarFactura(connection, transaction, factura);
-
+                        int idFactura = facturacionDAL.InsertarCabecera(factura, connection, transaction);
+                        
                         // 2. Insertar los detalles
                         foreach (var detalle in detalles)
                         {
                             detalle.ID_Factura = idFactura;
-                            InsertarDetalleFactura(connection, transaction, detalle);
+                            if (!detalle.IsValid())
+                                throw new Exception("Detalle inválido: " + detalle.GetValidationError());
+
+                            facturacionDAL.InsertarDetalle(detalle, connection, transaction);
                         }
 
                         // 3. Actualizar stock de productos

@@ -167,6 +167,11 @@ namespace MiniSistemaFacturacion.Forms
                                 "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close(); 
+        }
     }
     
 }

@@ -76,7 +76,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(578, 9);
+            this.label3.Location = new System.Drawing.Point(755, 17);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 22);
             this.label3.TabIndex = 2;
@@ -86,18 +86,18 @@
             // 
             this.dgvDetalle.AllowUserToAddRows = false;
             this.dgvDetalle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDetalle.Location = new System.Drawing.Point(16, 229);
+            this.dgvDetalle.Location = new System.Drawing.Point(12, 218);
             this.dgvDetalle.Name = "dgvDetalle";
             this.dgvDetalle.ReadOnly = true;
             this.dgvDetalle.RowHeadersWidth = 62;
             this.dgvDetalle.RowTemplate.Height = 28;
-            this.dgvDetalle.Size = new System.Drawing.Size(849, 260);
+            this.dgvDetalle.Size = new System.Drawing.Size(788, 260);
             this.dgvDetalle.TabIndex = 4;
             // 
             // dtpFecha
             // 
             this.dtpFecha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpFecha.Location = new System.Drawing.Point(659, 3);
+            this.dtpFecha.Location = new System.Drawing.Point(826, 12);
             this.dtpFecha.Name = "dtpFecha";
             this.dtpFecha.Size = new System.Drawing.Size(222, 28);
             this.dtpFecha.TabIndex = 6;
@@ -106,7 +106,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 66);
+            this.label2.Location = new System.Drawing.Point(12, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(168, 22);
             this.label2.TabIndex = 7;
@@ -143,9 +143,9 @@
             // 
             // btnAnadir
             // 
-            this.btnAnadir.Location = new System.Drawing.Point(598, 141);
+            this.btnAnadir.Location = new System.Drawing.Point(582, 171);
             this.btnAnadir.Name = "btnAnadir";
-            this.btnAnadir.Size = new System.Drawing.Size(83, 30);
+            this.btnAnadir.Size = new System.Drawing.Size(91, 30);
             this.btnAnadir.TabIndex = 12;
             this.btnAnadir.Text = "Añadir";
             this.btnAnadir.UseVisualStyleBackColor = true;
@@ -153,7 +153,7 @@
             // 
             // btnEliminarItem
             // 
-            this.btnEliminarItem.Location = new System.Drawing.Point(598, 179);
+            this.btnEliminarItem.Location = new System.Drawing.Point(701, 170);
             this.btnEliminarItem.Name = "btnEliminarItem";
             this.btnEliminarItem.Size = new System.Drawing.Size(91, 33);
             this.btnEliminarItem.TabIndex = 13;
@@ -181,7 +181,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 509);
+            this.label6.Location = new System.Drawing.Point(8, 496);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(81, 22);
             this.label6.TabIndex = 15;
@@ -190,7 +190,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(249, 512);
+            this.label7.Location = new System.Drawing.Point(243, 496);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(112, 22);
             this.label7.TabIndex = 16;
@@ -199,7 +199,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(526, 512);
+            this.label8.Location = new System.Drawing.Point(520, 496);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(99, 22);
             this.label8.TabIndex = 17;
@@ -208,7 +208,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(768, 512);
+            this.label9.Location = new System.Drawing.Point(768, 499);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(147, 22);
             this.label9.TabIndex = 18;
@@ -216,7 +216,7 @@
             // 
             // txtSubtotal
             // 
-            this.txtSubtotal.Location = new System.Drawing.Point(109, 506);
+            this.txtSubtotal.Location = new System.Drawing.Point(95, 490);
             this.txtSubtotal.Name = "txtSubtotal";
             this.txtSubtotal.ReadOnly = true;
             this.txtSubtotal.Size = new System.Drawing.Size(100, 28);
@@ -224,7 +224,7 @@
             // 
             // txtIVA
             // 
-            this.txtIVA.Location = new System.Drawing.Point(387, 506);
+            this.txtIVA.Location = new System.Drawing.Point(372, 493);
             this.txtIVA.Name = "txtIVA";
             this.txtIVA.ReadOnly = true;
             this.txtIVA.Size = new System.Drawing.Size(100, 28);
@@ -232,7 +232,7 @@
             // 
             // txtTotalNeto
             // 
-            this.txtTotalNeto.Location = new System.Drawing.Point(640, 506);
+            this.txtTotalNeto.Location = new System.Drawing.Point(640, 493);
             this.txtTotalNeto.Name = "txtTotalNeto";
             this.txtTotalNeto.ReadOnly = true;
             this.txtTotalNeto.Size = new System.Drawing.Size(100, 28);
@@ -240,7 +240,7 @@
             // 
             // txtSaldoPendiente
             // 
-            this.txtSaldoPendiente.Location = new System.Drawing.Point(921, 506);
+            this.txtSaldoPendiente.Location = new System.Drawing.Point(921, 496);
             this.txtSaldoPendiente.Name = "txtSaldoPendiente";
             this.txtSaldoPendiente.ReadOnly = true;
             this.txtSaldoPendiente.Size = new System.Drawing.Size(100, 28);
@@ -248,9 +248,9 @@
             // 
             // btnGuardarFactura
             // 
-            this.btnGuardarFactura.Location = new System.Drawing.Point(741, 577);
+            this.btnGuardarFactura.Location = new System.Drawing.Point(685, 540);
             this.btnGuardarFactura.Name = "btnGuardarFactura";
-            this.btnGuardarFactura.Size = new System.Drawing.Size(115, 44);
+            this.btnGuardarFactura.Size = new System.Drawing.Size(115, 30);
             this.btnGuardarFactura.TabIndex = 23;
             this.btnGuardarFactura.Text = "Guardar";
             this.btnGuardarFactura.UseVisualStyleBackColor = true;
@@ -258,17 +258,18 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(885, 577);
+            this.btnCancelar.Location = new System.Drawing.Point(864, 539);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(113, 44);
+            this.btnCancelar.Size = new System.Drawing.Size(113, 31);
             this.btnCancelar.TabIndex = 24;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // cmbClientes
             // 
             this.cmbClientes.FormattingEnabled = true;
-            this.cmbClientes.Location = new System.Drawing.Point(187, 66);
+            this.cmbClientes.Location = new System.Drawing.Point(186, 61);
             this.cmbClientes.Name = "cmbClientes";
             this.cmbClientes.Size = new System.Drawing.Size(307, 30);
             this.cmbClientes.TabIndex = 25;
@@ -277,7 +278,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1077, 650);
+            this.ClientSize = new System.Drawing.Size(1077, 576);
             this.Controls.Add(this.cmbClientes);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardarFactura);
@@ -303,6 +304,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "FrmFacturacion";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmFacturacion";
             this.Load += new System.EventHandler(this.FrmFacturacion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).EndInit();

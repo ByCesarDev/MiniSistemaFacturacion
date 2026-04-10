@@ -47,6 +47,7 @@
     <Reference Include="System.Data.SqlClient" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\FacturacionDAL.cs" />
     <Compile Include="Forms\FrmClientes.cs">
       <SubType>Form</SubType>
     </Compile>
