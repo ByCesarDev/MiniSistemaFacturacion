@@ -46,6 +46,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnLimpiar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,14 +57,14 @@
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersWidth = 51;
-            this.dgvClientes.Size = new System.Drawing.Size(769, 327);
+            this.dgvClientes.Size = new System.Drawing.Size(873, 327);
             this.dgvClientes.TabIndex = 0;
             this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_DoubleClick);
             // 
             // btnNuevoCli
             // 
             this.btnNuevoCli.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNuevoCli.Location = new System.Drawing.Point(358, 398);
+            this.btnNuevoCli.Location = new System.Drawing.Point(462, 396);
             this.btnNuevoCli.Name = "btnNuevoCli";
             this.btnNuevoCli.Size = new System.Drawing.Size(135, 23);
             this.btnNuevoCli.TabIndex = 1;
@@ -74,7 +75,7 @@
             // btnEditarCli
             // 
             this.btnEditarCli.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditarCli.Location = new System.Drawing.Point(499, 398);
+            this.btnEditarCli.Location = new System.Drawing.Point(603, 396);
             this.btnEditarCli.Name = "btnEditarCli";
             this.btnEditarCli.Size = new System.Drawing.Size(135, 23);
             this.btnEditarCli.TabIndex = 2;
@@ -85,7 +86,7 @@
             // btnCambiarEstado
             // 
             this.btnCambiarEstado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCambiarEstado.Location = new System.Drawing.Point(642, 398);
+            this.btnCambiarEstado.Location = new System.Drawing.Point(746, 396);
             this.btnCambiarEstado.Name = "btnCambiarEstado";
             this.btnCambiarEstado.Size = new System.Drawing.Size(135, 23);
             this.btnCambiarEstado.TabIndex = 3;
@@ -97,7 +98,7 @@
             // 
             this.txtBuscarCli.Location = new System.Drawing.Point(8, 398);
             this.txtBuscarCli.Name = "txtBuscarCli";
-            this.txtBuscarCli.Size = new System.Drawing.Size(345, 20);
+            this.txtBuscarCli.Size = new System.Drawing.Size(448, 20);
             this.txtBuscarCli.TabIndex = 4;
             this.txtBuscarCli.TextChanged += new System.EventHandler(this.txtBuscarCli_TextChanged);
             // 
@@ -113,33 +114,33 @@
             // 
             this.txtNombreCli.Location = new System.Drawing.Point(50, 37);
             this.txtNombreCli.Name = "txtNombreCli";
-            this.txtNombreCli.Size = new System.Drawing.Size(198, 20);
+            this.txtNombreCli.Size = new System.Drawing.Size(177, 20);
             this.txtNombreCli.TabIndex = 6;
             // 
             // txtCedulaCli
             // 
-            this.txtCedulaCli.Location = new System.Drawing.Point(254, 37);
+            this.txtCedulaCli.Location = new System.Drawing.Point(233, 37);
             this.txtCedulaCli.Name = "txtCedulaCli";
             this.txtCedulaCli.Size = new System.Drawing.Size(75, 20);
             this.txtCedulaCli.TabIndex = 7;
             // 
             // txtDireccionCli
             // 
-            this.txtDireccionCli.Location = new System.Drawing.Point(335, 37);
+            this.txtDireccionCli.Location = new System.Drawing.Point(314, 37);
             this.txtDireccionCli.Name = "txtDireccionCli";
-            this.txtDireccionCli.Size = new System.Drawing.Size(191, 20);
+            this.txtDireccionCli.Size = new System.Drawing.Size(245, 20);
             this.txtDireccionCli.TabIndex = 8;
             // 
             // txtTelefonoCli
             // 
-            this.txtTelefonoCli.Location = new System.Drawing.Point(532, 37);
+            this.txtTelefonoCli.Location = new System.Drawing.Point(565, 37);
             this.txtTelefonoCli.Name = "txtTelefonoCli";
             this.txtTelefonoCli.Size = new System.Drawing.Size(102, 20);
             this.txtTelefonoCli.TabIndex = 9;
             // 
             // txtCorreoCli
             // 
-            this.txtCorreoCli.Location = new System.Drawing.Point(640, 37);
+            this.txtCorreoCli.Location = new System.Drawing.Point(673, 37);
             this.txtCorreoCli.Name = "txtCorreoCli";
             this.txtCorreoCli.Size = new System.Drawing.Size(137, 20);
             this.txtCorreoCli.TabIndex = 10;
@@ -150,7 +151,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(23, 17);
+            this.label1.Size = new System.Drawing.Size(20, 13);
             this.label1.TabIndex = 11;
             this.label1.Text = "ID";
             // 
@@ -158,9 +159,9 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(130, 21);
+            this.label2.Location = new System.Drawing.Point(121, 21);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 17);
+            this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 12;
             this.label2.Text = "Nombre";
             // 
@@ -168,9 +169,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(274, 21);
+            this.label3.Location = new System.Drawing.Point(253, 21);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 17);
+            this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 13;
             this.label3.Text = "Cedula";
             // 
@@ -178,9 +179,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(411, 21);
+            this.label4.Location = new System.Drawing.Point(404, 21);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 17);
+            this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 14;
             this.label4.Text = "Direccion";
             // 
@@ -188,9 +189,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(560, 21);
+            this.label5.Location = new System.Drawing.Point(593, 21);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 17);
+            this.label5.Size = new System.Drawing.Size(57, 13);
             this.label5.TabIndex = 15;
             this.label5.Text = "Telefono";
             // 
@@ -198,9 +199,9 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(685, 21);
+            this.label6.Location = new System.Drawing.Point(718, 21);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(47, 17);
+            this.label6.Size = new System.Drawing.Size(37, 13);
             this.label6.TabIndex = 16;
             this.label6.Text = "Email";
             // 
@@ -208,17 +209,29 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(148, 421);
+            this.label7.Location = new System.Drawing.Point(202, 421);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 17);
+            this.label7.Size = new System.Drawing.Size(89, 13);
             this.label7.TabIndex = 17;
             this.label7.Text = "Buscar Cliente";
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.Location = new System.Drawing.Point(816, 21);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(65, 36);
+            this.btnLimpiar.TabIndex = 18;
+            this.btnLimpiar.Text = "Limpiar";
+            this.btnLimpiar.UseVisualStyleBackColor = true;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // FrmClientes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(791, 438);
+            this.ClientSize = new System.Drawing.Size(893, 438);
+            this.Controls.Add(this.btnLimpiar);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -267,5 +280,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnLimpiar;
     }
 }

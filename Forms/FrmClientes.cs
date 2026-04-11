@@ -38,7 +38,36 @@ namespace MiniSistemaFacturacion.Forms
             txtIdCli.Clear();
 
             idClienteSeleccionado = 0;
+            estadoClienteSeleccionado = 1;
         }
+
+        private bool ValidarCampos()
+        {
+            if (txtNombreCli.Text.Trim() == "" ||
+                txtCedulaCli.Text.Trim() == "" ||
+                txtDireccionCli.Text.Trim() == "" ||
+                txtTelefonoCli.Text.Trim() == "" ||
+                txtCorreoCli.Text.Trim() == "")
+            {
+                MessageBox.Show("Complete todos los campos.");
+                return false;
+            }
+
+            if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
+            {
+                MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
+                return false;
+            }
+
+            if (!txtCorreoCli.Text.Contains("@") || !txtCorreoCli.Text.Contains("."))
+            {
+                MessageBox.Show("Ingrese un correo válido.");
+                return false;
+            }
+
+            return true;
+        }
+
         private void FrmClientes_Load(object sender, EventArgs e)
         {
             CargarClientes();
@@ -84,27 +113,14 @@ namespace MiniSistemaFacturacion.Forms
                     return;
                 }
 
-                if (txtNombreCli.Text.Trim() == "" ||
-                    txtCedulaCli.Text.Trim() == "" ||
-                    txtDireccionCli.Text.Trim() == "" ||
-                    txtTelefonoCli.Text.Trim() == "" ||
-                    txtCorreoCli.Text.Trim() == "")
-                {
-                    MessageBox.Show("Complete todos los campos.");
-                    return;
-                }
+                if (!ValidarCampos()) return;
 
-                if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
-                {
-                    MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
-                    return;
-                }
+                var confirm = MessageBox.Show("¿Está seguro de actualizar este cliente?",
+                             "Confirmar",
+                             MessageBoxButtons.YesNo,
+                             MessageBoxIcon.Question);
 
-                if (!txtCorreoCli.Text.Contains("@"))
-                {
-                    MessageBox.Show("Ingrese un correo válido.");
-                    return;
-                }
+                if (confirm != DialogResult.Yes) return;
 
                 Cliente cliente = new Cliente
                 {
@@ -142,6 +158,12 @@ namespace MiniSistemaFacturacion.Forms
                 return;
             }
 
+            var confirm = MessageBox.Show("¿Desea cambiar el estado de este cliente?",
+                             "Confirmar",
+                             MessageBoxButtons.YesNo);
+
+            if (confirm != DialogResult.Yes) return;
+
             int cambiado = estadoClienteSeleccionado == 1 ? clienteDAL.Desactivar(idClienteSeleccionado) : clienteDAL.Activar(idClienteSeleccionado);
 
             if (cambiado > 0)
@@ -155,27 +177,7 @@ namespace MiniSistemaFacturacion.Forms
 
         private void btnNuevoCli_Click(object sender, EventArgs e)
         {
-            if (txtNombreCli.Text.Trim() == "" ||
-                txtCedulaCli.Text.Trim() == "" ||
-                txtDireccionCli.Text.Trim() == "" ||
-                txtTelefonoCli.Text.Trim() == "" ||
-                txtCorreoCli.Text.Trim() == "")
-            {
-                MessageBox.Show("Complete todos los campos.");
-                return;
-            }
-
-            if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
-            {
-                MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
-                return;
-            }
-
-            if (!txtCorreoCli.Text.Contains("@"))
-            {
-                MessageBox.Show("Ingrese un correo válido.");
-                return;
-            }
+            if (!ValidarCampos()) return;
 
             try
             {
@@ -205,5 +207,10 @@ namespace MiniSistemaFacturacion.Forms
                 MessageBox.Show("Error al agregar: " + ex.Message);
             }
         }
-}
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarCampos();
+        }
+    }
 }
