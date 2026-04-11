@@ -47,26 +47,26 @@ namespace MiniSistemaFacturacion.Services
                         {
                             // Configurar página para ticket 80mm
                             page.Margin(10);
-                            page.PageSize(PageSize.Custom(226.77f, 400)); // 80mm x altura variable
+                            page.PageSize(new PageSize(226.77f, 400)); // 80mm x altura variable
                             page.DefaultTextStyle(x => x.FontSize(8).FontFamily(Fonts.Courier));
 
                             // Encabezado de la empresa
-                            page.Header().Element(container =>
+                            page.Header().Element(header =>
                             {
-                                container.Column(column =>
+                                header.Column(column =>
                                 {
-                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.NombreEmpresa?.ToUpper() ?? "EMPRESA").Bold().FontSize(10);
-                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.Direccion ?? "Dirección").FontSize(7);
-                                    column.Item().AlignCenter().Text($"Tel: {EmpresaConfig.Instance.Telefono ?? "N/A"}").FontSize(7);
+                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.Nombre.ToUpper()).Bold().FontSize(10);
+                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.Direccion).FontSize(7);
+                                    column.Item().AlignCenter().Text($"Tel: {EmpresaConfig.Instance.Telefono}").FontSize(7);
                                     column.Item().AlignCenter().Text($"RNC: {FormatearRNC(EmpresaConfig.Instance.RNC)}").FontSize(7);
                                     column.Item().LineHorizontal(0.5f);
                                 });
                             });
 
                             // Contenido principal
-                            page.Content().Element(container =>
+                            page.Content().Element(content =>
                             {
-                                container.Column(column =>
+                                content.Column(column =>
                                 {
                                     // Información fiscal
                                     column.Item().Text($"NCF: {factura.NCF ?? "Pendiente"}").Bold();
@@ -111,9 +111,9 @@ namespace MiniSistemaFacturacion.Services
                             });
 
                             // Pie de página
-                            page.Footer().Element(container =>
+                            page.Footer().Element(footer =>
                             {
-                                container.Column(column =>
+                                footer.Column(column =>
                                 {
                                     column.Item().AlignCenter().Text("¡Gracias por su compra!").FontSize(7);
                                     column.Item().AlignCenter().Text("Este documento no es válido como factura fiscal").FontSize(6);
