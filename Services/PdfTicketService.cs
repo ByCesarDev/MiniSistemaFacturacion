@@ -45,9 +45,8 @@ namespace MiniSistemaFacturacion.Services
                     {
                         container.Page(page =>
                         {
-                            // Configurar página para ticket 80mm
+                            page.Size(new PageSize(226.77f, 400)); // 80mm x altura variable
                             page.Margin(10);
-                            page.PageLayout(PageOrientation.Portrait, new PageSize(226.77f, 400)); // 80mm x altura variable
                             page.DefaultTextStyle(x => x.FontSize(8).FontFamily(Fonts.Courier));
 
                             // Encabezado de la empresa
