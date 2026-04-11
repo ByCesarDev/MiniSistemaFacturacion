@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Linq;
 
 namespace MiniSistemaFacturacion.Configuration
 {
@@ -257,6 +258,10 @@ namespace MiniSistemaFacturacion.Configuration
 
             // Validar longitud (11 caracteres para NCF estándar)
             if (ncf.Length != 11)
+                return false;
+
+            // Validar que todos los caracteres sean dígitos
+            if (!ncf.All(char.IsDigit))
                 return false;
 
             // Validar que sea numérico
