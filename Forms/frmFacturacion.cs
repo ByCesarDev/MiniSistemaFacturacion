@@ -172,6 +172,109 @@ namespace MiniSistemaFacturacion.Forms
         {
             this.Close(); 
         }
+
+        private void btnVistaPreviaPdf_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbClientes.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Debe seleccionar un cliente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (listaDetalles.Count == 0)
+                {
+                    MessageBox.Show("Debe agregar al menos un producto a la factura.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                Factura facturaTemp = new Factura
+                {
+                    NumeroFactura = lblNumeroFactura.Text,
+                    ID_Cliente = (int)cmbClientes.SelectedValue,
+                    Fecha = dtpFecha.Value,
+                    PorcentajeImpuesto = TASA_ITBIS * 100,
+                    TotalBruto = listaDetalles.Sum(d => d.Subtotal),
+                    ValorImpuesto = listaDetalles.Sum(d => d.Subtotal) * TASA_ITBIS,
+                    TotalNeto = listaDetalles.Sum(d => d.Subtotal) * (1 + TASA_ITBIS),
+                    SaldoPendiente = listaDetalles.Sum(d => d.Subtotal) * (1 + TASA_ITBIS),
+                    Estado = "Pendiente"
+                };
+
+                Cliente cliente = (Cliente)cmbClientes.SelectedItem;
+
+                using (FrmVistaPreviaPdf frmVistaPrevia = new FrmVistaPreviaPdf(facturaTemp, cliente, listaDetalles))
+                {
+                    frmVistaPrevia.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al generar vista previa: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnGenerarPdf_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbClientes.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Debe seleccionar un cliente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (listaDetalles.Count == 0)
+                {
+                    MessageBox.Show("Debe agregar al menos un producto a la factura.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                IPdfTicketService pdfService = new PdfTicketService();
+
+                Factura facturaTemp = new Factura
+                {
+                    NumeroFactura = lblNumeroFactura.Text,
+                    ID_Cliente = (int)cmbClientes.SelectedValue,
+                    Fecha = dtpFecha.Value,
+                    PorcentajeImpuesto = TASA_ITBIS * 100,
+                    TotalBruto = listaDetalles.Sum(d => d.Subtotal),
+                    ValorImpuesto = listaDetalles.Sum(d => d.Subtotal) * TASA_ITBIS,
+                    TotalNeto = listaDetalles.Sum(d => d.Subtotal) * (1 + TASA_ITBIS),
+                    SaldoPendiente = listaDetalles.Sum(d => d.Subtotal) * (1 + TASA_ITBIS),
+                    Estado = "Pendiente"
+                };
+
+                Cliente cliente = (Cliente)cmbClientes.SelectedItem;
+
+                if (!pdfService.ValidarDatosTicket(facturaTemp, cliente, listaDetalles, out string mensajeError))
+                {
+                    MessageBox.Show($"Error de validación: {mensajeError}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                byte[] pdfBytes = pdfService.GenerarTicketPdf(facturaTemp, cliente, listaDetalles);
+
+                string ruta = pdfService.ObtenerRutaCompleta(facturaTemp);
+                pdfService.GuardarTicketPdf(ruta, pdfBytes);
+
+                MessageBox.Show($"PDF generado exitosamente en:\n{ruta}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                if (chkEnviarEmail.Checked && !string.IsNullOrWhiteSpace(cliente.Email))
+                {
+                    MessageBox.Show("Funcionalidad de email en desarrollo.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                if (chkImprimirDirecto.Checked)
+                {
+                    MessageBox.Show("Funcionalidad de impresión directa en desarrollo.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al generar PDF: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
-    
 }

@@ -12,9 +12,9 @@ namespace MiniSistemaFacturacion.DataAccess
         {
             string query = @"INSERT INTO Facturas 
                              (NumeroFactura, Fecha, ID_Cliente, TotalBruto, PorcentajeImpuesto, 
-                              ValorImpuesto, TotalNeto, SaldoPendiente, Estado, FechaCreacion) 
+                              ValorImpuesto, TotalNeto, SaldoPendiente, Estado, FechaCreacion, NCF, TipoComprobante) 
                              VALUES 
-                             (@Num, @Fecha, @IdCli, @Bruto, @Porc, @ValImp, @Neto, @Saldo, @Estado, GETDATE());
+                             (@Num, @Fecha, @IdCli, @Bruto, @Porc, @ValImp, @Neto, @Saldo, @Estado, GETDATE(), @NCF, @TipoComprobante);
                              SELECT SCOPE_IDENTITY();";
 
             using (SqlCommand cmd = new SqlCommand(query, connection, transaction))
@@ -28,6 +28,8 @@ namespace MiniSistemaFacturacion.DataAccess
                 cmd.Parameters.AddWithValue("@Neto", factura.TotalNeto);
                 cmd.Parameters.AddWithValue("@Saldo", factura.SaldoPendiente);
                 cmd.Parameters.AddWithValue("@Estado", factura.Estado);
+                cmd.Parameters.AddWithValue("@NCF", (object)factura.NCF ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TipoComprobante", (object)factura.TipoComprobante ?? DBNull.Value);
 
                 return Convert.ToInt32(cmd.ExecuteScalar());
             }

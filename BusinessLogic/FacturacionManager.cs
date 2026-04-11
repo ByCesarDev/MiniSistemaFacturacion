@@ -77,6 +77,9 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
             try
             {
+                // Generar NCF antes de guardar
+                factura.NCF = Configuration.EmpresaConfig.Instance.GenerarSiguienteNCF(factura.TipoComprobante);
+                
                 using (SqlConnection connection = DbHelper.Instance.GetConnection())
                 {
                    
@@ -553,7 +556,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
             try
             {
                 string query = @"
-                    SELECT f.*, c.Nombre, c.Cedula
+                    SELECT f.*, c.Nombre, c.Cedula, c.Direccion, c.Telefono, c.Email
                     FROM Facturas f
                     LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
                     WHERE f.ID_Factura = @ID_Factura";
@@ -586,7 +589,10 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         {
                             ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
                             Nombre = row["Nombre"].ToString(),
-                            Cedula = row["Cedula"].ToString()
+                            Cedula = row["Cedula"].ToString(),
+                            Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                            Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                            Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
                         };
                     }
 
@@ -599,6 +605,82 @@ namespace MiniSistemaFacturacion.BusinessLogic
             {
                 throw new Exception($"Error al obtener factura: {ex.Message}", ex);
             }
+        }
+
+        /// <summary>
+        /// Obtiene una factura completa con todos sus detalles
+        /// </summary>
+        /// <param name="idFactura">ID de la factura</param>
+        /// <returns>Factura completa con cliente y detalles</returns>
+        public Factura ObtenerFacturaCompleta(int idFactura)
+        {
+            try
+            {
+                // Obtener cabecera de la factura
+                Factura factura = ObtenerFactura(idFactura);
+                if (factura == null)
+                    return null;
+
+                // Obtener detalles de la factura
+                factura.Detalles = ObtenerDetallesFacturaCompleta(idFactura);
+
+                return factura;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener factura completa: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los detalles completos de una factura con información de productos
+        /// </summary>
+        /// <param name="idFactura">ID de la factura</param>
+        /// <returns>Lista de detalles completos</returns>
+        private List<DetalleFactura> ObtenerDetallesFacturaCompleta(int idFactura)
+        {
+            List<DetalleFactura> detalles = new List<DetalleFactura>();
+
+            try
+            {
+                string query = @"
+                    SELECT df.ID_Detalle, df.ID_Factura, df.ID_Producto, df.Cantidad, 
+                           df.PrecioUnitarioVenta, df.Subtotal, p.Codigo, p.Descripcion
+                    FROM DetallesFactura df
+                    LEFT JOIN Productos p ON df.ID_Producto = p.ID_Producto
+                    WHERE df.ID_Factura = @ID_Factura
+                    ORDER BY df.ID_Detalle";
+
+                SqlParameter parameter = DbHelper.Instance.CreateParameter("@ID_Factura", idFactura);
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, new SqlParameter[] { parameter });
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    DetalleFactura detalle = new DetalleFactura
+                    {
+                        ID_Detalle = Convert.ToInt32(row["ID_Detalle"]),
+                        ID_Factura = Convert.ToInt32(row["ID_Factura"]),
+                        ID_Producto = Convert.ToInt32(row["ID_Producto"]),
+                        Cantidad = Convert.ToInt32(row["Cantidad"]),
+                        PrecioUnitarioVenta = Convert.ToDecimal(row["PrecioUnitarioVenta"]),
+                        Subtotal = Convert.ToDecimal(row["Subtotal"])
+                    };
+
+                    // Agregar descripción del producto si está disponible
+                    if (row["Descripcion"] != DBNull.Value)
+                    {
+                        detalle.Descripcion = row["Descripcion"].ToString();
+                    }
+
+                    detalles.Add(detalle);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener detalles de factura: {ex.Message}", ex);
+            }
+
+            return detalles;
         }
 
         #endregion

@@ -45,6 +45,11 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.SqlClient" />
+    <Reference Include="QuestPDF">
+      <HintPath>packages\QuestPDF.2022.12.1\lib\netstandard2.0\QuestPDF.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Mail" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\FacturacionDAL.cs" />
@@ -59,6 +64,12 @@
     </Compile>
     <Compile Include="Forms\frmFacturacion.Designer.cs">
       <DependentUpon>frmFacturacion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmVistaPreviaPdf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmVistaPreviaPdf.Designer.cs">
+      <DependentUpon>FrmVistaPreviaPdf.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
@@ -96,6 +107,11 @@
     <Compile Include="DataAccess\ConnectionStringManager.cs" />
     <Compile Include="DataAccess\ClienteDAL.cs" />
     <Compile Include="DataAccess\ProductoDAL.cs" />
+    <!-- SERVICES -->
+    <Compile Include="Services\IPdfTicketService.cs" />
+    <Compile Include="Services\PdfTicketService.cs" />
+    <!-- CONFIGURATION -->
+    <Compile Include="Configuration\EmpresaConfig.cs" />
     <!-- BUSINESS -->
     <Compile Include="BusinessLogic\FacturacionManager.cs" />
     <Compile Include="BusinessLogic\PagoManager.cs" />
