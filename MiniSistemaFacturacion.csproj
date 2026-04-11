@@ -68,9 +68,6 @@
     <Compile Include="Forms\FrmVistaPreviaPdf.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmVistaPreviaPdf.Designer.cs">
-      <DependentUpon>FrmVistaPreviaPdf.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
