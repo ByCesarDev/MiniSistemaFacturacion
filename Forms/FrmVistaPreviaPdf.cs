@@ -72,17 +72,34 @@ namespace MiniSistemaFacturacion.Forms
                 // Generar PDF para vista previa
                 _pdfBytes = _pdfService.GenerarVistaPrevia(_factura, _cliente, _detalles);
 
-                // Mostrar en el PictureBox (temporal, hasta tener visor PDF real)
-                using (var memoryStream = new MemoryStream(_pdfBytes))
+                // Mostrar información en el PictureBox (ya que no podemos mostrar PDF directamente)
+                pictureBoxVistaPrevia.Image = null;
+                pictureBoxVistaPrevia.BackColor = Color.LightGray;
+                
+                // Crear un texto informativo
+                using (var font = new Font("Arial", 12, FontStyle.Bold))
+                using (var brush = new SolidBrush(Color.Black))
+                using (var bitmap = new Bitmap(pictureBoxVistaPrevia.Width, pictureBoxVistaPrevia.Height))
+                using (var graphics = Graphics.FromImage(bitmap))
                 {
-                    // Por ahora mostramos como imagen, en producción se usaría un visor PDF
-                    var image = Image.FromStream(memoryStream);
-                    pictureBoxVistaPrevia.Image = image;
-                    pictureBoxVistaPrevia.SizeMode = PictureBoxSizeMode.Zoom;
+                    graphics.Clear(Color.White);
+                    
+                    string mensaje = $"VISTA PREVIA - FACTURA #{_factura.NumeroFactura}\n\n";
+                    mensaje += $"Cliente: {_cliente.Nombre}\n";
+                    mensaje += $"Total: ${_factura.TotalNeto:F2}\n\n";
+                    mensaje += "PDF generado correctamente.\n";
+                    mensaje += "Use 'Guardar PDF' para ver el documento completo.";
+                    
+                    var size = graphics.MeasureString(mensaje, font);
+                    var x = (bitmap.Width - size.Width) / 2;
+                    var y = (bitmap.Height - size.Height) / 2;
+                    
+                    graphics.DrawString(mensaje, font, brush, x, y);
+                    pictureBoxVistaPrevia.Image = bitmap;
                 }
 
                 // Mostrar información
-                lblInfo.Text = $"Factura: {_factura.NumeroFactura} | Cliente: {_cliente.Nombre} | Total: ${_factura.TotalNeto:F2}";
+                lblInfo.Text = $"Factura: {_factura.NumeroFactura} | Cliente: {_cliente.Nombre} | Total: ${_factura.TotalNeto:F2} | PDF Listo para guardar";
             }
             catch (Exception ex)
             {
