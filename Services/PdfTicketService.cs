@@ -4,8 +4,9 @@ using System.IO;
 using System.Text;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.Configuration;
-using System.Drawing;
-using System.Drawing.Printing;
+using QuestPDF.Helpers;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 namespace MiniSistemaFacturacion.Services
 {
@@ -16,23 +17,11 @@ namespace MiniSistemaFacturacion.Services
     /// </summary>
     public class PdfTicketService : IPdfTicketService
     {
-        #region Constants
-
-        // Constantes para formato de ticket 80mm
-        private const float ANCHO_TICKET_MM = 80f; // 80mm = 3.15 pulgadas
-        private const float ANCHO_TICKET_POINTS = 226.77f; // 80mm en puntos (1mm = 2.8346 puntos)
-        private const float MARGEN = 10f;
-        private const float FUENTE_TITULO = 12f;
-        private const float FUENTE_NORMAL = 8f;
-        private const float FUENTE_PEQUENA = 7f;
-
-        #endregion
-
         #region Constructor
 
         public PdfTicketService()
         {
-            // Inicializar configuración si es necesario
+            // Inicializar QuestPDF si es necesario
         }
 
         #endregion
@@ -46,21 +35,97 @@ namespace MiniSistemaFacturacion.Services
         {
             try
             {
+                // Inicializar QuestPDF (solo una vez en la aplicación)
+                QuestPDF.Settings.License = LicenseType.Community;
+                
                 using (var memoryStream = new MemoryStream())
                 {
-                    // Crear documento PDF usando System.Drawing (alternativa a QuestPDF)
-                    var bitmap = CrearBitmapTicket(factura, cliente, detalles);
-                    
-                    // Convertir bitmap a bytes
-                    using (var imageStream = new MemoryStream())
+                    // Crear documento PDF real con QuestPDF
+                    var document = Document.Create(container =>
                     {
-                        bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Png);
-                        bitmap.Dispose();
-                        
-                        // Aquí deberíamos usar una librería PDF real, pero por ahora retornamos la imagen
-                        // En producción, se usaría QuestPDF o PDFSharp
-                        return ConvertirImagenAPdf(imageStream.ToArray());
-                    }
+                        container.Page(page =>
+                        {
+                            // Configurar página para ticket 80mm
+                            page.Margin(10);
+                            page.PageSize(PageSize.Custom(226.77f, 400)); // 80mm x altura variable
+                            page.DefaultTextStyle(x => x.FontSize(8).FontFamily(Fonts.Courier));
+
+                            // Encabezado de la empresa
+                            page.Header().Element(container =>
+                            {
+                                container.Column(column =>
+                                {
+                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.NombreEmpresa?.ToUpper() ?? "EMPRESA").Bold().FontSize(10);
+                                    column.Item().AlignCenter().Text(EmpresaConfig.Instance.Direccion ?? "Dirección").FontSize(7);
+                                    column.Item().AlignCenter().Text($"Tel: {EmpresaConfig.Instance.Telefono ?? "N/A"}").FontSize(7);
+                                    column.Item().AlignCenter().Text($"RNC: {FormatearRNC(EmpresaConfig.Instance.RNC)}").FontSize(7);
+                                    column.Item().LineHorizontal(0.5f);
+                                });
+                            });
+
+                            // Contenido principal
+                            page.Content().Element(container =>
+                            {
+                                container.Column(column =>
+                                {
+                                    // Información fiscal
+                                    column.Item().Text($"NCF: {factura.NCF ?? "Pendiente"}").Bold();
+                                    column.Item().Text($"Factura: #{factura.NumeroFactura}");
+                                    column.Item().Text($"Fecha: {factura.Fecha:dd/MM/yyyy HH:mm}");
+                                    column.Item().LineHorizontal(0.5f);
+
+                                    // Datos del cliente
+                                    column.Item().Text("DATOS DEL CLIENTE:").Bold();
+                                    column.Item().Text($"Nombre: {cliente.Nombre ?? "N/A"}");
+                                    column.Item().Text($"Cédula: {cliente.Cedula ?? "N/A"}");
+                                    column.Item().Text("Tipo: Consumidor Final");
+                                    column.Item().LineHorizontal(0.5f);
+
+                                    // Detalles de productos
+                                    column.Item().Text("DETALLE DE PRODUCTOS:").Bold();
+                                    
+                                    foreach (var detalle in detalles)
+                                    {
+                                        column.Item().Row(row =>
+                                        {
+                                            row.RelativeItem().Text($"{detalle.Cantidad}");
+                                            row.RelativeItem(3).Text(detalle.Descripcion ?? "");
+                                            row.RelativeItem().AlignRight().Text($"{detalle.PrecioUnitarioVenta:C2}");
+                                            row.RelativeItem().AlignRight().Text($"{detalle.Subtotal:C2}");
+                                        });
+                                    }
+                                    
+                                    column.Item().LineHorizontal(0.5f);
+
+                                    // Resumen financiero
+                                    column.Item().AlignRight().Column(resumen =>
+                                    {
+                                        resumen.Item().Text($"Subtotal: {factura.TotalBruto:C2}");
+                                        resumen.Item().Text($"ITBIS (18%): {factura.ValorImpuesto:C2}");
+                                        resumen.Item().Text($"TOTAL: {factura.TotalNeto:C2}").Bold();
+                                        resumen.Item().Text("Forma de Pago: Contado");
+                                    });
+                                    
+                                    column.Item().LineHorizontal(0.5f);
+                                });
+                            });
+
+                            // Pie de página
+                            page.Footer().Element(container =>
+                            {
+                                container.Column(column =>
+                                {
+                                    column.Item().AlignCenter().Text("¡Gracias por su compra!").FontSize(7);
+                                    column.Item().AlignCenter().Text("Este documento no es válido como factura fiscal").FontSize(6);
+                                    column.Item().AlignCenter().Text("sin el sello y firma correspondientes.").FontSize(6);
+                                });
+                            });
+                        });
+                    });
+
+                    // Generar PDF
+                    document.GeneratePdf(memoryStream);
+                    return memoryStream.ToArray();
                 }
             }
             catch (Exception ex)
@@ -174,17 +239,12 @@ namespace MiniSistemaFacturacion.Services
         }
 
         /// <summary>
-        /// Genera una vista previa del ticket PDF
+        /// Genera vista previa del ticket
         /// </summary>
         public byte[] GenerarVistaPrevia(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
         {
-            // Para vista previa, agregamos marca de agua
-            byte[] pdfBytes = GenerarTicketPdf(factura, cliente, detalles);
-            
-            // Aquí podríamos agregar marca de agua "VISTA PREVIA"
-            // Por ahora retornamos el mismo PDF
-            
-            return pdfBytes;
+            // Para vista previa, generamos el mismo PDF
+            return GenerarTicketPdf(factura, cliente, detalles);
         }
 
         #endregion
@@ -192,328 +252,19 @@ namespace MiniSistemaFacturacion.Services
         #region Private Methods
 
         /// <summary>
-        /// Crea un bitmap con el diseño del ticket
+        /// Formatea el RNC con guiones
         /// </summary>
-        private Bitmap CrearBitmapTicket(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
+        private string FormatearRNC(string rnc)
         {
-            // Calcular altura necesaria
-            float altura = CalcularAlturaTicket(factura, cliente, detalles);
-            
-            // Crear bitmap con dimensiones adecuadas
-            var bitmap = new Bitmap((int)ANCHO_TICKET_POINTS, (int)altura);
-            
-            using (var graphics = Graphics.FromImage(bitmap))
-            {
-                graphics.Clear(Color.White);
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                
-                // Usar fuente monoespaciada para alineación perfecta
-                using (var fontTitulo = new Font("Courier New", FUENTE_TITULO, FontStyle.Bold))
-                using (var fontNormal = new Font("Courier New", FUENTE_NORMAL))
-                using (var fontPequena = new Font("Courier New", FUENTE_PEQUENA))
-                using (var brush = new SolidBrush(Color.Black))
-                {
-                    float y = MARGEN;
-                    var empresa = EmpresaConfig.Instance;
-                    
-                    // Encabezado
-                    y = DibujarEncabezado(graphics, fontTitulo, fontNormal, brush, ref y);
-                    
-                    // Línea separadora
-                    y = DibujarLinea(graphics, brush, ref y);
-                    
-                    // Información fiscal y factura
-                    y = DibujarInfoFactura(graphics, factura, fontNormal, brush, ref y);
-                    
-                    // Línea separadora
-                    y = DibujarLinea(graphics, brush, ref y);
-                    
-                    // Datos del cliente
-                    y = DibujarDatosCliente(graphics, cliente, fontNormal, brush, ref y);
-                    
-                    // Línea separadora
-                    y = DibujarLinea(graphics, brush, ref y);
-                    
-                    // Detalles de productos
-                    y = DibujarDetalles(graphics, detalles, fontNormal, fontPequena, brush, ref y);
-                    
-                    // Línea separadora
-                    y = DibujarLinea(graphics, brush, ref y);
-                    
-                    // Resumen financiero
-                    y = DibujarResumen(graphics, factura, fontNormal, brush, ref y);
-                    
-                    // Línea separadora
-                    y = DibujarLinea(graphics, brush, ref y);
-                    
-                    // Pie de página
-                    y = DibujarPie(graphics, fontPequena, brush, ref y);
-                }
-            }
-            
-            return bitmap;
-        }
+            if (string.IsNullOrWhiteSpace(rnc))
+                return "N/A";
 
-        /// <summary>
-        /// Calcula la altura necesaria para el ticket
-        /// </summary>
-        private float CalcularAlturaTicket(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
-        {
-            float altura = MARGEN * 2; // Márgenes superior e inferior
-            
-            // Encabezado empresa (3 líneas)
-            altura += FUENTE_TITULO + FUENTE_NORMAL * 2;
-            
-            // Líneas separadoras (5 líneas)
-            altura += 5 * 5;
-            
-            // Info fiscal (3 líneas)
-            altura += FUENTE_NORMAL * 3;
-            
-            // Datos cliente (3 líneas)
-            altura += FUENTE_NORMAL * 3;
-            
-            // Encabezado detalles (1 línea)
-            altura += FUENTE_NORMAL;
-            
-            // Detalles (1 línea por producto + 1 por cada 2 productos si hay descripciones largas)
-            altura += FUENTE_NORMAL * detalles.Count;
-            
-            // Resumen (4 líneas)
-            altura += FUENTE_NORMAL * 4;
-            
-            // Pie de página (4 líneas)
-            altura += FUENTE_PEQUENA * 4;
-            
-            return altura + 50; // Extra para espacio
-        }
-
-        /// <summary>
-        /// Dibuja el encabezado con datos de la empresa
-        /// </summary>
-        private float DibujarEncabezado(Graphics graphics, Font fontTitulo, Font fontNormal, SolidBrush brush, ref float y)
-        {
-            var empresa = EmpresaConfig.Instance;
-            float centerX = ANCHO_TICKET_POINTS / 2;
-            
-            // Nombre de empresa (centrado)
-            string nombre = empresa.Nombre;
-            var size = graphics.MeasureString(nombre, fontTitulo);
-            graphics.DrawString(nombre, fontTitulo, brush, centerX - size.Width / 2, y);
-            y += FUENTE_TITULO;
-            
-            // Dirección (centrado)
-            string direccion = empresa.Direccion;
-            size = graphics.MeasureString(direccion, fontNormal);
-            graphics.DrawString(direccion, fontNormal, brush, centerX - size.Width / 2, y);
-            y += FUENTE_NORMAL;
-            
-            // Teléfono (centrado)
-            string telefono = $"Tel: {empresa.Telefono}";
-            size = graphics.MeasureString(telefono, fontNormal);
-            graphics.DrawString(telefono, fontNormal, brush, centerX - size.Width / 2, y);
-            y += FUENTE_NORMAL;
-            
-            // RNC (centrado)
-            string rnc = $"RNC: {empresa.GetFormattedRNC()}";
-            size = graphics.MeasureString(rnc, fontNormal);
-            graphics.DrawString(rnc, fontNormal, brush, centerX - size.Width / 2, y);
-            y += FUENTE_NORMAL;
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Dibuja una línea separadora
-        /// </summary>
-        private float DibujarLinea(Graphics graphics, SolidBrush brush, ref float y)
-        {
-            graphics.DrawLine(new Pen(brush, 1), MARGEN, y, ANCHO_TICKET_POINTS - MARGEN, y);
-            y += 5;
-            return y;
-        }
-
-        /// <summary>
-        /// Dibuja información de la factura y datos fiscales
-        /// </summary>
-        private float DibujarInfoFactura(Graphics graphics, Factura factura, Font fontNormal, SolidBrush brush, ref float y)
-        {
-            // NCF
-            string ncf = $"NCF: {factura.NCF ?? "N/A"}";
-            graphics.DrawString(ncf, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Número de factura
-            string numFactura = $"FACTURA: {factura.NumeroFactura}";
-            graphics.DrawString(numFactura, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Fecha
-            string fecha = $"FECHA: {factura.Fecha:dd/MM/yyyy HH:mm}";
-            graphics.DrawString(fecha, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Dibuja los datos del cliente
-        /// </summary>
-        private float DibujarDatosCliente(Graphics graphics, Cliente cliente, Font fontNormal, SolidBrush brush, ref float y)
-        {
-            // Título
-            graphics.DrawString("DATOS DEL CLIENTE:", fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Nombre
-            string nombre = $"Nombre: {cliente.Nombre}";
-            graphics.DrawString(nombre, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Cédula
-            string cedula = $"Cédula: {cliente.Cedula}";
-            graphics.DrawString(cedula, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Tipo (si aplica)
-            string tipo = $"Tipo: Consumidor Final";
-            graphics.DrawString(tipo, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Dibuja los detalles de los productos
-        /// </summary>
-        private float DibujarDetalles(Graphics graphics, List<DetalleFactura> detalles, Font fontNormal, Font fontPequena, SolidBrush brush, ref float y)
-        {
-            // Título
-            graphics.DrawString("DETALLE DE COMPRA:", fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Encabezado tabla
-            string encabezado = "CANT  DESCRIPCIÓN        PRECIO   TOTAL";
-            graphics.DrawString(encabezado, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Línea separadora
-            graphics.DrawLine(new Pen(brush, 1), MARGEN, y, ANCHO_TICKET_POINTS - MARGEN, y);
-            y += 3;
-            
-            // Detalles
-            foreach (var detalle in detalles)
-            {
-                // Formatear línea
-                string linea = FormatearLineaDetalle(detalle);
-                graphics.DrawString(linea, fontPequena, brush, MARGEN, y);
-                y += FUENTE_PEQUENA;
-            }
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Formatea una línea de detalle para el ticket
-        /// </summary>
-        private string FormatearLineaDetalle(DetalleFactura detalle)
-        {
-            string cantidad = detalle.Cantidad.ToString().PadLeft(3);
-            string descripcion = (detalle.Descripcion ?? "").PadRight(18).Substring(0, 18);
-            string precio = $"${detalle.PrecioUnitarioVenta:F2}".PadLeft(7);
-            string total = $"${detalle.Subtotal:F2}".PadLeft(7);
-            
-            return $"{cantidad} {descripcion} {precio} {total}";
-        }
-
-        /// <summary>
-        /// Dibuja el resumen financiero
-        /// </summary>
-        private float DibujarResumen(Graphics graphics, Factura factura, Font fontNormal, SolidBrush brush, ref float y)
-        {
-            // Subtotal
-            string subtotal = $"Subtotal:           {factura.TotalBruto:F2}";
-            graphics.DrawString(subtotal, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // ITBIS
-            string itbis = $"ITBIS ({factura.PorcentajeImpuesto}%):        {factura.ValorImpuesto:F2}";
-            graphics.DrawString(itbis, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Total
-            string total = $"TOTAL:             {factura.TotalNeto:F2}";
-            graphics.DrawString(total, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            // Forma de pago (por defecto efectivo)
-            string formaPago = "FORMA DE PAGO: Efectivo";
-            graphics.DrawString(formaPago, fontNormal, brush, MARGEN, y);
-            y += FUENTE_NORMAL;
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Dibuja el pie de página con términos y condiciones
-        /// </summary>
-        private float DibujarPie(Graphics graphics, Font fontPequena, SolidBrush brush, ref float y)
-        {
-            // Línea decorativa
-            string linea1 = "================================";
-            graphics.DrawString(linea1, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            // Mensaje de agradecimiento (centrado)
-            float centerX = ANCHO_TICKET_POINTS / 2;
-            string gracias = "     GRACIAS POR SU COMPRA";
-            var size = graphics.MeasureString(gracias, fontPequena);
-            graphics.DrawString(gracias, fontPequena, brush, centerX - size.Width / 2, y);
-            y += FUENTE_PEQUENA;
-            
-            // Vuelva pronto (centrado)
-            string vuelva = "       VUELVA PRONTO";
-            size = graphics.MeasureString(vuelva, fontPequena);
-            graphics.DrawString(vuelva, fontPequena, brush, centerX - size.Width / 2, y);
-            y += FUENTE_PEQUENA;
-            
-            // Línea decorativa
-            string linea2 = "================================";
-            graphics.DrawString(linea2, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            // Términos
-            string terminos = "TÉRMINOS Y CONDICIONES:";
-            graphics.DrawString(terminos, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            string termino1 = "* Los productos tienen 30 días de garantía";
-            graphics.DrawString(termino1, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            string termino2 = "* No se aceptan devoluciones sin factura";
-            graphics.DrawString(termino2, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            string termino3 = "* Para reclamaciones conserve esta factura";
-            graphics.DrawString(termino3, fontPequena, brush, MARGEN, y);
-            y += FUENTE_PEQUENA;
-            
-            return y;
-        }
-
-        /// <summary>
-        /// Convierte una imagen a PDF (método temporal)
-        /// </summary>
-        private byte[] ConvertirImagenAPdf(byte[] imageBytes)
-        {
-            // Este es un método temporal que retorna la imagen como si fuera PDF
-            // En producción, se usaría una librería PDF real como QuestPDF o PDFSharp
-            
-            // Por ahora, retornamos los bytes de la imagen
-            // El usuario puede verla como vista previa y luego implementaremos la conversión real
-            
-            return imageBytes;
+            if (rnc.Length == 9)
+                return $"{rnc.Substring(0, 3)}-{rnc.Substring(3, 3)}-{rnc.Substring(6, 3)}";
+            else if (rnc.Length == 11)
+                return $"{rnc.Substring(0, 3)}-{rnc.Substring(3, 7)}-{rnc.Substring(10, 1)}";
+            else
+                return rnc;
         }
 
         #endregion

@@ -281,10 +281,13 @@
             // 
             // btnVistaPreviaPdf
             // 
-            this.btnVistaPreviaPdf.Location = new System.Drawing.Point(574, 54);
+            this.btnVistaPreviaPdf.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVistaPreviaPdf.Location = new System.Drawing.Point(323, 461);
             this.btnVistaPreviaPdf.Name = "btnVistaPreviaPdf";
-            this.btnVistaPreviaPdf.Size = new System.Drawing.Size(75, 23);
+            this.btnVistaPreviaPdf.Size = new System.Drawing.Size(119, 23);
             this.btnVistaPreviaPdf.TabIndex = 3;
+            this.btnVistaPreviaPdf.Text = "Vista Previa";
+            this.btnVistaPreviaPdf.Click += new System.EventHandler(this.btnVistaPreviaPdf_Click);
             // 
             // btnGenerarPdf
             // 
@@ -294,6 +297,7 @@
             this.btnGenerarPdf.Size = new System.Drawing.Size(91, 23);
             this.btnGenerarPdf.TabIndex = 2;
             this.btnGenerarPdf.Text = "Generar";
+            this.btnGenerarPdf.Click += new System.EventHandler(this.btnGenerarPdf_Click);
             // 
             // chkEnviarEmail
             // 
@@ -315,9 +319,9 @@
             // 
             // cmbClientes
             // 
-            this.cmbClientes.Location = new System.Drawing.Point(211, 30);
+            this.cmbClientes.Location = new System.Drawing.Point(174, 51);
             this.cmbClientes.Name = "cmbClientes";
-            this.cmbClientes.Size = new System.Drawing.Size(121, 26);
+            this.cmbClientes.Size = new System.Drawing.Size(285, 26);
             this.cmbClientes.TabIndex = 4;
             // 
             // FrmFacturacion
