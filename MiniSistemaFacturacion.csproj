@@ -210,6 +210,9 @@
     <EmbeddedResource Include="Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmProductos.resx">
+      <DependentUpon>FrmProductos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmVistaPreviaPdf.resx">
       <DependentUpon>FrmVistaPreviaPdf.cs</DependentUpon>
     </EmbeddedResource>

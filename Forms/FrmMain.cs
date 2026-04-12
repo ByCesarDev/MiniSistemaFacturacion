@@ -102,5 +102,11 @@ namespace MiniSistemaFacturacion.Forms
             FrmBusquedaFacturas frm = new FrmBusquedaFacturas();
             frm.ShowDialog();
         }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            frmCuentasPorCobrar frm = new frmCuentasPorCobrar();
+            frm.ShowDialog();
+        }
     }
 }

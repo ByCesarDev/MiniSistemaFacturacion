@@ -53,22 +53,20 @@
             // dgvClientes
             // 
             this.dgvClientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClientes.Location = new System.Drawing.Point(11, 78);
-            this.dgvClientes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvClientes.Location = new System.Drawing.Point(8, 63);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersWidth = 51;
-            this.dgvClientes.Size = new System.Drawing.Size(1164, 402);
+            this.dgvClientes.Size = new System.Drawing.Size(873, 327);
             this.dgvClientes.TabIndex = 0;
             this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_DoubleClick);
             // 
             // btnNuevoCli
             // 
             this.btnNuevoCli.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNuevoCli.Location = new System.Drawing.Point(616, 487);
-            this.btnNuevoCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNuevoCli.Location = new System.Drawing.Point(462, 396);
             this.btnNuevoCli.Name = "btnNuevoCli";
-            this.btnNuevoCli.Size = new System.Drawing.Size(180, 28);
+            this.btnNuevoCli.Size = new System.Drawing.Size(135, 23);
             this.btnNuevoCli.TabIndex = 1;
             this.btnNuevoCli.Text = "Nuevo Cliente";
             this.btnNuevoCli.UseVisualStyleBackColor = true;
@@ -77,10 +75,9 @@
             // btnEditarCli
             // 
             this.btnEditarCli.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditarCli.Location = new System.Drawing.Point(804, 487);
-            this.btnEditarCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEditarCli.Location = new System.Drawing.Point(603, 396);
             this.btnEditarCli.Name = "btnEditarCli";
-            this.btnEditarCli.Size = new System.Drawing.Size(180, 28);
+            this.btnEditarCli.Size = new System.Drawing.Size(135, 23);
             this.btnEditarCli.TabIndex = 2;
             this.btnEditarCli.Text = "Editar Cliente";
             this.btnEditarCli.UseVisualStyleBackColor = true;
@@ -89,10 +86,9 @@
             // btnCambiarEstado
             // 
             this.btnCambiarEstado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCambiarEstado.Location = new System.Drawing.Point(995, 487);
-            this.btnCambiarEstado.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCambiarEstado.Location = new System.Drawing.Point(746, 396);
             this.btnCambiarEstado.Name = "btnCambiarEstado";
-            this.btnCambiarEstado.Size = new System.Drawing.Size(180, 28);
+            this.btnCambiarEstado.Size = new System.Drawing.Size(135, 23);
             this.btnCambiarEstado.TabIndex = 3;
             this.btnCambiarEstado.Text = "Cambiar estado";
             this.btnCambiarEstado.UseVisualStyleBackColor = true;
@@ -100,68 +96,60 @@
             // 
             // txtBuscarCli
             // 
-            this.txtBuscarCli.Location = new System.Drawing.Point(11, 490);
-            this.txtBuscarCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtBuscarCli.Location = new System.Drawing.Point(8, 398);
             this.txtBuscarCli.Name = "txtBuscarCli";
-            this.txtBuscarCli.Size = new System.Drawing.Size(596, 22);
+            this.txtBuscarCli.Size = new System.Drawing.Size(448, 20);
             this.txtBuscarCli.TabIndex = 4;
             this.txtBuscarCli.TextChanged += new System.EventHandler(this.txtBuscarCli_TextChanged);
             // 
             // txtIdCli
             // 
-            this.txtIdCli.Location = new System.Drawing.Point(11, 46);
-            this.txtIdCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtIdCli.Location = new System.Drawing.Point(8, 37);
             this.txtIdCli.Name = "txtIdCli";
             this.txtIdCli.ReadOnly = true;
-            this.txtIdCli.Size = new System.Drawing.Size(47, 22);
+            this.txtIdCli.Size = new System.Drawing.Size(36, 20);
             this.txtIdCli.TabIndex = 5;
             // 
             // txtNombreCli
             // 
-            this.txtNombreCli.Location = new System.Drawing.Point(67, 46);
-            this.txtNombreCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtNombreCli.Location = new System.Drawing.Point(50, 37);
             this.txtNombreCli.Name = "txtNombreCli";
-            this.txtNombreCli.Size = new System.Drawing.Size(235, 22);
+            this.txtNombreCli.Size = new System.Drawing.Size(177, 20);
             this.txtNombreCli.TabIndex = 6;
             // 
             // txtCedulaCli
             // 
-            this.txtCedulaCli.Location = new System.Drawing.Point(311, 46);
-            this.txtCedulaCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCedulaCli.Location = new System.Drawing.Point(233, 37);
             this.txtCedulaCli.Name = "txtCedulaCli";
-            this.txtCedulaCli.Size = new System.Drawing.Size(99, 22);
+            this.txtCedulaCli.Size = new System.Drawing.Size(75, 20);
             this.txtCedulaCli.TabIndex = 7;
             // 
             // txtDireccionCli
             // 
-            this.txtDireccionCli.Location = new System.Drawing.Point(419, 46);
-            this.txtDireccionCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtDireccionCli.Location = new System.Drawing.Point(314, 37);
             this.txtDireccionCli.Name = "txtDireccionCli";
-            this.txtDireccionCli.Size = new System.Drawing.Size(325, 22);
+            this.txtDireccionCli.Size = new System.Drawing.Size(245, 20);
             this.txtDireccionCli.TabIndex = 8;
             // 
             // txtTelefonoCli
             // 
-            this.txtTelefonoCli.Location = new System.Drawing.Point(753, 46);
-            this.txtTelefonoCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtTelefonoCli.Location = new System.Drawing.Point(565, 37);
             this.txtTelefonoCli.Name = "txtTelefonoCli";
-            this.txtTelefonoCli.Size = new System.Drawing.Size(135, 22);
+            this.txtTelefonoCli.Size = new System.Drawing.Size(102, 20);
             this.txtTelefonoCli.TabIndex = 9;
             // 
             // txtCorreoCli
             // 
-            this.txtCorreoCli.Location = new System.Drawing.Point(897, 46);
-            this.txtCorreoCli.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCorreoCli.Location = new System.Drawing.Point(673, 37);
             this.txtCorreoCli.Name = "txtCorreoCli";
-            this.txtCorreoCli.Size = new System.Drawing.Size(181, 22);
+            this.txtCorreoCli.Size = new System.Drawing.Size(137, 20);
             this.txtCorreoCli.TabIndex = 10;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(16, 26);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(12, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 17);
             this.label1.TabIndex = 11;
@@ -171,8 +159,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(161, 26);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(121, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 17);
             this.label2.TabIndex = 12;
@@ -182,8 +169,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(337, 26);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(253, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 17);
             this.label3.TabIndex = 13;
@@ -193,8 +179,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(539, 26);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(404, 21);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 17);
             this.label4.TabIndex = 14;
@@ -204,8 +189,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(791, 26);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(593, 21);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 17);
             this.label5.TabIndex = 15;
@@ -215,8 +199,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(957, 26);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(718, 21);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(47, 17);
             this.label6.TabIndex = 16;
@@ -226,8 +209,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(269, 518);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(202, 421);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(113, 17);
             this.label7.TabIndex = 17;
@@ -236,10 +218,9 @@
             // btnLimpiar
             // 
             this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpiar.Location = new System.Drawing.Point(1088, 26);
-            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLimpiar.Location = new System.Drawing.Point(816, 21);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(87, 44);
+            this.btnLimpiar.Size = new System.Drawing.Size(65, 36);
             this.btnLimpiar.TabIndex = 18;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -247,9 +228,9 @@
             // 
             // FrmClientes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1191, 539);
+            this.ClientSize = new System.Drawing.Size(893, 438);
             this.Controls.Add(this.btnLimpiar);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -269,9 +250,8 @@
             this.Controls.Add(this.btnEditarCli);
             this.Controls.Add(this.btnNuevoCli);
             this.Controls.Add(this.dgvClientes);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FrmClientes";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gestión de Clientes";
             this.Load += new System.EventHandler(this.FrmClientes_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();

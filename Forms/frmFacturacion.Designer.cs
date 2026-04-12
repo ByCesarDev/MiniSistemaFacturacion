@@ -335,7 +335,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "FrmFacturacion";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Facturación";
             this.Load += new System.EventHandler(this.FrmFacturacion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).EndInit();
