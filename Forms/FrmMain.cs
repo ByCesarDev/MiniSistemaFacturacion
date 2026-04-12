@@ -108,5 +108,26 @@ namespace MiniSistemaFacturacion.Forms
             frmCuentasPorCobrar frm = new frmCuentasPorCobrar();
             frm.ShowDialog();
         }
+
+        // Evento único para la entrada del mouse (MouseEnter)
+        private void PictureBox_HoverEnter(object sender, EventArgs e)
+        {
+            // Convertimos el 'sender' en un PictureBox de forma segura
+            if (sender is PictureBox pb)
+            {
+                pb.BackColor = Color.LightGray;
+                pb.Cursor = Cursors.Hand; // Opcional: cambia el puntero a la "manito"
+            }
+        }
+
+        // Evento único para la salida del mouse (MouseLeave)
+        private void PictureBox_HoverLeave(object sender, EventArgs e)
+        {
+           if (sender is PictureBox pb)
+            {
+                pb.BackColor = Color.Transparent;
+                pb.Cursor = Cursors.Default;
+            }
+        }
     }
 }
