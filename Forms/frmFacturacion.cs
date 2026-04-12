@@ -108,6 +108,8 @@ namespace MiniSistemaFacturacion.Forms
         {
             CargarCombos();
             ConfigurarGridFactura();
+            CargarTiposComprobante();
+            CargarFormaDePago();
 
             if (_esEdicion)
             {
@@ -132,6 +134,27 @@ namespace MiniSistemaFacturacion.Forms
             cmbProductos.DisplayMember = "Descripcion";
             cmbProductos.ValueMember = "ID_Producto";
             cmbProductos.SelectedIndex = -1;
+        }
+
+
+        private void CargarFormaDePago()
+        {
+            cmbFormaPago.Items.Clear();
+            cmbFormaPago.Items.Add("Efectivo");
+            cmbFormaPago.Items.Add("Tarjeta Crédito");
+            cmbFormaPago.Items.Add("Tarjeta Débito");
+            cmbFormaPago.Items.Add("Transferencia");
+            cmbFormaPago.Items.Add("Cheque");
+
+          
+        }
+        private void CargarTiposComprobante()
+        {
+            cmbTipoComprobante.Items.Clear();
+            cmbTipoComprobante.Items.Add("01 - Crédito Fiscal");
+            cmbTipoComprobante.Items.Add("02 - Consumidor Final");
+
+            cmbTipoComprobante.SelectedIndex = 1;
         }
 
         private void ConfigurarGridFactura()
@@ -217,6 +240,21 @@ namespace MiniSistemaFacturacion.Forms
         private void chkCredito_CheckedChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
+
+            bool esCredito = chkCredito.Checked;
+
+            cmbFormaPago.Enabled = !esCredito;
+            lblFormaPago.Enabled = !esCredito;
+
+            if (esCredito)
+            {
+                cmbFormaPago.SelectedIndex = -1;
+                btnGuardarFactura.Text = "Guardar";
+            }
+            else
+            {
+                btnGuardarFactura.Text = "Pagar";
+            }
         }
 
         private void btnGuardarFactura_Click_1(object sender, EventArgs e)
@@ -229,8 +267,27 @@ namespace MiniSistemaFacturacion.Forms
                 if (listaDetalles.Count == 0)
                     throw new Exception("No puede guardar una factura sin productos.");
 
+                if (!chkCredito.Checked && cmbFormaPago.SelectedIndex == -1)
+                    throw new Exception("Debe seleccionar una forma de pago.");
+                Cliente clienteSeleccionado = (Cliente)cmbClientes.SelectedItem;
+
+                if (clienteSeleccionado == null)
+                    throw new Exception("Debe seleccionar un cliente válido.");
+
+                if (cmbTipoComprobante.SelectedIndex == -1)
+                    throw new Exception("Debe seleccionar un tipo de comprobante.");
+
+                string tipoComprobante = cmbTipoComprobante.Text.Substring(0, 2);
+
+                if (tipoComprobante == "01")
+                {
+                    if (string.IsNullOrWhiteSpace(clienteSeleccionado.Cedula))
+                        throw new Exception("Para facturas con Crédito Fiscal, el cliente debe tener RNC o cédula registrada.");
+                }
+
                 string tipoVenta = chkCredito.Checked ? "Credito" : "Contado";
                 string estadoFactura = chkCredito.Checked ? "Pendiente" : "Pagada";
+
                 decimal saldoPendiente = chkCredito.Checked
                     ? decimal.Parse(txtTotalNeto.Text)
                     : 0m;
@@ -242,10 +299,9 @@ namespace MiniSistemaFacturacion.Forms
                     Fecha = DateTime.Now,
                     PorcentajeImpuesto = TASA_ITBIS * 100,
                     Estado = estadoFactura,
-
-                    // Estas 2 propiedades debes agregarlas al modelo Factura
                     TipoVenta = tipoVenta,
-                    SaldoPendiente = saldoPendiente
+                    SaldoPendiente = saldoPendiente,
+                    TipoComprobante = tipoComprobante
                 };
 
                 int id;
@@ -276,10 +332,10 @@ namespace MiniSistemaFacturacion.Forms
                     {
                         HabilitarControles(true);
                     }
-                    else if (result == DialogResult.OK)
+                    else if (result == DialogResult.OK || result == DialogResult.Cancel)
                     {
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        HabilitarControles(true);
+                        LimpiarFormularioFacturacion();
                     }
                 }
             }
@@ -318,7 +374,70 @@ namespace MiniSistemaFacturacion.Forms
             numCantidad.Value = 1;
             cmbProductos.Focus();
         }
+        private void LimpiarFormularioFacturacion()
+        {
+            // Limpiar selección principal
+            cmbClientes.SelectedIndex = -1;
+            cmbProductos.SelectedIndex = -1;
 
+            // Reiniciar cantidad
+            numCantidad.Value = 1;
+            // Limpiar selección principal
+            cmbClientes.SelectedIndex = -1;
+            cmbClientes.SelectedItem = null;
+            cmbClientes.Text = "";
+
+            cmbProductos.SelectedIndex = -1;
+            cmbProductos.SelectedItem = null;
+            cmbProductos.Text = "";
+
+            // Limpiar detalle
+            listaDetalles.Clear();
+            dgvDetalle.DataSource = null;
+            dgvDetalle.DataSource = listaDetalles;
+
+            // Reiniciar checks
+            chkEnviarEmail.Checked = false;
+            chkImprimirDirecto.Checked = false;
+            chkCredito.Checked = false;
+
+            // Reiniciar tipo de comprobante
+            if (cmbTipoComprobante.Items.Count > 1)
+                cmbTipoComprobante.SelectedIndex = 1; // 02 - Consumidor Final
+            else
+                cmbTipoComprobante.SelectedIndex = -1;
+
+            // Reiniciar forma de pago
+            cmbFormaPago.Enabled = true;
+            lblFormaPago.Enabled = true;
+
+            if (cmbFormaPago.Items.Count > 0)
+                cmbFormaPago.SelectedIndex = 0; // Efectivo por defecto
+            else
+                cmbFormaPago.SelectedIndex = -1;
+
+            // Reiniciar totales
+            txtSubtotal.Text = "0.00";
+            txtIVA.Text = "0.00";
+            txtTotalNeto.Text = "0.00";
+            txtSaldoPendiente.Text = "0.00";
+
+            // Reiniciar modo
+            _esEdicion = false;
+            _idFacturaExistente = 0;
+            _facturaEdicion = null;
+            _clienteEdicion = null;
+            _detallesEdicion = null;
+
+            // Nuevo número de factura
+            lblNumeroFactura.Text = FacturacionManager.Instance.GenerarSiguienteNumeroFactura();
+
+            // Botón por defecto
+            btnGuardarFactura.Text = "Pagar";
+
+            // Enfocar primer campo útil
+            cmbClientes.Focus();
+        }
         private void btnEliminarItem_Click_1(object sender, EventArgs e)
         {
             if (dgvDetalle.SelectedRows.Count > 0)
@@ -397,6 +516,16 @@ namespace MiniSistemaFacturacion.Forms
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -82,13 +82,8 @@ namespace MiniSistemaFacturacion.Models
         /// </summary>
         [Required(ErrorMessage = "El estado es requerido")]
         [StringLength(20, ErrorMessage = "El estado no puede exceder 20 caracteres")]
-        public string Estado { get; set; }
 
-        /// <summary>
-        /// Tipo de venta de la factura (Contado o Credito)
-        /// </summary>
-        [StringLength(20, ErrorMessage = "El tipo de venta no puede exceder 20 caracteres")]
-        public string TipoVenta { get; set; }
+        public string Estado { get; set; }
 
         /// <summary>
         /// Fecha de creación del registro
@@ -120,11 +115,30 @@ namespace MiniSistemaFacturacion.Models
         /// </summary>
         public string Email { get; set; }
 
+        public string TipoVenta { get; set; }
+
         /// <summary>
         /// Tipo de comprobante fiscal (01, 02, 03, 14, 15, 16)
         /// </summary>
         [StringLength(2, ErrorMessage = "El tipo de comprobante no puede exceder 2 caracteres")]
         public string TipoComprobante { get; set; }
+
+        public string TipoComprobanteDescripcion
+        {
+            get
+            {
+                switch (TipoComprobante)
+                {
+                    case "01":
+                        return "Crédito Fiscal";
+                    case "02":
+                        return "Consumidor Final";
+
+                    default:
+                        return TipoComprobante;
+                }
+            }
+        }
 
         /// <summary>
         /// Propiedad de navegación para el cliente

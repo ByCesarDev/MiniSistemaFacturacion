@@ -710,7 +710,9 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         TotalNeto = Convert.ToDecimal(row["TotalNeto"]),
                         SaldoPendiente = Convert.ToDecimal(row["SaldoPendiente"]),
                         Estado = row["Estado"].ToString(),
-                        FechaCreacion = Convert.ToDateTime(row["FechaCreacion"])
+                        FechaCreacion = Convert.ToDateTime(row["FechaCreacion"]),
+                        NCF = row["NCF"] != DBNull.Value ? row["NCF"].ToString() : null,
+                        TipoComprobante = row["TipoComprobante"] != DBNull.Value ? row["TipoComprobante"].ToString() : null,
                     };
 
                     // Agregar información del cliente
@@ -832,7 +834,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                 string query = @"
                     SELECT f.ID_Factura, f.NumeroFactura, f.Fecha, f.ID_Cliente, 
                            f.TotalBruto, f.PorcentajeImpuesto, f.ValorImpuesto, f.TotalNeto, 
-                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF,
+                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF, f.TipoComprobante,
                            c.Nombre as ClienteNombre, c.Cedula, c.Direccion, c.Telefono, c.Email
                     FROM Facturas f
                     LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
@@ -883,7 +885,8 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         Estado = row["Estado"].ToString(),
                         FechaCreacion = Convert.ToDateTime(row["FechaCreacion"]),
                         NCF = row["NCF"] != DBNull.Value ? row["NCF"].ToString() : null,
-                        
+                        TipoComprobante = row["TipoComprobante"] != DBNull.Value ? row["TipoComprobante"].ToString() : null,
+
                         // Propiedades calculadas para el DataGridView
                         ClienteNombre = row["ClienteNombre"] != DBNull.Value ? row["ClienteNombre"].ToString() : null,
                         Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,
@@ -931,7 +934,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                 string query = @"
                     SELECT TOP " + cantidad + @" f.ID_Factura, f.NumeroFactura, f.Fecha, f.ID_Cliente, 
                            f.TotalBruto, f.PorcentajeImpuesto, f.ValorImpuesto, f.TotalNeto, 
-                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF,
+                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF, f.TipoComprobante,
                            c.Nombre as ClienteNombre, c.Cedula, c.Direccion, c.Telefono, c.Email
                     FROM Facturas f
                     LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
@@ -955,7 +958,8 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         Estado = row["Estado"].ToString(),
                         FechaCreacion = Convert.ToDateTime(row["FechaCreacion"]),
                         NCF = row["NCF"] != DBNull.Value ? row["NCF"].ToString() : null,
-                        
+                        TipoComprobante = row["TipoComprobante"] != DBNull.Value ? row["TipoComprobante"].ToString() : null,
+
                         // Propiedades calculadas para el DataGridView
                         ClienteNombre = row["ClienteNombre"] != DBNull.Value ? row["ClienteNombre"].ToString() : null,
                         Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,

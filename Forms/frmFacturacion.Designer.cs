@@ -54,6 +54,10 @@
             this.chkImprimirDirecto = new System.Windows.Forms.CheckBox();
             this.cmbClientes = new System.Windows.Forms.ComboBox();
             this.chkCredito = new System.Windows.Forms.CheckBox();
+            this.cmbTipoComprobante = new System.Windows.Forms.ComboBox();
+            this.lblTipoComprobante = new System.Windows.Forms.Label();
+            this.cmbFormaPago = new System.Windows.Forms.ComboBox();
+            this.lblFormaPago = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).BeginInit();
             this.SuspendLayout();
@@ -62,7 +66,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 83);
+            this.label1.Location = new System.Drawing.Point(12, 112);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 18);
             this.label1.TabIndex = 0;
@@ -71,7 +75,7 @@
             // lblNumeroFactura
             // 
             this.lblNumeroFactura.AutoSize = true;
-            this.lblNumeroFactura.Location = new System.Drawing.Point(97, 30);
+            this.lblNumeroFactura.Location = new System.Drawing.Point(97, 26);
             this.lblNumeroFactura.Name = "lblNumeroFactura";
             this.lblNumeroFactura.Size = new System.Drawing.Size(0, 18);
             this.lblNumeroFactura.TabIndex = 1;
@@ -89,12 +93,13 @@
             // dgvDetalle
             // 
             this.dgvDetalle.AllowUserToAddRows = false;
+            this.dgvDetalle.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvDetalle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDetalle.Location = new System.Drawing.Point(11, 141);
+            this.dgvDetalle.Location = new System.Drawing.Point(11, 170);
             this.dgvDetalle.Name = "dgvDetalle";
             this.dgvDetalle.RowHeadersWidth = 62;
             this.dgvDetalle.RowTemplate.Height = 28;
-            this.dgvDetalle.Size = new System.Drawing.Size(638, 260);
+            this.dgvDetalle.Size = new System.Drawing.Size(638, 253);
             this.dgvDetalle.TabIndex = 4;
             this.dgvDetalle.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDetalle_CellValueChanged);
             this.dgvDetalle.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvDetalle_CurrentCellDirtyStateChanged);
@@ -111,7 +116,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(11, 54);
+            this.label2.Location = new System.Drawing.Point(11, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 18);
             this.label2.TabIndex = 7;
@@ -121,7 +126,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(12, 111);
+            this.label4.Location = new System.Drawing.Point(12, 140);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(79, 18);
             this.label4.TabIndex = 9;
@@ -131,7 +136,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(12, 30);
+            this.label5.Location = new System.Drawing.Point(12, 26);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(102, 18);
             this.label5.TabIndex = 10;
@@ -141,7 +146,7 @@
             // 
             this.cmbProductos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProductos.FormattingEnabled = true;
-            this.cmbProductos.Location = new System.Drawing.Point(86, 80);
+            this.cmbProductos.Location = new System.Drawing.Point(86, 109);
             this.cmbProductos.Name = "cmbProductos";
             this.cmbProductos.Size = new System.Drawing.Size(373, 26);
             this.cmbProductos.TabIndex = 11;
@@ -149,7 +154,7 @@
             // btnAnadir
             // 
             this.btnAnadir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAnadir.Location = new System.Drawing.Point(461, 109);
+            this.btnAnadir.Location = new System.Drawing.Point(461, 122);
             this.btnAnadir.Name = "btnAnadir";
             this.btnAnadir.Size = new System.Drawing.Size(91, 26);
             this.btnAnadir.TabIndex = 12;
@@ -160,7 +165,7 @@
             // btnEliminarItem
             // 
             this.btnEliminarItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEliminarItem.Location = new System.Drawing.Point(558, 109);
+            this.btnEliminarItem.Location = new System.Drawing.Point(558, 122);
             this.btnEliminarItem.Name = "btnEliminarItem";
             this.btnEliminarItem.Size = new System.Drawing.Size(91, 26);
             this.btnEliminarItem.TabIndex = 13;
@@ -170,7 +175,7 @@
             // 
             // numCantidad
             // 
-            this.numCantidad.Location = new System.Drawing.Point(86, 109);
+            this.numCantidad.Location = new System.Drawing.Point(86, 138);
             this.numCantidad.Minimum = new decimal(new int[] {
             1,
             0,
@@ -189,7 +194,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(22, 513);
+            this.label6.Location = new System.Drawing.Point(22, 531);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 18);
             this.label6.TabIndex = 15;
@@ -199,7 +204,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(114, 513);
+            this.label7.Location = new System.Drawing.Point(114, 531);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(102, 18);
             this.label7.TabIndex = 16;
@@ -209,7 +214,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(222, 513);
+            this.label8.Location = new System.Drawing.Point(222, 531);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(92, 18);
             this.label8.TabIndex = 17;
@@ -219,7 +224,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(325, 513);
+            this.label9.Location = new System.Drawing.Point(325, 531);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(135, 18);
             this.label9.TabIndex = 18;
@@ -227,7 +232,7 @@
             // 
             // txtSubtotal
             // 
-            this.txtSubtotal.Location = new System.Drawing.Point(8, 489);
+            this.txtSubtotal.Location = new System.Drawing.Point(8, 507);
             this.txtSubtotal.Name = "txtSubtotal";
             this.txtSubtotal.ReadOnly = true;
             this.txtSubtotal.Size = new System.Drawing.Size(86, 24);
@@ -235,7 +240,7 @@
             // 
             // txtIVA
             // 
-            this.txtIVA.Location = new System.Drawing.Point(102, 489);
+            this.txtIVA.Location = new System.Drawing.Point(102, 507);
             this.txtIVA.Name = "txtIVA";
             this.txtIVA.ReadOnly = true;
             this.txtIVA.Size = new System.Drawing.Size(100, 24);
@@ -243,7 +248,7 @@
             // 
             // txtTotalNeto
             // 
-            this.txtTotalNeto.Location = new System.Drawing.Point(208, 489);
+            this.txtTotalNeto.Location = new System.Drawing.Point(208, 507);
             this.txtTotalNeto.Name = "txtTotalNeto";
             this.txtTotalNeto.ReadOnly = true;
             this.txtTotalNeto.Size = new System.Drawing.Size(100, 24);
@@ -251,7 +256,7 @@
             // 
             // txtSaldoPendiente
             // 
-            this.txtSaldoPendiente.Location = new System.Drawing.Point(314, 489);
+            this.txtSaldoPendiente.Location = new System.Drawing.Point(314, 507);
             this.txtSaldoPendiente.Name = "txtSaldoPendiente";
             this.txtSaldoPendiente.ReadOnly = true;
             this.txtSaldoPendiente.Size = new System.Drawing.Size(128, 24);
@@ -260,18 +265,18 @@
             // btnGuardarFactura
             // 
             this.btnGuardarFactura.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGuardarFactura.Location = new System.Drawing.Point(463, 506);
+            this.btnGuardarFactura.Location = new System.Drawing.Point(460, 465);
             this.btnGuardarFactura.Name = "btnGuardarFactura";
             this.btnGuardarFactura.Size = new System.Drawing.Size(91, 25);
             this.btnGuardarFactura.TabIndex = 23;
-            this.btnGuardarFactura.Text = "Guardar";
+            this.btnGuardarFactura.Text = "Pagar";
             this.btnGuardarFactura.UseVisualStyleBackColor = true;
             this.btnGuardarFactura.Click += new System.EventHandler(this.btnGuardarFactura_Click_1);
             // 
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(560, 506);
+            this.btnCancelar.Location = new System.Drawing.Point(557, 465);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(91, 25);
             this.btnCancelar.TabIndex = 24;
@@ -282,7 +287,7 @@
             // chkEnviarEmail
             // 
             this.chkEnviarEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnviarEmail.Location = new System.Drawing.Point(8, 422);
+            this.chkEnviarEmail.Location = new System.Drawing.Point(8, 434);
             this.chkEnviarEmail.Name = "chkEnviarEmail";
             this.chkEnviarEmail.Size = new System.Drawing.Size(104, 24);
             this.chkEnviarEmail.TabIndex = 1;
@@ -291,7 +296,7 @@
             // chkImprimirDirecto
             // 
             this.chkImprimirDirecto.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkImprimirDirecto.Location = new System.Drawing.Point(100, 422);
+            this.chkImprimirDirecto.Location = new System.Drawing.Point(100, 434);
             this.chkImprimirDirecto.Name = "chkImprimirDirecto";
             this.chkImprimirDirecto.Size = new System.Drawing.Size(104, 24);
             this.chkImprimirDirecto.TabIndex = 0;
@@ -299,7 +304,7 @@
             // 
             // cmbClientes
             // 
-            this.cmbClientes.Location = new System.Drawing.Point(174, 51);
+            this.cmbClientes.Location = new System.Drawing.Point(174, 47);
             this.cmbClientes.Name = "cmbClientes";
             this.cmbClientes.Size = new System.Drawing.Size(285, 26);
             this.cmbClientes.TabIndex = 4;
@@ -307,18 +312,62 @@
             // chkCredito
             // 
             this.chkCredito.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkCredito.Location = new System.Drawing.Point(204, 422);
+            this.chkCredito.Location = new System.Drawing.Point(204, 434);
             this.chkCredito.Name = "chkCredito";
             this.chkCredito.Size = new System.Drawing.Size(147, 24);
             this.chkCredito.TabIndex = 25;
             this.chkCredito.Text = "Venta a crédito";
             this.chkCredito.CheckedChanged += new System.EventHandler(this.chkCredito_CheckedChanged);
             // 
+            // cmbTipoComprobante
+            // 
+            this.cmbTipoComprobante.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipoComprobante.FormattingEnabled = true;
+            this.cmbTipoComprobante.Location = new System.Drawing.Point(180, 77);
+            this.cmbTipoComprobante.Name = "cmbTipoComprobante";
+            this.cmbTipoComprobante.Size = new System.Drawing.Size(278, 26);
+            this.cmbTipoComprobante.TabIndex = 27;
+            // 
+            // lblTipoComprobante
+            // 
+            this.lblTipoComprobante.AutoSize = true;
+            this.lblTipoComprobante.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTipoComprobante.Location = new System.Drawing.Point(9, 81);
+            this.lblTipoComprobante.Name = "lblTipoComprobante";
+            this.lblTipoComprobante.Size = new System.Drawing.Size(173, 18);
+            this.lblTipoComprobante.TabIndex = 26;
+            this.lblTipoComprobante.Text = "Tipo de comprobante:";
+            // 
+            // cmbFormaPago
+            // 
+            this.cmbFormaPago.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFormaPago.FormattingEnabled = true;
+            this.cmbFormaPago.Location = new System.Drawing.Point(147, 465);
+            this.cmbFormaPago.Name = "cmbFormaPago";
+            this.cmbFormaPago.Size = new System.Drawing.Size(185, 26);
+            this.cmbFormaPago.TabIndex = 29;
+            this.cmbFormaPago.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // lblFormaPago
+            // 
+            this.lblFormaPago.AutoSize = true;
+            this.lblFormaPago.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFormaPago.Location = new System.Drawing.Point(14, 468);
+            this.lblFormaPago.Name = "lblFormaPago";
+            this.lblFormaPago.Size = new System.Drawing.Size(127, 18);
+            this.lblFormaPago.TabIndex = 28;
+            this.lblFormaPago.Text = "Forma de pago:";
+            this.lblFormaPago.Click += new System.EventHandler(this.label10_Click);
+            // 
             // FrmFacturacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 543);
+            this.ClientSize = new System.Drawing.Size(661, 573);
+            this.Controls.Add(this.cmbFormaPago);
+            this.Controls.Add(this.lblFormaPago);
+            this.Controls.Add(this.cmbTipoComprobante);
+            this.Controls.Add(this.lblTipoComprobante);
             this.Controls.Add(this.chkCredito);
             this.Controls.Add(this.chkImprimirDirecto);
             this.Controls.Add(this.chkEnviarEmail);
@@ -385,5 +434,9 @@
         private System.Windows.Forms.CheckBox chkImprimirDirecto;
         private System.Windows.Forms.ComboBox cmbClientes;
         private System.Windows.Forms.CheckBox chkCredito;
+        private System.Windows.Forms.ComboBox cmbTipoComprobante;
+        private System.Windows.Forms.Label lblTipoComprobante;
+        private System.Windows.Forms.ComboBox cmbFormaPago;
+        private System.Windows.Forms.Label lblFormaPago;
     }
 }
