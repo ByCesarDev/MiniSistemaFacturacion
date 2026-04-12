@@ -37,6 +37,8 @@
             this.productosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarFacturaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cuentasPorCobrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configuracionEmpresaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -61,7 +63,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientesToolStripMenuItem,
-            this.productosToolStripMenuItem});
+            this.productosToolStripMenuItem,
+            this.configuracionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -129,6 +132,23 @@
             this.cuentasPorCobrarToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
             this.cuentasPorCobrarToolStripMenuItem.Text = "Cuentas por cobrar";
             this.cuentasPorCobrarToolStripMenuItem.Click += new System.EventHandler(this.pictureBox5_Click);
+            // 
+            // configuracionToolStripMenuItem
+            // 
+            this.configuracionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configuracionEmpresaToolStripMenuItem});
+            this.configuracionToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(130, 23);
+            this.configuracionToolStripMenuItem.Text = "Configuración";
+            // 
+            // configuracionEmpresaToolStripMenuItem
+            // 
+            this.configuracionEmpresaToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.configuracionEmpresaToolStripMenuItem.Name = "configuracionEmpresaToolStripMenuItem";
+            this.configuracionEmpresaToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
+            this.configuracionEmpresaToolStripMenuItem.Text = "Configuración de Empresa";
+            this.configuracionEmpresaToolStripMenuItem.Click += new System.EventHandler(this.configuracionEmpresaToolStripMenuItem_Click);
             // 
             // pictureBox1
             // 
@@ -319,6 +339,13 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem productosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem configuracionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem productosToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem facturacionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem buscarFacturaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cuentasPorCobrarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem configuracionEmpresaToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -327,13 +354,7 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem productosToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem facturacionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem buscarFacturaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cuentasPorCobrarToolStripMenuItem;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox CuentasPorCobrar;
     }
 }
-
