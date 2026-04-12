@@ -38,13 +38,10 @@ namespace MiniSistemaFacturacion.Forms
 
         private void dgvDetalle_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            // Si el error es por un valor nulo o formato incorrecto en la columna Cantidad
-            if (dgvDetalle.Columns[e.ColumnIndex].HeaderText == "Cantidad")
+            // Si el error es por un valor nulo (DBNull) en una columna numérica
+            if (e.Exception is ArgumentException && e.Context.HasFlag(DataGridViewDataErrorContexts.Parsing))
             {
-                MessageBox.Show("Por favor, ingrese un número válido para la cantidad.",
-                                "Dato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Evitamos que el error se propague y cierre el programa
+                // Evitamos que salte el diálogo de error y cancelamos el evento
                 e.ThrowException = false;
                 e.Cancel = true;
             }
@@ -67,46 +64,24 @@ namespace MiniSistemaFacturacion.Forms
 
         private void CargarDatosFactura()
         {
-            // Depuración: Mostrar información del cliente recibido
-            if (_clienteEdicion == null)
-            {
-                MessageBox.Show("DEBUG: Cliente recibido es NULL", "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show($"DEBUG: Cliente recibido - ID: {_clienteEdicion.ID_Cliente}, Nombre: {_clienteEdicion.Nombre}", 
-                              "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            
             // Establecer datos de la factura
             lblNumeroFactura.Text = _facturaEdicion.NumeroFactura;
             
-            // Buscar y seleccionar el cliente de forma más robusta
+            // Buscar y seleccionar el cliente
             if (_clienteEdicion != null)
             {
-                // Depuración: Mostrar cantidad de clientes en el combo
-                MessageBox.Show($"DEBUG: Total clientes en combo: {cmbClientes.Items.Count}", 
-                              "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                // Método 1: Intentar usar SelectedValue
+                // Intentar usar SelectedValue primero
                 cmbClientes.SelectedValue = _clienteEdicion.ID_Cliente;
-                MessageBox.Show($"DEBUG: Después de SelectedValue - SelectedValue: {cmbClientes.SelectedValue}, SelectedIndex: {cmbClientes.SelectedIndex}", 
-                              "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
-                // Método 2: Si SelectedValue no funciona, buscar por índice
+                // Si SelectedValue no funciona, buscar por índice
                 if (cmbClientes.SelectedValue == null || (int)cmbClientes.SelectedValue != _clienteEdicion.ID_Cliente)
                 {
-                    MessageBox.Show("DEBUG: SelectedValue no funcionó, intentando búsqueda por índice", 
-                                  "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
                     for (int i = 0; i < cmbClientes.Items.Count; i++)
                     {
                         Cliente item = (Cliente)cmbClientes.Items[i];
                         if (item.ID_Cliente == _clienteEdicion.ID_Cliente)
                         {
                             cmbClientes.SelectedIndex = i;
-                            MessageBox.Show($"DEBUG: Cliente encontrado en índice {i}", 
-                                          "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             break;
                         }
                     }
@@ -118,17 +93,6 @@ namespace MiniSistemaFacturacion.Forms
                     MessageBox.Show($"No se encontró el cliente '{_clienteEdicion.Nombre}' (ID: {_clienteEdicion.ID_Cliente}) en la lista. Por favor, seleccione un cliente manualmente.", 
                                   "Cliente no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                else
-                {
-                    Cliente clienteSeleccionado = (Cliente)cmbClientes.SelectedItem;
-                    MessageBox.Show($"DEBUG: Cliente seleccionado finalmente - ID: {clienteSeleccionado.ID_Cliente}, Nombre: {clienteSeleccionado.Nombre}", 
-                                  "Depuración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
-                    // Forzar actualización visual del ComboBox
-                    cmbClientes.Refresh();
-                    cmbClientes.Invalidate();
-                    this.Refresh();
-                }
             }
             
             // Cargar detalles
@@ -136,6 +100,9 @@ namespace MiniSistemaFacturacion.Forms
             
             // Actualizar interfaz
             ActualizarInterfaz();
+            
+            // IMPORTANTE: Asegurar que los controles estén habilitados para edición
+            HabilitarControles(true);
         }
 
         private void FrmFacturacion_Load(object sender, EventArgs e)
@@ -276,8 +243,10 @@ namespace MiniSistemaFacturacion.Forms
                 int id;
                 if (_esEdicion)
                 {
-                    // Actualizar factura existente
+                    // Actualizar factura existente - mantener NCF original
                     f.ID_Factura = _idFacturaExistente;
+                    f.NCF = _facturaEdicion.NCF; // Mantener el NCF original
+                    f.TipoComprobante = _facturaEdicion.TipoComprobante; // Mantener tipo de comprobante
                     FacturacionManager.Instance.ActualizarFacturaCompleta(f, listaDetalles);
                     id = _idFacturaExistente;
                 }
@@ -298,16 +267,13 @@ namespace MiniSistemaFacturacion.Forms
                 using (FrmVistaPreviaPdf frmVistaPrevia = new FrmVistaPreviaPdf(facturaCompleta, cliente, listaDetalles, true))
                 {
                     var result = frmVistaPrevia.ShowDialog();
-                    
-                    // Si el usuario presionó Editar, habilitar controles para edición
+
                     if (result == DialogResult.Retry)
                     {
+                        // Esto es lo que permite que vuelvas a editar la cantidad y el cliente
                         HabilitarControles(true);
-                        ActualizarInterfaz(); // Recalcular totales
-                        // No cerrar el formulario, permitir continuar editando
                     }
-                    // Si fue OK o Cancel, cerrar formulario de facturación
-                    else if (result == DialogResult.OK || result == DialogResult.Cancel)
+                    else if (result == DialogResult.OK)
                     {
                         this.DialogResult = DialogResult.OK;
                         this.Close();
@@ -387,31 +353,32 @@ namespace MiniSistemaFacturacion.Forms
 
         private void dgvDetalle_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            // 1. Validar que la fila sea válida y que el cambio sea en la columna de Cantidad
-            // Usamos HeaderText porque es lo que definiste en ConfigurarGridFactura
             if (e.RowIndex >= 0 && dgvDetalle.Columns[e.ColumnIndex].HeaderText == "Cantidad")
             {
                 try
                 {
-                    // 2. Obtener el objeto directamente de la lista de detalles
                     var item = listaDetalles[e.RowIndex];
-
-                    // 3. Obtener el nuevo valor de la celda de cantidad
                     var valorCelda = dgvDetalle.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
-                    if (valorCelda != null && int.TryParse(valorCelda.ToString(), out int nuevaCantidad))
+                    // Permitir valores vacíos - establecer cantidad a 0 si está vacío
+                    if (valorCelda == null || string.IsNullOrWhiteSpace(valorCelda.ToString()))
                     {
-                        // 4. Actualizar el objeto (el precio ya vive en el objeto 'item')
+                        item.Cantidad = 0;
+                        item.Subtotal = 0;
+                    }
+                    else if (int.TryParse(valorCelda.ToString(), out int nuevaCantidad))
+                    {
                         item.Cantidad = nuevaCantidad;
                         item.Subtotal = item.Cantidad * item.PrecioUnitarioVenta;
-
-                        // 5. Refrescar los totales generales
-                        ActualizarInterfaz();
                     }
+
+                    // Actualizar solo la fila modificada para mantener el foco
+                    dgvDetalle.Refresh();
+                    ActualizarTotales();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    MessageBox.Show("Error al actualizar la cantidad: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Error silencioso para no interrumpir al usuario mientras escribe
                 }
             }
         }
