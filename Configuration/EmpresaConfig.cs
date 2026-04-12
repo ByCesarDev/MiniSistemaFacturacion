@@ -1,5 +1,8 @@
+using MiniSistemaFacturacion.DataAccess;
 using System;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace MiniSistemaFacturacion.Configuration
@@ -164,24 +167,64 @@ namespace MiniSistemaFacturacion.Configuration
         /// <returns>Siguiente NCF disponible</returns>
         public string GenerarSiguienteNCF(string tipoComprobante)
         {
-            try
-            {
-                string prefijo = ObtenerPrefijoNCF(tipoComprobante);
-                
-                // Para consumidor final (02), usar secuencia B
-                if (tipoComprobante == "02")
-                {
-                    return GenerarSiguienteNCFConsumidorFinal();
-                }
+            if (string.IsNullOrWhiteSpace(tipoComprobante) || tipoComprobante == "00")
+                return null;
 
-                // Para otros tipos, usar secuencia normal
-                string ncfActual = GetConfigValue($"NCF{tipoComprobante}", $"{prefijo}000000001");
-                return IncrementarNCF(ncfActual);
-            }
-            catch
+            using (SqlConnection connection = DbHelper.Instance.GetConnection())
             {
-                // Si hay error, retornar NCF por defecto
-                return tipoComprobante == "02" ? "B0100000001" : "01010000001";
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        string querySelect = @"
+                    SELECT Prefijo, UltimoNumero
+                    FROM SecuenciasNCF
+                    WHERE TipoComprobante = @TipoComprobante";
+
+                        string prefijo;
+                        int ultimoNumero;
+
+                        using (SqlCommand cmd = new SqlCommand(querySelect, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@TipoComprobante", tipoComprobante);
+
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                    throw new Exception($"No existe secuencia configurada para el tipo {tipoComprobante}.");
+
+                                prefijo = reader["Prefijo"].ToString();
+                                ultimoNumero = Convert.ToInt32(reader["UltimoNumero"]);
+                            }
+                        }
+
+                        int nuevoNumero = ultimoNumero + 1;
+
+                        string queryUpdate = @"
+                    UPDATE SecuenciasNCF
+                    SET UltimoNumero = @UltimoNumero
+                    WHERE TipoComprobante = @TipoComprobante";
+
+                        using (SqlCommand cmd = new SqlCommand(queryUpdate, connection, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@UltimoNumero", nuevoNumero);
+                            cmd.Parameters.AddWithValue("@TipoComprobante", tipoComprobante);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+
+                        return prefijo + nuevoNumero.ToString("D8");
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
@@ -194,13 +237,13 @@ namespace MiniSistemaFacturacion.Configuration
         {
             switch (tipoComprobante)
             {
-                case "01": return "01010000001"; // Crédito Fiscal
-                case "02": return "B0100000001";  // Consumidor Final
-                case "03": return "13010000001"; // Regímenes Especiales
-                case "14": return "11010000001"; // Gubernamental
-                case "15": return "31010000001"; // Nota de Débito
-                case "16": return "32010000001"; // Nota de Crédito
-                default: return "01010000001";   // Por defecto Crédito Fiscal
+                case "01": return "B01"; // Crédito Fiscal
+                case "02": return "B02"; // Consumidor Final
+                case "03": return "B03";
+                case "14": return "B14";
+                case "15": return "B15";
+                case "16": return "B16";
+                default: return "B01";
             }
         }
 
@@ -223,27 +266,20 @@ namespace MiniSistemaFacturacion.Configuration
         /// <returns>NCF incrementado</returns>
         private string IncrementarNCF(string ncfActual)
         {
-            if (string.IsNullOrWhiteSpace(ncfActual) || ncfActual.Length < 9)
-                return ncfActual;
-
             try
             {
-                // Extraer el número secuencial (últimos 8 dígitos)
-                string prefijo = ncfActual.Substring(0, ncfActual.Length - 8);
-                string numeroStr = ncfActual.Substring(ncfActual.Length - 8);
-                
-                if (int.TryParse(numeroStr, out int numero))
-                {
-                    numero++;
-                    return prefijo + numero.ToString("D8");
-                }
+                string prefijo = ncfActual.Substring(0, 3); // B01, B02
+                string numeroStr = ncfActual.Substring(3);
+
+                int numero = int.Parse(numeroStr);
+                numero++;
+
+                return prefijo + numero.ToString("D8");
             }
             catch
             {
-                // Si hay error, retornar el mismo NCF
+                return ncfActual;
             }
-
-            return ncfActual;
         }
 
         /// <summary>

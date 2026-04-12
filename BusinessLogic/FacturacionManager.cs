@@ -71,18 +71,24 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
             if (detalles == null || detalles.Count == 0)
                 throw new ArgumentException("La factura debe tener al menos un detalle");
-            
 
-         
+
+
 
             try
             {
-                // Generar NCF antes de guardar
-                factura.NCF = Configuration.EmpresaConfig.Instance.GenerarSiguienteNCF(factura.TipoComprobante);
-                
+                // Generar NCF solo si el comprobante tiene valor fiscal
+                if (string.IsNullOrWhiteSpace(factura.TipoComprobante) || factura.TipoComprobante == "00")
+                {
+                    factura.NCF = null;
+                }
+                else
+                {
+                    factura.NCF = Configuration.EmpresaConfig.Instance.GenerarSiguienteNCF(factura.TipoComprobante);
+                }
+
                 using (SqlConnection connection = DbHelper.Instance.GetConnection())
                 {
-                   
                     if (connection.State == ConnectionState.Closed)
                     {
                         connection.Open();
