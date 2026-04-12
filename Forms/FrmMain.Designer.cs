@@ -32,9 +32,23 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.clientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.facturaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buscarFacturasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.clientesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.productosToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.facturacionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buscarFacturaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -43,63 +57,179 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientesToolStripMenuItem,
-            this.productosToolStripMenuItem,
-            this.facturaciónToolStripMenuItem,
-            this.buscarFacturasToolStripMenuItem});
+            this.productosToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1067, 27);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(943, 27);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // clientesToolStripMenuItem
             // 
+            this.clientesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clientesToolStripMenuItem1,
+            this.productosToolStripMenuItem1,
+            this.facturacionToolStripMenuItem});
             this.clientesToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(86, 23);
-            this.clientesToolStripMenuItem.Text = "Clientes";
-            this.clientesToolStripMenuItem.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
+            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(89, 23);
+            this.clientesToolStripMenuItem.Text = "Modulos";
             // 
             // productosToolStripMenuItem
             // 
+            this.productosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buscarFacturaToolStripMenuItem});
             this.productosToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productosToolStripMenuItem.Name = "productosToolStripMenuItem";
-            this.productosToolStripMenuItem.Size = new System.Drawing.Size(105, 23);
-            this.productosToolStripMenuItem.Text = "Productos";
-            this.productosToolStripMenuItem.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
+            this.productosToolStripMenuItem.Size = new System.Drawing.Size(102, 23);
+            this.productosToolStripMenuItem.Text = "Consultas";
             // 
-            // facturaciónToolStripMenuItem
+            // pictureBox1
             // 
-            this.facturaciónToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold);
-            this.facturaciónToolStripMenuItem.Name = "facturaciónToolStripMenuItem";
-            this.facturaciónToolStripMenuItem.Size = new System.Drawing.Size(116, 23);
-            this.facturaciónToolStripMenuItem.Text = "Facturación";
-            this.facturaciónToolStripMenuItem.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(31, 82);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(77, 72);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
             // 
-            // buscarFacturasToolStripMenuItem
+            // label1
             // 
-            this.buscarFacturasToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold);
-            this.buscarFacturasToolStripMenuItem.Name = "buscarFacturasToolStripMenuItem";
-            this.buscarFacturasToolStripMenuItem.Size = new System.Drawing.Size(153, 23);
-            this.buscarFacturasToolStripMenuItem.Text = "Buscar Facturas";
-            this.buscarFacturasToolStripMenuItem.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(35, 145);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(72, 24);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Clientes";
+            this.label1.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(40, 230);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(64, 59);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.label2.Location = new System.Drawing.Point(30, 287);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 24);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Productos";
+            this.label2.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.label3.Location = new System.Drawing.Point(25, 410);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(101, 24);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Facturacion";
+            this.label3.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(40, 353);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(64, 59);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 5;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.label4.Location = new System.Drawing.Point(15, 554);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(128, 24);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Buscar Factura";
+            this.label4.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(40, 497);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(64, 59);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 7;
+            this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
+            // 
+            // clientesToolStripMenuItem1
+            // 
+            this.clientesToolStripMenuItem1.Name = "clientesToolStripMenuItem1";
+            this.clientesToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.clientesToolStripMenuItem1.Text = "Clientes";
+            this.clientesToolStripMenuItem1.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
+            // 
+            // productosToolStripMenuItem1
+            // 
+            this.productosToolStripMenuItem1.Name = "productosToolStripMenuItem1";
+            this.productosToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.productosToolStripMenuItem1.Text = "Productos";
+            this.productosToolStripMenuItem1.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
+            // 
+            // facturacionToolStripMenuItem
+            // 
+            this.facturacionToolStripMenuItem.Name = "facturacionToolStripMenuItem";
+            this.facturacionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.facturacionToolStripMenuItem.Text = "Facturacion";
+            this.facturacionToolStripMenuItem.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
+            // 
+            // buscarFacturaToolStripMenuItem
+            // 
+            this.buscarFacturaToolStripMenuItem.Name = "buscarFacturaToolStripMenuItem";
+            this.buscarFacturaToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.buscarFacturaToolStripMenuItem.Text = "Buscar Factura";
+            this.buscarFacturaToolStripMenuItem.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.ClientSize = new System.Drawing.Size(943, 676);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.pictureBox4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FrmMain";
             this.Text = "SISTEMA DE VENTAS";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Resize += new System.EventHandler(this.FrmMain_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,8 +240,18 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem productosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem facturaciónToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem buscarFacturasToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem productosToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem facturacionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem buscarFacturaToolStripMenuItem;
     }
 }
 
