@@ -53,6 +53,7 @@
             this.chkEnviarEmail = new System.Windows.Forms.CheckBox();
             this.chkImprimirDirecto = new System.Windows.Forms.CheckBox();
             this.cmbClientes = new System.Windows.Forms.ComboBox();
+            this.chkCredito = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).BeginInit();
             this.SuspendLayout();
@@ -303,11 +304,22 @@
             this.cmbClientes.Size = new System.Drawing.Size(285, 26);
             this.cmbClientes.TabIndex = 4;
             // 
+            // chkCredito
+            // 
+            this.chkCredito.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkCredito.Location = new System.Drawing.Point(204, 422);
+            this.chkCredito.Name = "chkCredito";
+            this.chkCredito.Size = new System.Drawing.Size(147, 24);
+            this.chkCredito.TabIndex = 25;
+            this.chkCredito.Text = "Venta a crédito";
+            this.chkCredito.CheckedChanged += new System.EventHandler(this.chkCredito_CheckedChanged);
+            // 
             // FrmFacturacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(661, 543);
+            this.Controls.Add(this.chkCredito);
             this.Controls.Add(this.chkImprimirDirecto);
             this.Controls.Add(this.chkEnviarEmail);
             this.Controls.Add(this.cmbClientes);
@@ -372,5 +384,6 @@
         private System.Windows.Forms.CheckBox chkEnviarEmail;
         private System.Windows.Forms.CheckBox chkImprimirDirecto;
         private System.Windows.Forms.ComboBox cmbClientes;
+        private System.Windows.Forms.CheckBox chkCredito;
     }
 }

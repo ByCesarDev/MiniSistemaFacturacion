@@ -85,6 +85,12 @@ namespace MiniSistemaFacturacion.Models
         public string Estado { get; set; }
 
         /// <summary>
+        /// Tipo de venta de la factura (Contado o Credito)
+        /// </summary>
+        [StringLength(20, ErrorMessage = "El tipo de venta no puede exceder 20 caracteres")]
+        public string TipoVenta { get; set; }
+
+        /// <summary>
         /// Fecha de creación del registro
         /// </summary>
         public DateTime FechaCreacion { get; set; }

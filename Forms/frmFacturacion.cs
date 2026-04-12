@@ -16,7 +16,6 @@ namespace MiniSistemaFacturacion.Forms
 {
     public partial class FrmFacturacion : Form
     {
-        
         private List<DetalleFactura> listaDetalles = new List<DetalleFactura>();
         private ClienteDAL clienteDAL = new ClienteDAL();
         private ProductoDAL productoDAL = new ProductoDAL();
@@ -38,10 +37,8 @@ namespace MiniSistemaFacturacion.Forms
 
         private void dgvDetalle_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            // Si el error es por un valor nulo (DBNull) en una columna numérica
             if (e.Exception is ArgumentException && e.Context.HasFlag(DataGridViewDataErrorContexts.Parsing))
             {
-                // Evitamos que salte el diálogo de error y cancelamos el evento
                 e.ThrowException = false;
                 e.Cancel = true;
             }
@@ -51,29 +48,23 @@ namespace MiniSistemaFacturacion.Forms
         public FrmFacturacion(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
         {
             InitializeComponent();
-            
-            // Almacenar datos para usarlos en el Load
+
             _facturaEdicion = factura;
             _clienteEdicion = cliente;
             _detallesEdicion = detalles;
-            
-            // Establecer modo edición
+
             _esEdicion = true;
             _idFacturaExistente = factura.ID_Factura;
         }
 
         private void CargarDatosFactura()
         {
-            // Establecer datos de la factura
             lblNumeroFactura.Text = _facturaEdicion.NumeroFactura;
-            
-            // Buscar y seleccionar el cliente
+
             if (_clienteEdicion != null)
             {
-                // Intentar usar SelectedValue primero
                 cmbClientes.SelectedValue = _clienteEdicion.ID_Cliente;
-                
-                // Si SelectedValue no funciona, buscar por índice
+
                 if (cmbClientes.SelectedValue == null || (int)cmbClientes.SelectedValue != _clienteEdicion.ID_Cliente)
                 {
                     for (int i = 0; i < cmbClientes.Items.Count; i++)
@@ -86,68 +77,70 @@ namespace MiniSistemaFacturacion.Forms
                         }
                     }
                 }
-                
-                // Verificación final
+
                 if (cmbClientes.SelectedItem == null)
                 {
-                    MessageBox.Show($"No se encontró el cliente '{_clienteEdicion.Nombre}' (ID: {_clienteEdicion.ID_Cliente}) en la lista. Por favor, seleccione un cliente manualmente.", 
-                                  "Cliente no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        $"No se encontró el cliente '{_clienteEdicion.Nombre}' (ID: {_clienteEdicion.ID_Cliente}) en la lista. Por favor, seleccione un cliente manualmente.",
+                        "Cliente no encontrado",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                 }
             }
-            
-            // Cargar detalles
+
             listaDetalles = new List<DetalleFactura>(_detallesEdicion);
-            
-            // Actualizar interfaz
+
+            // Si la factura ya existía y estaba pendiente, marcar como crédito
+            if (_facturaEdicion != null && _facturaEdicion.Estado == "Pendiente")
+            {
+                chkCredito.Checked = true;
+            }
+            else
+            {
+                chkCredito.Checked = false;
+            }
+
             ActualizarInterfaz();
-            
-            // IMPORTANTE: Asegurar que los controles estén habilitados para edición
             HabilitarControles(true);
         }
 
         private void FrmFacturacion_Load(object sender, EventArgs e)
         {
-            CargarCombos(); 
+            CargarCombos();
             ConfigurarGridFactura();
-            
-            // Si estamos en modo edición, cargar los datos
+
             if (_esEdicion)
             {
                 CargarDatosFactura();
             }
             else
             {
-                // Solo generar número si es factura nueva
                 lblNumeroFactura.Text = FacturacionManager.Instance.GenerarSiguienteNumeroFactura();
+                chkCredito.Checked = false;
+                ActualizarTotales();
             }
         }
 
         private void CargarCombos()
         {
-            // Lógica para cargar Clientes en el ComboBox
             cmbClientes.DataSource = clienteDAL.ObtenerTodos();
             cmbClientes.DisplayMember = "Nombre";
             cmbClientes.ValueMember = "ID_Cliente";
-            cmbClientes.SelectedIndex = -1; 
+            cmbClientes.SelectedIndex = -1;
 
-            // Lógica para cargar Productos
             cmbProductos.DataSource = productoDAL.ObtenerTodos();
             cmbProductos.DisplayMember = "Descripcion";
             cmbProductos.ValueMember = "ID_Producto";
             cmbProductos.SelectedIndex = -1;
         }
 
-
-
         private void ConfigurarGridFactura()
         {
             dgvDetalle.AutoGenerateColumns = false;
             dgvDetalle.Columns.Clear();
 
-            // 1. Permitir edición en el grid
             dgvDetalle.ReadOnly = false;
 
-            // Columna ID (No editable)
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ID_Producto",
@@ -156,7 +149,6 @@ namespace MiniSistemaFacturacion.Forms
                 ReadOnly = true
             });
 
-            // Columna Producto (No editable)
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Descripcion",
@@ -165,7 +157,6 @@ namespace MiniSistemaFacturacion.Forms
                 ReadOnly = true
             });
 
-            // Columna CANTIDAD (ESTA SÍ ES EDITABLE)
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Cantidad",
@@ -174,7 +165,6 @@ namespace MiniSistemaFacturacion.Forms
                 ReadOnly = false
             });
 
-            // Columna Precio (No editable)
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PrecioUnitarioVenta",
@@ -184,7 +174,6 @@ namespace MiniSistemaFacturacion.Forms
                 ReadOnly = true
             });
 
-            // Columna Subtotal (No editable)
             dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Subtotal",
@@ -194,10 +183,6 @@ namespace MiniSistemaFacturacion.Forms
                 ReadOnly = true
             });
         }
-
-
-
-
 
         private void ActualizarInterfaz()
         {
@@ -216,61 +201,79 @@ namespace MiniSistemaFacturacion.Forms
             txtSubtotal.Text = bruto.ToString("N2");
             txtIVA.Text = itbis.ToString("N2");
             txtTotalNeto.Text = neto.ToString("N2");
-            txtSaldoPendiente.Text = neto.ToString("N2");
+
+            // Si es crédito, el saldo pendiente es el total.
+            // Si no, queda en 0.
+            if (chkCredito.Checked)
+            {
+                txtSaldoPendiente.Text = neto.ToString("N2");
+            }
+            else
+            {
+                txtSaldoPendiente.Text = "0.00";
+            }
         }
-        
+
+        private void chkCredito_CheckedChanged(object sender, EventArgs e)
+        {
+            ActualizarTotales();
+        }
 
         private void btnGuardarFactura_Click_1(object sender, EventArgs e)
         {
             try
             {
-               
                 if (cmbClientes.SelectedIndex == -1)
                     throw new Exception("Debe seleccionar un cliente de la lista.");
 
                 if (listaDetalles.Count == 0)
                     throw new Exception("No puede guardar una factura sin productos.");
 
+                string tipoVenta = chkCredito.Checked ? "Credito" : "Contado";
+                string estadoFactura = chkCredito.Checked ? "Pendiente" : "Pagada";
+                decimal saldoPendiente = chkCredito.Checked
+                    ? decimal.Parse(txtTotalNeto.Text)
+                    : 0m;
+
                 Factura f = new Factura
                 {
-                    ID_Cliente = (int)cmbClientes.SelectedValue, 
+                    ID_Cliente = (int)cmbClientes.SelectedValue,
                     NumeroFactura = lblNumeroFactura.Text,
                     Fecha = DateTime.Now,
                     PorcentajeImpuesto = TASA_ITBIS * 100,
-                    Estado = "Pendiente"
+                    Estado = estadoFactura,
+
+                    // Estas 2 propiedades debes agregarlas al modelo Factura
+                    TipoVenta = tipoVenta,
+                    SaldoPendiente = saldoPendiente
                 };
 
                 int id;
                 if (_esEdicion)
                 {
-                    // Actualizar factura existente - mantener NCF original
                     f.ID_Factura = _idFacturaExistente;
-                    f.NCF = _facturaEdicion.NCF; // Mantener el NCF original
-                    f.TipoComprobante = _facturaEdicion.TipoComprobante; // Mantener tipo de comprobante
+                    f.NCF = _facturaEdicion.NCF;
+                    f.TipoComprobante = _facturaEdicion.TipoComprobante;
+
                     FacturacionManager.Instance.ActualizarFacturaCompleta(f, listaDetalles);
                     id = _idFacturaExistente;
                 }
                 else
                 {
-                    // Crear nueva factura
                     id = FacturacionManager.Instance.CrearFacturaCompleta(f, listaDetalles);
                 }
-                
-                // Obtener factura completa para PDF
+
                 Factura facturaCompleta = FacturacionManager.Instance.ObtenerFactura(id);
                 Cliente cliente = (Cliente)cmbClientes.SelectedItem;
 
-                // 1. Deshabilitar antes de mostrar vista previa
                 HabilitarControles(false);
 
-                // Abrir vista previa automáticamente
                 using (FrmVistaPreviaPdf frmVistaPrevia = new FrmVistaPreviaPdf(facturaCompleta, cliente, listaDetalles, true))
                 {
                     var result = frmVistaPrevia.ShowDialog();
 
                     if (result == DialogResult.Retry)
                     {
-                        // Esto es lo que permite que vuelvas a editar la cantidad y el cliente
                         HabilitarControles(true);
                     }
                     else if (result == DialogResult.OK)
@@ -280,22 +283,24 @@ namespace MiniSistemaFacturacion.Forms
                     }
                 }
             }
+            catch (FormatException)
+            {
+                MessageBox.Show("Error al convertir los valores numéricos.");
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
-    
         }
 
         private void btnAnadir_Click_1(object sender, EventArgs e)
         {
-            if (cmbProductos.SelectedIndex == -1) return;
+            if (cmbProductos.SelectedIndex == -1)
+                return;
 
-            
             Producto prod = (Producto)cmbProductos.SelectedItem;
             int cant = (int)numCantidad.Value;
 
-           
             DetalleFactura nuevoItem = new DetalleFactura
             {
                 ID_Producto = prod.ID_Producto,
@@ -307,12 +312,10 @@ namespace MiniSistemaFacturacion.Forms
 
             listaDetalles.Add(nuevoItem);
 
-
             ActualizarInterfaz();
 
             cmbProductos.SelectedIndex = -1;
             numCantidad.Value = 1;
-
             cmbProductos.Focus();
         }
 
@@ -320,23 +323,23 @@ namespace MiniSistemaFacturacion.Forms
         {
             if (dgvDetalle.SelectedRows.Count > 0)
             {
-                
                 int idProducto = Convert.ToInt32(dgvDetalle.SelectedRows[0].Cells[0].Value);
 
-                
                 var itemAEliminar = listaDetalles.FirstOrDefault(d => d.ID_Producto == idProducto);
 
                 if (itemAEliminar != null)
                 {
                     listaDetalles.Remove(itemAEliminar);
-
                     ActualizarInterfaz();
                 }
             }
             else
             {
-                MessageBox.Show("Por favor, seleccione una fila completa en la tabla para eliminar.",
-                                "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Por favor, seleccione una fila completa en la tabla para eliminar.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
         }
 
@@ -349,6 +352,7 @@ namespace MiniSistemaFacturacion.Forms
             btnEliminarItem.Enabled = habilitar;
             dgvDetalle.ReadOnly = !habilitar;
             btnGuardarFactura.Enabled = habilitar;
+            chkCredito.Enabled = habilitar;
         }
 
         private void dgvDetalle_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -360,7 +364,6 @@ namespace MiniSistemaFacturacion.Forms
                     var item = listaDetalles[e.RowIndex];
                     var valorCelda = dgvDetalle.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
-                    // Permitir valores vacíos - establecer cantidad a 0 si está vacío
                     if (valorCelda == null || string.IsNullOrWhiteSpace(valorCelda.ToString()))
                     {
                         item.Cantidad = 0;
@@ -372,13 +375,12 @@ namespace MiniSistemaFacturacion.Forms
                         item.Subtotal = item.Cantidad * item.PrecioUnitarioVenta;
                     }
 
-                    // Actualizar solo la fila modificada para mantener el foco
                     dgvDetalle.Refresh();
                     ActualizarTotales();
                 }
                 catch
                 {
-                    // Error silencioso para no interrumpir al usuario mientras escribe
+                    // Error silencioso mientras el usuario escribe
                 }
             }
         }
@@ -387,7 +389,6 @@ namespace MiniSistemaFacturacion.Forms
         {
             if (dgvDetalle.IsCurrentCellDirty)
             {
-                // Esto fuerza a que el CellValueChanged se dispare inmediatamente
                 dgvDetalle.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }

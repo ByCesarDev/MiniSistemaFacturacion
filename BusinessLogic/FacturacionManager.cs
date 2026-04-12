@@ -114,8 +114,8 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         ActualizarStockProductos(connection, transaction, detalles);
 
                         // 4. Calcular y actualizar totales de la factura
-                        CalcularYActualizarTotalesFactura(connection, transaction, idFactura, detalles);
-
+                        factura.ID_Factura = idFactura;
+                        CalcularYActualizarTotalesFactura(connection, transaction, factura, detalles);
                         transaction.Commit();
                         return idFactura;
                     }
@@ -183,7 +183,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         }
 
                         // 4. Calcular y actualizar totales de la factura
-                        CalcularYActualizarTotalesFactura(connection, transaction, factura.ID_Factura, detalles);
+                        CalcularYActualizarTotalesFactura(connection, transaction, factura, detalles);
 
                         transaction.Commit();
                     }
@@ -257,8 +257,12 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
                         // 3. Recalcular totales de la factura
                         List<DetalleFactura> todosLosDetalles = ObtenerDetallesFactura(connection, transaction, idFactura);
-                        CalcularYActualizarTotalesFactura(connection, transaction, idFactura, todosLosDetalles);
+                        Factura factura = ObtenerFactura(idFactura);
 
+                        if (factura == null)
+                            throw new Exception("No se encontró la factura para recalcular sus totales.");
+
+                        CalcularYActualizarTotalesFactura(connection, transaction, factura, todosLosDetalles);
                         transaction.Commit();
                         return idDetalle;
                     }
@@ -497,27 +501,34 @@ namespace MiniSistemaFacturacion.BusinessLogic
         /// <param name="transaction">Transacción actual</param>
         /// <param name="idFactura">ID de la factura</param>
         /// <param name="detalles">Lista de detalles de la factura</param>
-        private void CalcularYActualizarTotalesFactura(SqlConnection connection, SqlTransaction transaction, int idFactura, List<DetalleFactura> detalles)
+        private void CalcularYActualizarTotalesFactura(SqlConnection connection, SqlTransaction transaction, Factura factura, List<DetalleFactura> detalles)
         {
             // Calcular totales
             decimal totalBruto = detalles.Sum(d => d.Subtotal);
             decimal valorImpuesto = totalBruto * 15.0m / 100.0m; // 15% de impuesto
             decimal totalNeto = totalBruto + valorImpuesto;
 
+            // Definir saldo y estado según el tipo de venta
+            decimal saldoPendiente = (factura.TipoVenta == "Credito") ? totalNeto : 0m;
+            string estado = (saldoPendiente == 0) ? "Pagada" : "Pendiente";
+
             string query = @"
-                UPDATE Facturas 
-                SET TotalBruto = @TotalBruto, 
-                    ValorImpuesto = @ValorImpuesto, 
-                    TotalNeto = @TotalNeto, 
-                    SaldoPendiente = @TotalNeto
-                WHERE ID_Factura = @ID_Factura";
+        UPDATE Facturas 
+        SET TotalBruto = @TotalBruto, 
+            ValorImpuesto = @ValorImpuesto, 
+            TotalNeto = @TotalNeto, 
+            SaldoPendiente = @SaldoPendiente,
+            Estado = @Estado
+        WHERE ID_Factura = @ID_Factura";
 
             using (SqlCommand command = new SqlCommand(query, connection, transaction))
             {
                 command.Parameters.AddWithValue("@TotalBruto", totalBruto);
                 command.Parameters.AddWithValue("@ValorImpuesto", valorImpuesto);
                 command.Parameters.AddWithValue("@TotalNeto", totalNeto);
-                command.Parameters.AddWithValue("@ID_Factura", idFactura);
+                command.Parameters.AddWithValue("@SaldoPendiente", saldoPendiente);
+                command.Parameters.AddWithValue("@Estado", estado);
+                command.Parameters.AddWithValue("@ID_Factura", factura.ID_Factura);
 
                 command.ExecuteNonQuery();
             }

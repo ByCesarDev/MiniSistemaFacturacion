@@ -284,14 +284,13 @@ namespace MiniSistemaFacturacion.BusinessLogic
         /// <returns>Nuevo estado de la factura</returns>
         private string DeterminarNuevoEstadoFactura(string estadoActual, decimal nuevoSaldo)
         {
+            if (nuevoSaldo < 0)
+                throw new ArgumentException("El saldo no puede ser negativo");
+
             if (nuevoSaldo == 0)
                 return "Pagada";
-            else if (nuevoSaldo < 0)
-                throw new ArgumentException("El saldo no puede ser negativo");
-            else if (estadoActual == "Pendiente" && nuevoSaldo > 0)
-                return "Parcial";
-            else
-                return estadoActual;
+
+            return "Parcial";
         }
 
         #endregion
