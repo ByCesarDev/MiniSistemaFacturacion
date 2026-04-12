@@ -72,15 +72,53 @@ namespace MiniSistemaFacturacion.Models
         public decimal SaldoPendiente { get; set; }
 
         /// <summary>
+        /// Número de Comprobante Fiscal (NCF)
+        /// </summary>
+        [StringLength(19, ErrorMessage = "El NCF no puede exceder 19 caracteres")]
+        public string NCF { get; set; }
+
+        /// <summary>
         /// Estado de la factura
         /// </summary>
-        [Required(ErrorMessage = "El estado de la factura es requerido")]
+        [Required(ErrorMessage = "El estado es requerido")]
+        [StringLength(20, ErrorMessage = "El estado no puede exceder 20 caracteres")]
         public string Estado { get; set; }
 
         /// <summary>
         /// Fecha de creación del registro
         /// </summary>
         public DateTime FechaCreacion { get; set; }
+
+        /// <summary>
+        /// Nombre del cliente (propiedad calculada para DataGridView)
+        /// </summary>
+        public string ClienteNombre { get; set; }
+
+        /// <summary>
+        /// Cédula del cliente (propiedad calculada para DataGridView)
+        /// </summary>
+        public string Cedula { get; set; }
+
+        /// <summary>
+        /// Dirección del cliente (propiedad calculada para DataGridView)
+        /// </summary>
+        public string Direccion { get; set; }
+
+        /// <summary>
+        /// Teléfono del cliente (propiedad calculada para DataGridView)
+        /// </summary>
+        public string Telefono { get; set; }
+
+        /// <summary>
+        /// Email del cliente (propiedad calculada para DataGridView)
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Tipo de comprobante fiscal (01, 02, 03, 14, 15, 16)
+        /// </summary>
+        [StringLength(2, ErrorMessage = "El tipo de comprobante no puede exceder 2 caracteres")]
+        public string TipoComprobante { get; set; }
 
         /// <summary>
         /// Propiedad de navegación para el cliente
@@ -105,6 +143,8 @@ namespace MiniSistemaFacturacion.Models
             FechaCreacion = DateTime.Now;
             PorcentajeImpuesto = 15.00m;
             Estado = "Pendiente";
+            TipoComprobante = "02"; // Por defecto Consumidor Final
+            NCF = null; // Se generará al guardar
             Detalles = new System.Collections.Generic.List<DetalleFactura>();
         }
 
@@ -121,6 +161,8 @@ namespace MiniSistemaFacturacion.Models
             FechaCreacion = DateTime.Now;
             PorcentajeImpuesto = 15.00m;
             Estado = "Pendiente";
+            TipoComprobante = "02"; // Por defecto Consumidor Final
+            NCF = null; // Se generará al guardar
             Detalles = new System.Collections.Generic.List<DetalleFactura>();
         }
 
@@ -239,6 +281,8 @@ namespace MiniSistemaFacturacion.Models
         public string GetFullInfo()
         {
             string info = $"Factura #: {NumeroFactura}\n";
+            info += $"NCF: {NCF ?? "No asignado"}\n";
+            info += $"Tipo: {MiniSistemaFacturacion.Configuration.EmpresaConfig.Instance.GetDescripcionTipoComprobante(TipoComprobante)}\n";
             info += $"Fecha: {Fecha:dd/MM/yyyy HH:mm}\n";
             info += $"Cliente: {Cliente?.Nombre ?? "N/A"}\n";
             info += $"Total Bruto: ${TotalBruto:F2}\n";

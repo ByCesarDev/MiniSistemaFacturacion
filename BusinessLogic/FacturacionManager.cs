@@ -77,6 +77,9 @@ namespace MiniSistemaFacturacion.BusinessLogic
 
             try
             {
+                // Generar NCF antes de guardar
+                factura.NCF = Configuration.EmpresaConfig.Instance.GenerarSiguienteNCF(factura.TipoComprobante);
+                
                 using (SqlConnection connection = DbHelper.Instance.GetConnection())
                 {
                    
@@ -126,6 +129,74 @@ namespace MiniSistemaFacturacion.BusinessLogic
             catch (Exception ex)
             {
                 throw new Exception($"Error en el proceso de facturación: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Actualiza una factura existente con sus detalles
+        /// </summary>
+        /// <param name="factura">Factura a actualizar</param>
+        /// <param name="detalles">Lista de detalles de la factura</param>
+        public void ActualizarFacturaCompleta(Factura factura, List<DetalleFactura> detalles)
+        {
+            if (factura == null)
+                throw new ArgumentException("La factura no puede ser nula");
+
+            if (factura.ID_Factura <= 0)
+                throw new ArgumentException("El ID de la factura debe ser válido");
+
+            if (detalles == null || detalles.Count == 0)
+                throw new ArgumentException("La factura debe tener al menos un detalle");
+
+            try
+            {
+                using (SqlConnection connection = DbHelper.Instance.GetConnection())
+                {
+                    if (connection.State == ConnectionState.Closed)
+                    {
+                        connection.Open();
+                    }
+                    else if (connection.State == ConnectionState.Broken)
+                    {
+                        connection.Close();
+                        connection.Open();
+                    }
+
+                    SqlTransaction transaction = connection.BeginTransaction();
+
+                    try
+                    {
+                        // 1. Eliminar detalles existentes
+                        facturacionDAL.EliminarDetallesFactura(factura.ID_Factura, connection, transaction);
+                        
+                        // 2. Actualizar la factura
+                        facturacionDAL.ActualizarCabecera(factura, connection, transaction);
+                        
+                        // 3. Insertar los nuevos detalles
+                        foreach (var detalle in detalles)
+                        {
+                            detalle.ID_Factura = factura.ID_Factura;
+                            if (!detalle.IsValid())
+                                throw new Exception("Detalle inválido: " + detalle.GetValidationError());
+
+                            facturacionDAL.InsertarDetalle(detalle, connection, transaction);
+                        }
+
+                        // 4. Calcular y actualizar totales de la factura
+                        CalcularYActualizarTotalesFactura(connection, transaction, factura.ID_Factura, detalles);
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        TransaccionHelper.Instance.RollbackSeguro(transaction);
+                        throw new Exception($"Error al actualizar factura: {ex.Message}", ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en el proceso de actualización: {ex.Message}", ex);
             }
         }
 
@@ -523,6 +594,58 @@ namespace MiniSistemaFacturacion.BusinessLogic
         }
 
         /// <summary>
+        /// Obtiene los detalles de una factura específica (método público)
+        /// </summary>
+        /// <param name="idFactura">ID de la factura</param>
+        /// <returns>Lista de detalles de la factura</returns>
+        public List<DetalleFactura> ObtenerDetallesFactura(int idFactura)
+        {
+            try
+            {
+                using (SqlConnection connection = DbHelper.Instance.GetConnection())
+                {
+                    if (connection.State == ConnectionState.Closed)
+                        connection.Open();
+
+                    string query = @"SELECT df.ID_Factura, df.ID_Producto, df.Cantidad, 
+                                           df.PrecioUnitarioVenta, df.Subtotal,
+                                           p.Descripcion
+                                   FROM DetallesFactura df
+                                   INNER JOIN Productos p ON df.ID_Producto = p.ID_Producto
+                                   WHERE df.ID_Factura = @IdFactura";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@IdFactura", idFactura);
+
+                        List<DetalleFactura> detalles = new List<DetalleFactura>();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                DetalleFactura detalle = new DetalleFactura
+                                {
+                                    ID_Factura = Convert.ToInt32(reader["ID_Factura"]),
+                                    ID_Producto = Convert.ToInt32(reader["ID_Producto"]),
+                                    Cantidad = Convert.ToInt32(reader["Cantidad"]),
+                                    PrecioUnitarioVenta = Convert.ToDecimal(reader["PrecioUnitarioVenta"]),
+                                    Subtotal = Convert.ToDecimal(reader["Subtotal"]),
+                                    Descripcion = reader["Descripcion"].ToString()
+                                };
+                                detalles.Add(detalle);
+                            }
+                        }
+                        return detalles;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener detalles de la factura: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
         /// Verifica si un número de factura ya existe
         /// </summary>
         /// <param name="numeroFactura">Número de factura a verificar</param>
@@ -553,7 +676,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
             try
             {
                 string query = @"
-                    SELECT f.*, c.Nombre, c.Cedula
+                    SELECT f.*, c.Nombre, c.Cedula, c.Direccion, c.Telefono, c.Email
                     FROM Facturas f
                     LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
                     WHERE f.ID_Factura = @ID_Factura";
@@ -586,7 +709,10 @@ namespace MiniSistemaFacturacion.BusinessLogic
                         {
                             ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
                             Nombre = row["Nombre"].ToString(),
-                            Cedula = row["Cedula"].ToString()
+                            Cedula = row["Cedula"].ToString(),
+                            Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                            Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                            Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
                         };
                     }
 
@@ -598,6 +724,257 @@ namespace MiniSistemaFacturacion.BusinessLogic
             catch (Exception ex)
             {
                 throw new Exception($"Error al obtener factura: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene una factura completa con todos sus detalles
+        /// </summary>
+        /// <param name="idFactura">ID de la factura</param>
+        /// <returns>Factura completa con cliente y detalles</returns>
+        public Factura ObtenerFacturaCompleta(int idFactura)
+        {
+            try
+            {
+                // Obtener cabecera de la factura
+                Factura factura = ObtenerFactura(idFactura);
+                if (factura == null)
+                    return null;
+
+                // Obtener detalles de la factura
+                factura.Detalles = ObtenerDetallesFacturaCompleta(idFactura);
+
+                return factura;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener factura completa: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los detalles completos de una factura con información de productos
+        /// </summary>
+        /// <param name="idFactura">ID de la factura</param>
+        /// <returns>Lista de detalles completos</returns>
+        private List<DetalleFactura> ObtenerDetallesFacturaCompleta(int idFactura)
+        {
+            List<DetalleFactura> detalles = new List<DetalleFactura>();
+
+            try
+            {
+                string query = @"
+                    SELECT df.ID_Detalle, df.ID_Factura, df.ID_Producto, df.Cantidad, 
+                           df.PrecioUnitarioVenta, df.Subtotal, p.Codigo, p.Descripcion
+                    FROM DetallesFactura df
+                    LEFT JOIN Productos p ON df.ID_Producto = p.ID_Producto
+                    WHERE df.ID_Factura = @ID_Factura
+                    ORDER BY df.ID_Detalle";
+
+                SqlParameter parameter = DbHelper.Instance.CreateParameter("@ID_Factura", idFactura);
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, new SqlParameter[] { parameter });
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    DetalleFactura detalle = new DetalleFactura
+                    {
+                        ID_Detalle = Convert.ToInt32(row["ID_Detalle"]),
+                        ID_Factura = Convert.ToInt32(row["ID_Factura"]),
+                        ID_Producto = Convert.ToInt32(row["ID_Producto"]),
+                        Cantidad = Convert.ToInt32(row["Cantidad"]),
+                        PrecioUnitarioVenta = Convert.ToDecimal(row["PrecioUnitarioVenta"]),
+                        Subtotal = Convert.ToDecimal(row["Subtotal"])
+                    };
+
+                    // Agregar descripción del producto si está disponible
+                    if (row["Descripcion"] != DBNull.Value)
+                    {
+                        detalle.Descripcion = row["Descripcion"].ToString();
+                    }
+
+                    detalles.Add(detalle);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener detalles de factura: {ex.Message}", ex);
+            }
+
+            return detalles;
+        }
+
+        /// <summary>
+        /// Busca facturas según los criterios especificados
+        /// </summary>
+        /// <param name="numeroFactura">Número de factura (opcional)</param>
+        /// <param name="cliente">Nombre del cliente (opcional)</param>
+        /// <param name="fechaDesde">Fecha desde (opcional)</param>
+        /// <param name="fechaHasta">Fecha hasta (opcional)</param>
+        /// <returns>Lista de facturas encontradas</returns>
+        public List<Factura> BuscarFacturas(string numeroFactura, string cliente, int? idCliente, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            try
+            {
+                List<Factura> facturas = new List<Factura>();
+
+                // Construir consulta dinámica
+                string query = @"
+                    SELECT f.ID_Factura, f.NumeroFactura, f.Fecha, f.ID_Cliente, 
+                           f.TotalBruto, f.PorcentajeImpuesto, f.ValorImpuesto, f.TotalNeto, 
+                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF,
+                           c.Nombre as ClienteNombre, c.Cedula, c.Direccion, c.Telefono, c.Email
+                    FROM Facturas f
+                    LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
+                    WHERE 1=1";
+
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+                // Agregar filtros dinámicamente
+                if (!string.IsNullOrEmpty(numeroFactura))
+                {
+                    query += " AND f.NumeroFactura LIKE @NumeroFactura";
+                    parameters.Add(DbHelper.Instance.CreateParameter("@NumeroFactura", $"%{numeroFactura}%"));
+                }
+
+                // Priorizar ID de cliente si está disponible
+                if (idCliente.HasValue)
+                {
+                    query += " AND f.ID_Cliente = @ID_Cliente";
+                    parameters.Add(DbHelper.Instance.CreateParameter("@ID_Cliente", idCliente.Value));
+                }
+                else if (!string.IsNullOrEmpty(cliente))
+                {
+                    query += " AND c.Nombre LIKE @Cliente";
+                    parameters.Add(DbHelper.Instance.CreateParameter("@Cliente", $"%{cliente}%"));
+                }
+
+                query += " AND f.Fecha >= @FechaDesde AND f.Fecha <= @FechaHasta";
+                parameters.Add(DbHelper.Instance.CreateParameter("@FechaDesde", fechaDesde.Date));
+                parameters.Add(DbHelper.Instance.CreateParameter("@FechaHasta", fechaHasta.Date.AddDays(1).AddSeconds(-1)));
+
+                query += " ORDER BY f.Fecha DESC, f.NumeroFactura DESC";
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parameters.ToArray());
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    Factura factura = new Factura
+                    {
+                        ID_Factura = Convert.ToInt32(row["ID_Factura"]),
+                        NumeroFactura = row["NumeroFactura"].ToString(),
+                        Fecha = Convert.ToDateTime(row["Fecha"]),
+                        ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
+                        TotalBruto = Convert.ToDecimal(row["TotalBruto"]),
+                        PorcentajeImpuesto = Convert.ToDecimal(row["PorcentajeImpuesto"]),
+                        ValorImpuesto = Convert.ToDecimal(row["ValorImpuesto"]),
+                        TotalNeto = Convert.ToDecimal(row["TotalNeto"]),
+                        SaldoPendiente = Convert.ToDecimal(row["SaldoPendiente"]),
+                        Estado = row["Estado"].ToString(),
+                        FechaCreacion = Convert.ToDateTime(row["FechaCreacion"]),
+                        NCF = row["NCF"] != DBNull.Value ? row["NCF"].ToString() : null,
+                        
+                        // Propiedades calculadas para el DataGridView
+                        ClienteNombre = row["ClienteNombre"] != DBNull.Value ? row["ClienteNombre"].ToString() : null,
+                        Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,
+                        Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                        Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                        Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
+                    };
+
+                    // También mantener el objeto Cliente para otras operaciones
+                    if (row["ClienteNombre"] != DBNull.Value)
+                    {
+                        factura.Cliente = new Cliente
+                        {
+                            ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
+                            Nombre = row["ClienteNombre"].ToString(),
+                            Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,
+                            Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                            Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                            Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
+                        };
+                    }
+
+                    facturas.Add(factura);
+                }
+
+                return facturas;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al buscar facturas: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene las últimas N facturas ordenadas por fecha descendente
+        /// </summary>
+        /// <param name="cantidad">Número de facturas a obtener</param>
+        /// <returns>Lista de las últimas facturas</returns>
+        public List<Factura> ObtenerUltimasFacturas(int cantidad = 100)
+        {
+            try
+            {
+                List<Factura> facturas = new List<Factura>();
+
+                string query = @"
+                    SELECT TOP " + cantidad + @" f.ID_Factura, f.NumeroFactura, f.Fecha, f.ID_Cliente, 
+                           f.TotalBruto, f.PorcentajeImpuesto, f.ValorImpuesto, f.TotalNeto, 
+                           f.SaldoPendiente, f.Estado, f.FechaCreacion, f.NCF,
+                           c.Nombre as ClienteNombre, c.Cedula, c.Direccion, c.Telefono, c.Email
+                    FROM Facturas f
+                    LEFT JOIN Clientes c ON f.ID_Cliente = c.ID_Cliente
+                    ORDER BY f.Fecha DESC, f.NumeroFactura DESC";
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query);
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    Factura factura = new Factura
+                    {
+                        ID_Factura = Convert.ToInt32(row["ID_Factura"]),
+                        NumeroFactura = row["NumeroFactura"].ToString(),
+                        Fecha = Convert.ToDateTime(row["Fecha"]),
+                        ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
+                        TotalBruto = Convert.ToDecimal(row["TotalBruto"]),
+                        PorcentajeImpuesto = Convert.ToDecimal(row["PorcentajeImpuesto"]),
+                        ValorImpuesto = Convert.ToDecimal(row["ValorImpuesto"]),
+                        TotalNeto = Convert.ToDecimal(row["TotalNeto"]),
+                        SaldoPendiente = Convert.ToDecimal(row["SaldoPendiente"]),
+                        Estado = row["Estado"].ToString(),
+                        FechaCreacion = Convert.ToDateTime(row["FechaCreacion"]),
+                        NCF = row["NCF"] != DBNull.Value ? row["NCF"].ToString() : null,
+                        
+                        // Propiedades calculadas para el DataGridView
+                        ClienteNombre = row["ClienteNombre"] != DBNull.Value ? row["ClienteNombre"].ToString() : null,
+                        Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,
+                        Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                        Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                        Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
+                    };
+
+                    // También mantener el objeto Cliente para otras operaciones
+                    if (row["ClienteNombre"] != DBNull.Value)
+                    {
+                        factura.Cliente = new Cliente
+                        {
+                            ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
+                            Nombre = row["ClienteNombre"].ToString(),
+                            Cedula = row["Cedula"] != DBNull.Value ? row["Cedula"].ToString() : null,
+                            Direccion = row["Direccion"] != DBNull.Value ? row["Direccion"].ToString() : null,
+                            Telefono = row["Telefono"] != DBNull.Value ? row["Telefono"].ToString() : null,
+                            Email = row["Email"] != DBNull.Value ? row["Email"].ToString() : null
+                        };
+                    }
+
+                    facturas.Add(factura);
+                }
+
+                return facturas;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener últimas facturas: {ex.Message}", ex);
             }
         }
 

@@ -6,6 +6,8 @@
 
 Aplicación de escritorio desarrollada en C# con Windows Forms y SQL Server Express que implementa un sistema completo de facturación y gestión de cuentas por cobrar. El proyecto utiliza una arquitectura en capas con patrones de diseño modernos para garantizar mantenibilidad y escalabilidad.
 
+**🆕 Características Recientes**: Sistema completo de generación de PDF en formato ticket, búsqueda avanzada de facturas, edición de facturas existentes, selector de clientes intuitivo y mejoras significativas en la experiencia de usuario.
+
 ## 🏗️ Arquitectura del Sistema
 
 ### Estructura en Capas
@@ -31,7 +33,13 @@ MiniSistemaFacturacion/
 │   ├── frmClientes.cs            (Gestión de clientes)
 │   ├── frmProductos.cs           (Gestión de productos)
 │   ├── frmFacturacion.cs        (Proceso de facturación)
+│   ├── FrmVistaPreviaPdf.cs     (Vista previa e impresión de PDF)
+│   ├── FrmBusquedaFacturas.cs   (Búsqueda avanzada de facturas)
+│   ├── FrmSelectorClientes.cs    (Selector intuitivo de clientes)
 │   └── frmCuentasPorCobrar.cs  (Gestión de pagos)
+├── 📁 Services/                (Servicios especializados)
+│   ├── PdfTicketService.cs       (Generación de PDF en formato ticket)
+│   └── EmpresaConfig.cs         (Configuración de datos de empresa)
 ├── 📁 Utilities/               (Herramientas auxiliares)
 ├── 📁 Resources/               (Recursos de la aplicación)
 ├── App.config                   (Configuración de la aplicación)
@@ -41,10 +49,10 @@ MiniSistemaFacturacion/
 ## 🗄️ Base de Datos
 
 ### Entidades Principales
-- **Clientes**: Información completa de clientes con validación de cédulas
+- **Clientes**: Información completa de clientes con validación de cédulas y RNC
 - **Productos**: Gestión de inventario con control de stock
-- **Facturas**: Cabecera de facturas con cálculos automáticos
-- **DetallesFactura**: Líneas de detalle de cada factura
+- **Facturas**: Cabecera de facturas con NCF, cálculos automáticos y tipos de comprobante
+- **DetallesFactura**: Líneas de detalle de cada factura con edición en tiempo real
 - **Pagos**: Registro de pagos con múltiples formas de pago
 
 ### Características Técnicas
@@ -57,11 +65,15 @@ MiniSistemaFacturacion/
 ## ⚡ Funcionalidades Principales
 
 ### 🧾 Módulo de Facturación
-- **Creación de Facturas**: Selección de cliente y productos
-- **Cálculos Automáticos**: Subtotal, IVA (15%), Total Neto
+- **Creación de Facturas**: Selección de cliente y productos con selector intuitivo
+- **Cálculos Automáticos**: Subtotal, IVA (18%), Total Neto
 - **Control de Stock**: Validación y actualización automática
-- **Números de Factura**: Generación automática y única
+- **Números de Factura**: Generación automática y única con NCF
 - **Transacciones Atómicas**: Garantía de integridad de datos
+- **🆕 Edición de Facturas**: Modificación completa de facturas existentes
+- **🆕 Vista Previa PDF**: Generación instantánea de tickets en formato 80mm
+- **🆕 Búsqueda Avanzada**: Filtrado por número, cliente, fechas y estados
+- **🆕 Selector de Clientes**: Búsqueda rápida con atajo F3 y DataGridView
 
 ### 💳 Módulo de Cuentas por Cobrar
 - **Registro de Pagos**: Múltiples formas de pago
@@ -90,6 +102,9 @@ MiniSistemaFacturacion/
 - **Base de Datos**: SQL Server Express
 - **Acceso a Datos**: ADO.NET nativo
 - **Patrones**: Singleton, Repository, Transaction Script
+- **🆕 PDF Generation**: QuestPDF para tickets de 80mm
+- **🆕 WebView Integration**: Microsoft.Web.WebView2 para vista previa nativa
+- **🆕 Assembly Binding**: Redirección de versiones para compatibilidad
 
 ### Características Técnicas
 - **Conexión Pooling**: Optimización de recursos
@@ -99,6 +114,20 @@ MiniSistemaFacturacion/
 - **Configuración**: Archivos .config flexibles
 
 ## 📊 Características Destacadas
+
+### 🎫 Sistema de PDF Tickets
+- **Formato 80mm**: Diseño optimizado para impresoras térmicas
+- **Generación Instantánea**: PDF creado al momento de guardar factura
+- **Vista Previa Integrada**: WebView2 para visualización nativa
+- **Impresión Directa**: Soporte para impresoras térmicas y estándar
+- **Datos de Empresa**: Configuración completa de información comercial
+- **NCF Incluido**: Cumplimiento con normativa fiscal dominicana
+
+### 🔍 Búsqueda y Edición Avanzada
+- **Búsqueda Multi-criterio**: Por número, cliente, rango de fechas
+- **Edición Completa**: Modificación de facturas existentes manteniendo NCF
+- **Selector de Clientes**: Búsqueda rápida con DataGridView y atajo F3
+- **Actualización en Tiempo Real**: Subtotales calculados al editar cantidades
 
 ### 🔄 Transacciones Atómicas
 ```csharp
@@ -141,6 +170,13 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 - **Prevención de Ventas**: Bloqueo si no hay stock
 - **Reportes**: Estado actual del inventario
 
+### 🛠️ Mejas Recientes y Correcciones
+- **DataGridView Mejorado**: Edición fluida sin errores DBNull
+- **Actualización en Tiempo Real**: Subtotales calculados al editar cantidades
+- **Manejo de Errores**: Captura silenciosa para mejor experiencia
+- **Compatibilidad de Versiones**: Assembly binding redirects funcionales
+- **Interfaz Optimizada**: Selector de clientes y búsqueda intuitiva
+
 ## 🚀 Instalación y Configuración
 
 ### Requisitos del Sistema
@@ -173,12 +209,16 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 - **Productos Más Vendidos**: Ranking por cantidad
 - **Inventario Actual**: Stock disponible y valor
 - **Cuentas por Cobrar**: Resumen de pagos pendientes
+- **🆕 Tickets PDF**: Generación instantánea en formato 80mm
+- **🆕 Búsqueda Avanzada**: Multi-criterio con filtros flexibles
 
 ### 🔍 Consultas Avanzadas
-- **Búsqueda de Clientes**: Por nombre, cédula, teléfono
+- **Búsqueda de Clientes**: Por nombre, cédula, teléfono con selector intuitivo
 - **Búsqueda de Productos**: Por código, descripción, categoría
-- **Historial de Facturas**: Por cliente o período
+- **Historial de Facturas**: Por cliente o período con edición directa
 - **Estado de Pagos**: Detalle completo por factura
+- **🆕 Búsqueda de Facturas**: Por número, cliente, fechas y estados
+- **🆕 Edición en Línea**: Modificación directa desde resultados de búsqueda
 
 ## 🛠️ Mantenimiento y Soporte
 
@@ -226,8 +266,9 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 - **Semana 1**: Diseño de base de datos y ERD ✅
 - **Semana 2**: Implementación de backend y DAL ✅
 - **Semana 3**: Desarrollo de lógica de negocio ✅
-- **Semana 4**: Desarrollo de interfaces de usuario 🔄
-- **Semana 5**: Integración, pruebas y documentación 🔄
+- **Semana 4**: Desarrollo de interfaces de usuario ✅
+- **Semana 5**: Integración, pruebas y documentación ✅
+- **🆕 Mejoras Adicionales**: PDF tickets, búsqueda avanzada, edición de facturas ✅
 
 ## 📞 Contacto y Soporte
 
@@ -245,5 +286,7 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 ---
 
 **Nota**: Este proyecto fue desarrollado como trabajo final para el curso de Programación III, demostrando el dominio de conceptos avanzados de programación, diseño de bases de datos y desarrollo de aplicaciones empresariales.
+
+**🆕 Funcionalidades Completas**: Sistema robusto con generación de PDF tickets, búsqueda avanzada, edición de facturas, selector de clientes intuitivo y experiencia de usuario optimizada para entornos empresariales reales.
 
 © 2026 - Equipo de Desarrollo - Todos los derechos reservados
