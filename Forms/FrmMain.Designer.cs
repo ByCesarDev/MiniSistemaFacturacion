@@ -156,7 +156,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 3;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
+            this.pictureBox2.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
             // 
             // label2
             // 
