@@ -54,6 +54,12 @@
     <Compile Include="Forms\FrmClientes.Designer.cs">
       <DependentUpon>FrmClientes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmCuentasPorCobrar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCuentasPorCobrar.Designer.cs">
+      <DependentUpon>frmCuentasPorCobrar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmFacturacion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +77,12 @@
     </Compile>
     <Compile Include="Forms\FrmProductos.Designer.cs">
       <DependentUpon>FrmProductos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmRegistrarPago.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmRegistrarPago.Designer.cs">
+      <DependentUpon>frmRegistrarPago.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,6 +121,9 @@
     <EmbeddedResource Include="Forms\FrmClientes.resx">
       <DependentUpon>FrmClientes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCuentasPorCobrar.resx">
+      <DependentUpon>frmCuentasPorCobrar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmFacturacion.resx">
       <DependentUpon>frmFacturacion.cs</DependentUpon>
     </EmbeddedResource>
@@ -120,6 +135,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmRegistrarPago.resx">
+      <DependentUpon>frmRegistrarPago.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
