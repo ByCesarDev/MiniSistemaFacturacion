@@ -37,6 +37,7 @@ namespace MiniSistemaFacturacion.Services
             {
                 // Inicializar QuestPDF (solo una vez en la aplicación)
                 QuestPDF.Settings.License = LicenseType.Community;
+                QuestPDF.Settings.EnableDebugging = true;
                 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -45,7 +46,10 @@ namespace MiniSistemaFacturacion.Services
                     {
                         container.Page(page =>
                         {
-                            page.Size(new PageSize(226.77f, 400)); // 80mm x altura variable
+                            // 80mm son aproximadamente 227 puntos. 
+                            // Calcular altura dinámicamente basada en el contenido
+                            float alturaEstimada = CalcularAlturaTicket(factura, cliente, detalles);
+                            page.Size(227, alturaEstimada); // Ancho fijo 80mm, altura dinámica
                             page.Margin(10);
                             page.DefaultTextStyle(x => x.FontSize(8).FontFamily(Fonts.Courier));
 
@@ -87,10 +91,10 @@ namespace MiniSistemaFacturacion.Services
                                     {
                                         column.Item().Row(row =>
                                         {
-                                            row.RelativeItem().Text($"{detalle.Cantidad}");
-                                            row.RelativeItem(3).Text(detalle.Descripcion ?? "");
-                                            row.RelativeItem().AlignRight().Text($"{detalle.PrecioUnitarioVenta:C2}");
-                                            row.RelativeItem().AlignRight().Text($"{detalle.Subtotal:C2}");
+                                            row.ConstantItem(15).Text($"{detalle.Cantidad}");           // Ancho fijo para cantidad
+                                            row.RelativeItem().Text(detalle.Descripcion ?? "");        // Espacio restante para descripción
+                                            row.ConstantItem(35).AlignRight().Text($"{detalle.PrecioUnitarioVenta:C2}"); // Ancho fijo para precio
+                                            row.ConstantItem(35).AlignRight().Text($"{detalle.Subtotal:C2}");            // Ancho fijo para subtotal
                                         });
                                     }
                                     
@@ -106,10 +110,13 @@ namespace MiniSistemaFacturacion.Services
                                     });
                                     
                                     column.Item().LineHorizontal(0.5f);
+                                    
+                                    // Espacio para el mensaje de agradecimiento al final
+                                    column.Item().Text("").FontSize(20);
                                 });
                             });
 
-                            // Pie de página
+                            // Mensaje de agradecimiento al fondo del ticket
                             page.Footer().Element(footer =>
                             {
                                 footer.Column(column =>
@@ -153,6 +160,59 @@ namespace MiniSistemaFacturacion.Services
             catch (Exception ex)
             {
                 throw new Exception($"Error al guardar ticket PDF: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Calcula la altura dinámica del ticket basada en su contenido
+        /// </summary>
+        private float CalcularAlturaTicket(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
+        {
+            try
+            {
+                // Altura base para elementos fijos (encabezado, cliente, resumen, footer)
+                float alturaBase = 200; // pts para elementos estáticos
+                
+                // Altura para cada línea de producto
+                float alturaPorProducto = 15; // pts por línea de detalle
+                
+                // Altura para líneas de información fiscal y cliente
+                float alturaInfoFiscal = 60; // pts para NCF, factura, fecha, cliente
+                
+                // Altura para resumen financiero
+                float alturaResumen = 40; // pts para subtotal, ITBIS, total
+                
+                // Altura para mensaje de agradecimiento
+                float alturaAgradecimiento = 30; // pts para mensaje final
+                
+                // Calcular altura total
+                float alturaTotal = alturaBase + alturaInfoFiscal + alturaResumen + alturaAgradecimiento;
+                
+                // Agregar altura por cada producto
+                if (detalles != null && detalles.Count > 0)
+                {
+                    alturaTotal += (detalles.Count * alturaPorProducto);
+                    
+                    // Agregar espacio extra si hay muchos productos
+                    if (detalles.Count > 10)
+                    {
+                        alturaTotal += (detalles.Count - 10) * 2; // 2 pts extra por cada producto adicional
+                    }
+                }
+                
+                // Altura mínima para tickets simples
+                float alturaMinima = 300;
+                float alturaMaxima = 2000; // Límite razonable para evitar problemas
+                
+                alturaTotal = Math.Max(alturaTotal, alturaMinima);
+                alturaTotal = Math.Min(alturaTotal, alturaMaxima);
+                
+                return alturaTotal;
+            }
+            catch (Exception)
+            {
+                // En caso de error, retornar una altura predeterminada segura
+                return 500;
             }
         }
 

@@ -53,5 +53,49 @@ namespace MiniSistemaFacturacion.DataAccess
                 cmd.ExecuteNonQuery();
             }
         }
+
+        // Elimina todos los detalles de una factura
+        public void EliminarDetallesFactura(int idFactura, SqlConnection connection, SqlTransaction transaction)
+        {
+            string query = @"DELETE FROM DetallesFactura WHERE ID_Factura = @IdFactura";
+
+            using (SqlCommand cmd = new SqlCommand(query, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@IdFactura", idFactura);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // Actualiza la cabecera de una factura existente
+        public void ActualizarCabecera(Factura factura, SqlConnection connection, SqlTransaction transaction)
+        {
+            string query = @"UPDATE Facturas 
+                             SET ID_Cliente = @IdCli, 
+                                 TotalBruto = @Bruto, 
+                                 PorcentajeImpuesto = @Porc, 
+                                 ValorImpuesto = @ValImp, 
+                                 TotalNeto = @Neto, 
+                                 SaldoPendiente = @Saldo, 
+                                 Estado = @Estado,
+                                 NCF = @NCF,
+                                 TipoComprobante = @TipoComprobante
+                             WHERE ID_Factura = @IdFactura";
+
+            using (SqlCommand cmd = new SqlCommand(query, connection, transaction))
+            {
+                cmd.Parameters.AddWithValue("@IdCli", factura.ID_Cliente);
+                cmd.Parameters.AddWithValue("@Bruto", factura.TotalBruto);
+                cmd.Parameters.AddWithValue("@Porc", factura.PorcentajeImpuesto);
+                cmd.Parameters.AddWithValue("@ValImp", factura.ValorImpuesto);
+                cmd.Parameters.AddWithValue("@Neto", factura.TotalNeto);
+                cmd.Parameters.AddWithValue("@Saldo", factura.SaldoPendiente);
+                cmd.Parameters.AddWithValue("@Estado", factura.Estado);
+                cmd.Parameters.AddWithValue("@IdFactura", factura.ID_Factura);
+                cmd.Parameters.AddWithValue("@NCF", (object)factura.NCF ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TipoComprobante", (object)factura.TipoComprobante ?? DBNull.Value);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

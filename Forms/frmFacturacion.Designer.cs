@@ -50,8 +50,6 @@
             this.txtSaldoPendiente = new System.Windows.Forms.TextBox();
             this.btnGuardarFactura = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
-            this.btnVistaPreviaPdf = new System.Windows.Forms.Button();
-            this.btnGenerarPdf = new System.Windows.Forms.Button();
             this.chkEnviarEmail = new System.Windows.Forms.CheckBox();
             this.chkImprimirDirecto = new System.Windows.Forms.CheckBox();
             this.cmbClientes = new System.Windows.Forms.ComboBox();
@@ -93,11 +91,12 @@
             this.dgvDetalle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDetalle.Location = new System.Drawing.Point(11, 141);
             this.dgvDetalle.Name = "dgvDetalle";
-            this.dgvDetalle.ReadOnly = true;
             this.dgvDetalle.RowHeadersWidth = 62;
             this.dgvDetalle.RowTemplate.Height = 28;
             this.dgvDetalle.Size = new System.Drawing.Size(638, 260);
             this.dgvDetalle.TabIndex = 4;
+            this.dgvDetalle.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDetalle_CellValueChanged);
+            this.dgvDetalle.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvDetalle_CurrentCellDirtyStateChanged);
             // 
             // dtpFecha
             // 
@@ -279,30 +278,10 @@
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
-            // btnVistaPreviaPdf
-            // 
-            this.btnVistaPreviaPdf.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVistaPreviaPdf.Location = new System.Drawing.Point(323, 461);
-            this.btnVistaPreviaPdf.Name = "btnVistaPreviaPdf";
-            this.btnVistaPreviaPdf.Size = new System.Drawing.Size(119, 23);
-            this.btnVistaPreviaPdf.TabIndex = 3;
-            this.btnVistaPreviaPdf.Text = "Vista Previa";
-            this.btnVistaPreviaPdf.Click += new System.EventHandler(this.btnVistaPreviaPdf_Click);
-            // 
-            // btnGenerarPdf
-            // 
-            this.btnGenerarPdf.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGenerarPdf.Location = new System.Drawing.Point(8, 460);
-            this.btnGenerarPdf.Name = "btnGenerarPdf";
-            this.btnGenerarPdf.Size = new System.Drawing.Size(91, 23);
-            this.btnGenerarPdf.TabIndex = 2;
-            this.btnGenerarPdf.Text = "Generar";
-            this.btnGenerarPdf.Click += new System.EventHandler(this.btnGenerarPdf_Click);
-            // 
             // chkEnviarEmail
             // 
             this.chkEnviarEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnviarEmail.Location = new System.Drawing.Point(105, 460);
+            this.chkEnviarEmail.Location = new System.Drawing.Point(8, 422);
             this.chkEnviarEmail.Name = "chkEnviarEmail";
             this.chkEnviarEmail.Size = new System.Drawing.Size(104, 24);
             this.chkEnviarEmail.TabIndex = 1;
@@ -311,7 +290,7 @@
             // chkImprimirDirecto
             // 
             this.chkImprimirDirecto.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkImprimirDirecto.Location = new System.Drawing.Point(213, 460);
+            this.chkImprimirDirecto.Location = new System.Drawing.Point(100, 422);
             this.chkImprimirDirecto.Name = "chkImprimirDirecto";
             this.chkImprimirDirecto.Size = new System.Drawing.Size(104, 24);
             this.chkImprimirDirecto.TabIndex = 0;
@@ -331,8 +310,6 @@
             this.ClientSize = new System.Drawing.Size(661, 543);
             this.Controls.Add(this.chkImprimirDirecto);
             this.Controls.Add(this.chkEnviarEmail);
-            this.Controls.Add(this.btnGenerarPdf);
-            this.Controls.Add(this.btnVistaPreviaPdf);
             this.Controls.Add(this.cmbClientes);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardarFactura);
@@ -392,8 +369,6 @@
         private System.Windows.Forms.TextBox txtSaldoPendiente;
         private System.Windows.Forms.Button btnGuardarFactura;
         private System.Windows.Forms.Button btnCancelar;
-        private System.Windows.Forms.Button btnVistaPreviaPdf;
-        private System.Windows.Forms.Button btnGenerarPdf;
         private System.Windows.Forms.CheckBox chkEnviarEmail;
         private System.Windows.Forms.CheckBox chkImprimirDirecto;
         private System.Windows.Forms.ComboBox cmbClientes;

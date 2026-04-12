@@ -113,7 +113,7 @@ namespace MiniSistemaFacturacion.Configuration
                 NCFConsumidorFinal = GetConfigValue("NCFConsumidorFinal", "B0100000001");
                 RutaPdfTickets = GetConfigValue("RutaPdfTickets", "./TicketsPDF/");
             }
-            catch (Exception ex)
+            catch
             {
                 // Si hay error al cargar configuración, usar valores por defecto
                 SetValoresPorDefecto();
