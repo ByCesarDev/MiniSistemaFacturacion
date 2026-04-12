@@ -24,6 +24,9 @@ namespace MiniSistemaFacturacion.Forms
             ConfigurarGrid();
             CargarProductos();
             ReiniciarFormulario();
+            txtBuscar.Text = "Buscar por código o descripción...";
+            txtBuscar.ForeColor = Color.Gray;
+
         }
 
         private void ConfigurarGrid()
@@ -72,11 +75,13 @@ namespace MiniSistemaFacturacion.Forms
                     dgvProductos.Columns["PrecioUnitario"].DefaultCellStyle.Format = "N2";
             }
 
-            dgvProductos.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            dgvProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvProductos.DefaultCellStyle.SelectionBackColor = Color.RoyalBlue;
-            dgvProductos.DefaultCellStyle.SelectionForeColor = Color.White;
-            dgvProductos.RowTemplate.Height = 28;
+            dgvProductos.DefaultCellStyle.Font = new Font("Arial", 9F, FontStyle.Regular);
+            dgvProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 9F, FontStyle.Bold);
+
+            dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvProductos.MultiSelect = false;
+            dgvProductos.ReadOnly = true;
         }
 
         private void CargarProductos()
@@ -392,7 +397,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             string texto = txtBuscar.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(texto))
+            if (string.IsNullOrWhiteSpace(texto) || texto == "Buscar por código o descripción...")
             {
                 CargarProductos();
             }
@@ -443,6 +448,24 @@ namespace MiniSistemaFacturacion.Forms
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             ReiniciarFormulario();
+        }
+
+        private void txtBuscar_Enter(object sender, EventArgs e)
+        {
+            if (txtBuscar.Text == "Buscar por código o descripción...")
+            {
+                txtBuscar.Text = "";
+                txtBuscar.ForeColor = Color.Black;
+            }
+        }
+
+        private void txtBuscar_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtBuscar.Text))
+            {
+                txtBuscar.Text = "Buscar por código o descripción...";
+                txtBuscar.ForeColor = Color.Gray;
+            }
         }
     }
 }
