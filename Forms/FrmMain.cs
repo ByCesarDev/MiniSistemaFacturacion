@@ -121,6 +121,12 @@ namespace MiniSistemaFacturacion.Forms
             frm.ShowDialog();
         }
 
+        private void configuracionEmpresaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmConfiguracionEmpresa frm = new FrmConfiguracionEmpresa();
+            frm.ShowDialog();
+        }
+
         // Evento único para la entrada del mouse (MouseEnter)
         private void PictureBox_HoverEnter(object sender, EventArgs e)
         {
