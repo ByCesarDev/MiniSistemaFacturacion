@@ -137,12 +137,25 @@
     <Compile Include="Forms\FrmSelectorClientes.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FrmBusquedaClientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmBusquedaClientes.Designer.cs">
+      <DependentUpon>FrmBusquedaClientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmBusquedaProductos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmBusquedaProductos.Designer.cs">
+      <DependentUpon>FrmBusquedaProductos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmConfiguracionEmpresa.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmConfiguracionEmpresa.Designer.cs">
       <DependentUpon>FrmConfiguracionEmpresa.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess\ConfiguracionEmpresaDAL.cs" />
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +207,8 @@
     <Compile Include="BusinessLogic\FacturacionManager.cs" />
     <Compile Include="BusinessLogic\PagoManager.cs" />
     <Compile Include="BusinessLogic\TransaccionHelper.cs" />
+    <!-- UTILS -->
+    <Compile Include="Utils\RNCValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

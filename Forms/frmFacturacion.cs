@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,6 +24,12 @@ namespace MiniSistemaFacturacion.Forms
         private bool _esEdicion = false;
         private int _idFacturaExistente = 0;
 
+        // Campo para almacenar el cliente seleccionado
+        private Cliente _clienteSeleccionado;
+
+        // Campo para almacenar el producto seleccionado
+        private Producto _productoSeleccionado;
+
         // Campos para almacenar datos de edición
         private Factura _facturaEdicion;
         private Cliente _clienteEdicion;
@@ -48,212 +54,139 @@ namespace MiniSistemaFacturacion.Forms
         public FrmFacturacion(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
         {
             InitializeComponent();
-
+            dgvDetalle.DataError += dgvDetalle_DataError;
+            
+            // Configurar modo edición
+            _esEdicion = true;
+            _idFacturaExistente = factura.ID_Factura;
             _facturaEdicion = factura;
             _clienteEdicion = cliente;
             _detallesEdicion = detalles;
-
-            _esEdicion = true;
-            _idFacturaExistente = factura.ID_Factura;
-        }
-
-        private void CargarDatosFactura()
-        {
-            lblNumeroFactura.Text = _facturaEdicion.NumeroFactura;
-
-            if (_clienteEdicion != null)
-            {
-                cmbClientes.SelectedValue = _clienteEdicion.ID_Cliente;
-
-                if (cmbClientes.SelectedValue == null || (int)cmbClientes.SelectedValue != _clienteEdicion.ID_Cliente)
-                {
-                    for (int i = 0; i < cmbClientes.Items.Count; i++)
-                    {
-                        Cliente item = (Cliente)cmbClientes.Items[i];
-                        if (item.ID_Cliente == _clienteEdicion.ID_Cliente)
-                        {
-                            cmbClientes.SelectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-
-                if (cmbClientes.SelectedItem == null)
-                {
-                    MessageBox.Show(
-                        $"No se encontró el cliente '{_clienteEdicion.Nombre}' (ID: {_clienteEdicion.ID_Cliente}) en la lista. Por favor, seleccione un cliente manualmente.",
-                        "Cliente no encontrado",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                }
-            }
-
-            listaDetalles = new List<DetalleFactura>(_detallesEdicion);
-
-            // Si la factura ya existía y estaba pendiente, marcar como crédito
-            if (_facturaEdicion != null && _facturaEdicion.Estado == "Pendiente")
-            {
-                chkCredito.Checked = true;
-            }
-            else
-            {
-                chkCredito.Checked = false;
-            }
-
-            ActualizarInterfaz();
-            HabilitarControles(true);
+            
+            // Cargar datos en el formulario
+            CargarDatosFactura(factura, cliente, detalles);
         }
 
         private void FrmFacturacion_Load(object sender, EventArgs e)
         {
-            CargarCombos();
-            ConfigurarGridFactura();
-            CargarTiposComprobante();
-            CargarFormaDePago();
-
-            if (_esEdicion)
+            try
             {
-                CargarDatosFactura();
+                ConfigurarGridFactura();
+                CargarTiposComprobante();
+                CargarFormasPago();
+
+                if (!_esEdicion)
+                {
+                    lblNumeroFactura.Text = FacturacionManager.Instance.GenerarSiguienteNumeroFactura();
+                    dtpFecha.Value = DateTime.Now;
+                    cmbTipoComprobante.SelectedIndex = 1; // Consumidor Final por defecto
+                    cmbFormaPago.SelectedIndex = 0; // Efectivo por defecto
+                }
             }
-            else
+            catch (Exception ex)
             {
-                lblNumeroFactura.Text = FacturacionManager.Instance.GenerarSiguienteNumeroFactura();
-                chkCredito.Checked = false;
-                ActualizarTotales();
+                MessageBox.Show($"Error al cargar formulario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void CargarCombos()
-        {
-            cmbClientes.DataSource = clienteDAL.ObtenerTodos();
-            cmbClientes.DisplayMember = "Nombre";
-            cmbClientes.ValueMember = "ID_Cliente";
-            cmbClientes.SelectedIndex = -1;
-
-            cmbProductos.DataSource = productoDAL.ObtenerTodos();
-            cmbProductos.DisplayMember = "Descripcion";
-            cmbProductos.ValueMember = "ID_Producto";
-            cmbProductos.SelectedIndex = -1;
-        }
-
-
-        private void CargarFormaDePago()
-        {
-            cmbFormaPago.Items.Clear();
-            cmbFormaPago.Items.Add("Efectivo");
-            cmbFormaPago.Items.Add("Tarjeta Crédito");
-            cmbFormaPago.Items.Add("Tarjeta Débito");
-            cmbFormaPago.Items.Add("Transferencia");
-            cmbFormaPago.Items.Add("Cheque");
-
-          
-        }
-        private void CargarTiposComprobante()
-        {
-            cmbTipoComprobante.Items.Clear();
-            cmbTipoComprobante.Items.Add("01 - Crédito Fiscal");
-            cmbTipoComprobante.Items.Add("02 - Consumidor Final");
-
-            cmbTipoComprobante.SelectedIndex = 1;
         }
 
         private void ConfigurarGridFactura()
         {
             dgvDetalle.AutoGenerateColumns = false;
             dgvDetalle.Columns.Clear();
+            
+            // Columna Descripción
+            var colDescripcion = new DataGridViewTextBoxColumn();
+            colDescripcion.Name = "Descripcion";
+            colDescripcion.HeaderText = "Descripción";
+            colDescripcion.DataPropertyName = "Descripcion";
+            colDescripcion.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colDescripcion.ReadOnly = true;
+            dgvDetalle.Columns.Add(colDescripcion);
 
-            dgvDetalle.ReadOnly = false;
+            // Columna Cantidad
+            var colCantidad = new DataGridViewTextBoxColumn();
+            colCantidad.Name = "Cantidad";
+            colCantidad.HeaderText = "Cantidad";
+            colCantidad.DataPropertyName = "Cantidad";
+            colCantidad.Width = 80;
+            colCantidad.ReadOnly = false;
+            dgvDetalle.Columns.Add(colCantidad);
 
-            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "ID_Producto",
-                HeaderText = "ID",
-                Width = 50,
-                ReadOnly = true
-            });
+            // Columna Precio Unitario
+            var colPrecio = new DataGridViewTextBoxColumn();
+            colPrecio.Name = "PrecioUnitarioVenta";
+            colPrecio.HeaderText = "Precio Unitario";
+            colPrecio.DataPropertyName = "PrecioUnitarioVenta";
+            colPrecio.Width = 100;
+            colPrecio.ReadOnly = true;
+            dgvDetalle.Columns.Add(colPrecio);
 
-            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Descripcion",
-                HeaderText = "Producto",
-                Width = 220,
-                ReadOnly = true
-            });
-
-            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Cantidad",
-                HeaderText = "Cantidad",
-                Width = 60,
-                ReadOnly = false
-            });
-
-            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "PrecioUnitarioVenta",
-                HeaderText = "Precio",
-                Width = 90,
-                DefaultCellStyle = { Format = "N2" },
-                ReadOnly = true
-            });
-
-            dgvDetalle.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Subtotal",
-                HeaderText = "Subtotal",
-                Width = 100,
-                DefaultCellStyle = { Format = "N2" },
-                ReadOnly = true
-            });
+            // Columna Subtotal
+            var colSubtotal = new DataGridViewTextBoxColumn();
+            colSubtotal.Name = "Subtotal";
+            colSubtotal.HeaderText = "Subtotal";
+            colSubtotal.DataPropertyName = "Subtotal";
+            colSubtotal.Width = 100;
+            colSubtotal.ReadOnly = true;
+            dgvDetalle.Columns.Add(colSubtotal);
         }
 
-        private void ActualizarInterfaz()
+        
+        
+        private void CargarTiposComprobante()
         {
-            dgvDetalle.DataSource = null;
-            dgvDetalle.DataSource = listaDetalles;
+            var tipos = new[]
+            {
+                new { Value = "01", Text = "01 - Factura con Valor Fiscal" },
+                new { Value = "02", Text = "02 - Factura para Consumidor Final" },
+                new { Value = "03", Text = "03 - Nota de Débito" },
+                new { Value = "04", Text = "04 - Nota de Crédito" }
+            };
 
-            ActualizarTotales();
+            cmbTipoComprobante.DataSource = tipos;
+            cmbTipoComprobante.DisplayMember = "Text";
+            cmbTipoComprobante.ValueMember = "Value";
         }
 
-        private void ActualizarTotales()
+        private void CargarFormasPago()
         {
-            decimal bruto = listaDetalles.Sum(d => d.Subtotal);
-            decimal itbis = bruto * TASA_ITBIS;
-            decimal neto = bruto + itbis;
-
-            txtSubtotal.Text = bruto.ToString("N2");
-            txtIVA.Text = itbis.ToString("N2");
-            txtTotalNeto.Text = neto.ToString("N2");
-
-            // Si es crédito, el saldo pendiente es el total.
-            // Si no, queda en 0.
-            if (chkCredito.Checked)
+            var formas = new[]
             {
-                txtSaldoPendiente.Text = neto.ToString("N2");
-            }
-            else
-            {
-                txtSaldoPendiente.Text = "0.00";
-            }
+                new { Value = "EFECTIVO", Text = "Efectivo" },
+                new { Value = "TARJETA", Text = "Tarjeta de Crédito/Débito" },
+                new { Value = "TRANSFERENCIA", Text = "Transferencia Bancaria" },
+                new { Value = "CHEQUE", Text = "Cheque" }
+            };
+
+            cmbFormaPago.DataSource = formas;
+            cmbFormaPago.DisplayMember = "Text";
+            cmbFormaPago.ValueMember = "Value";
         }
 
-        private void chkCredito_CheckedChanged(object sender, EventArgs e)
+        private void CargarDatosFactura(Factura factura, Cliente cliente, List<DetalleFactura> detalles)
         {
-            ActualizarTotales();
-
-            bool esCredito = chkCredito.Checked;
-
-            cmbFormaPago.Enabled = !esCredito;
-            lblFormaPago.Enabled = !esCredito;
-
-            if (esCredito)
+            try
             {
-                cmbFormaPago.SelectedIndex = -1;
-                btnGuardarFactura.Text = "Guardar";
+                lblNumeroFactura.Text = factura.NumeroFactura;
+                dtpFecha.Value = factura.Fecha;
+                txtClientes.Text = cliente.Nombre;
+                _clienteSeleccionado = cliente;
+                cmbTipoComprobante.SelectedValue = factura.TipoComprobante;
+                cmbFormaPago.SelectedValue = factura.FormaPago;
+                chkCredito.Checked = factura.Credito;
+
+                listaDetalles.Clear();
+                listaDetalles.AddRange(detalles);
+                dgvDetalle.DataSource = null;
+                dgvDetalle.DataSource = listaDetalles;
+
+                ActualizarTotales();
+
+                btnGuardarFactura.Text = "Actualizar";
             }
-            else
+            catch (Exception ex)
             {
-                btnGuardarFactura.Text = "Pagar";
+                MessageBox.Show($"Error al cargar datos de factura: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -261,47 +194,21 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
-                if (cmbClientes.SelectedIndex == -1)
-                    throw new Exception("Debe seleccionar un cliente de la lista.");
-
-                if (listaDetalles.Count == 0)
-                    throw new Exception("No puede guardar una factura sin productos.");
-
-                if (!chkCredito.Checked && cmbFormaPago.SelectedIndex == -1)
-                    throw new Exception("Debe seleccionar una forma de pago.");
-                Cliente clienteSeleccionado = (Cliente)cmbClientes.SelectedItem;
-
-                if (clienteSeleccionado == null)
-                    throw new Exception("Debe seleccionar un cliente válido.");
-
-                if (cmbTipoComprobante.SelectedIndex == -1)
-                    throw new Exception("Debe seleccionar un tipo de comprobante.");
-
-                string tipoComprobante = cmbTipoComprobante.Text.Substring(0, 2);
-
-                if (tipoComprobante == "01")
-                {
-                    if (string.IsNullOrWhiteSpace(clienteSeleccionado.Cedula))
-                        throw new Exception("Para facturas con Crédito Fiscal, el cliente debe tener RNC o cédula registrada.");
-                }
-
-                string tipoVenta = chkCredito.Checked ? "Credito" : "Contado";
-                string estadoFactura = chkCredito.Checked ? "Pendiente" : "Pagada";
-
-                decimal saldoPendiente = chkCredito.Checked
-                    ? decimal.Parse(txtTotalNeto.Text)
-                    : 0m;
+                if (!ValidarFormulario())
+                    return;
 
                 Factura f = new Factura
                 {
-                    ID_Cliente = (int)cmbClientes.SelectedValue,
                     NumeroFactura = lblNumeroFactura.Text,
-                    Fecha = DateTime.Now,
-                    PorcentajeImpuesto = TASA_ITBIS * 100,
-                    Estado = estadoFactura,
-                    TipoVenta = tipoVenta,
-                    SaldoPendiente = saldoPendiente,
-                    TipoComprobante = tipoComprobante
+                    Fecha = dtpFecha.Value,
+                    ID_Cliente = _clienteSeleccionado.ID_Cliente,
+                    TipoComprobante = cmbTipoComprobante.SelectedValue.ToString(),
+                    FormaPago = cmbFormaPago.SelectedValue.ToString(),
+                    Credito = chkCredito.Checked,
+                    TotalBruto = decimal.Parse(txtSubtotal.Text),
+                    ValorImpuesto = decimal.Parse(txtIVA.Text),
+                    TotalNeto = decimal.Parse(txtTotalNeto.Text),
+                    SaldoPendiente = chkCredito.Checked ? decimal.Parse(txtTotalNeto.Text) : 0
                 };
 
                 int id;
@@ -320,7 +227,7 @@ namespace MiniSistemaFacturacion.Forms
                 }
 
                 Factura facturaCompleta = FacturacionManager.Instance.ObtenerFactura(id);
-                Cliente cliente = (Cliente)cmbClientes.SelectedItem;
+                Cliente cliente = _clienteSeleccionado;
 
                 HabilitarControles(false);
 
@@ -349,101 +256,128 @@ namespace MiniSistemaFacturacion.Forms
             }
         }
 
+        private bool ValidarFormulario()
+        {
+            if (_clienteSeleccionado == null)
+            {
+                MessageBox.Show("Por favor, seleccione un cliente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnBuscarCliente.Focus();
+                return false;
+            }
+
+            if (listaDetalles.Count == 0)
+            {
+                MessageBox.Show("Por favor, agregue al menos un producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnBuscarProducto.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
         private void btnAnadir_Click_1(object sender, EventArgs e)
         {
-            if (cmbProductos.SelectedIndex == -1)
+            if (_productoSeleccionado == null)
+            {
+                MessageBox.Show("Por favor, seleccione un producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnBuscarProducto.Focus();
                 return;
+            }
 
-            Producto prod = (Producto)cmbProductos.SelectedItem;
             int cant = (int)numCantidad.Value;
 
             DetalleFactura nuevoItem = new DetalleFactura
             {
-                ID_Producto = prod.ID_Producto,
-                Descripcion = prod.Descripcion,
+                ID_Producto = _productoSeleccionado.ID_Producto,
+                Descripcion = _productoSeleccionado.Descripcion,
                 Cantidad = cant,
-                PrecioUnitarioVenta = prod.PrecioUnitario,
-                Subtotal = cant * prod.PrecioUnitario
+                PrecioUnitarioVenta = _productoSeleccionado.PrecioUnitario,
+                Subtotal = cant * _productoSeleccionado.PrecioUnitario
             };
 
             listaDetalles.Add(nuevoItem);
-
             ActualizarInterfaz();
 
-            cmbProductos.SelectedIndex = -1;
+            txtProductos.Text = "";
+            _productoSeleccionado = null;
             numCantidad.Value = 1;
-            cmbProductos.Focus();
+            btnBuscarProducto.Focus();
         }
+
+        private void ActualizarInterfaz()
+        {
+            dgvDetalle.DataSource = null;
+            dgvDetalle.DataSource = listaDetalles;
+            ActualizarTotales();
+        }
+
+        private void ActualizarTotales()
+        {
+            decimal subtotal = listaDetalles.Sum(d => d.Subtotal);
+            decimal itbis = subtotal * TASA_ITBIS;
+            decimal total = subtotal + itbis;
+
+            txtSubtotal.Text = subtotal.ToString("F2");
+            txtIVA.Text = itbis.ToString("F2");
+            txtTotalNeto.Text = total.ToString("F2");
+            txtSaldoPendiente.Text = chkCredito.Checked ? total.ToString("F2") : "0.00";
+        }
+
         private void LimpiarFormularioFacturacion()
         {
-            // Limpiar selección principal
-            cmbClientes.SelectedIndex = -1;
-            cmbProductos.SelectedIndex = -1;
+            // Limpiar cliente
+            txtClientes.Text = "";
+            _clienteSeleccionado = null;
+
+            // Limpiar productos
+            txtProductos.Text = "";
+            _productoSeleccionado = null;
 
             // Reiniciar cantidad
             numCantidad.Value = 1;
-            // Limpiar selección principal
-            cmbClientes.SelectedIndex = -1;
-            cmbClientes.SelectedItem = null;
-            cmbClientes.Text = "";
 
-            cmbProductos.SelectedIndex = -1;
-            cmbProductos.SelectedItem = null;
-            cmbProductos.Text = "";
-
-            // Limpiar detalle
             listaDetalles.Clear();
             dgvDetalle.DataSource = null;
             dgvDetalle.DataSource = listaDetalles;
 
-            // Reiniciar checks
             chkEnviarEmail.Checked = false;
             chkImprimirDirecto.Checked = false;
             chkCredito.Checked = false;
 
-            // Reiniciar tipo de comprobante
             if (cmbTipoComprobante.Items.Count > 1)
-                cmbTipoComprobante.SelectedIndex = 1; // 02 - Consumidor Final
+                cmbTipoComprobante.SelectedIndex = 1;
             else
                 cmbTipoComprobante.SelectedIndex = -1;
 
-            // Reiniciar forma de pago
             cmbFormaPago.Enabled = true;
             lblFormaPago.Enabled = true;
 
             if (cmbFormaPago.Items.Count > 0)
-                cmbFormaPago.SelectedIndex = 0; // Efectivo por defecto
+                cmbFormaPago.SelectedIndex = 0;
             else
                 cmbFormaPago.SelectedIndex = -1;
 
-            // Reiniciar totales
             txtSubtotal.Text = "0.00";
             txtIVA.Text = "0.00";
             txtTotalNeto.Text = "0.00";
             txtSaldoPendiente.Text = "0.00";
 
-            // Reiniciar modo
             _esEdicion = false;
             _idFacturaExistente = 0;
             _facturaEdicion = null;
             _clienteEdicion = null;
             _detallesEdicion = null;
 
-            // Nuevo número de factura
             lblNumeroFactura.Text = FacturacionManager.Instance.GenerarSiguienteNumeroFactura();
-
-            // Botón por defecto
             btnGuardarFactura.Text = "Pagar";
-
-            // Enfocar primer campo útil
-            cmbClientes.Focus();
+            btnBuscarCliente.Focus();
         }
+
         private void btnEliminarItem_Click_1(object sender, EventArgs e)
         {
             if (dgvDetalle.SelectedRows.Count > 0)
             {
                 int idProducto = Convert.ToInt32(dgvDetalle.SelectedRows[0].Cells[0].Value);
-
                 var itemAEliminar = listaDetalles.FirstOrDefault(d => d.ID_Producto == idProducto);
 
                 if (itemAEliminar != null)
@@ -454,18 +388,15 @@ namespace MiniSistemaFacturacion.Forms
             }
             else
             {
-                MessageBox.Show(
-                    "Por favor, seleccione una fila completa en la tabla para eliminar.",
-                    "Aviso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccione una fila completa en la tabla para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void HabilitarControles(bool habilitar)
         {
-            cmbClientes.Enabled = habilitar;
-            cmbProductos.Enabled = habilitar;
+            btnBuscarCliente.Enabled = habilitar;
+            txtProductos.Enabled = habilitar;
+            btnBuscarProducto.Enabled = habilitar;
             numCantidad.Enabled = habilitar;
             btnAnadir.Enabled = habilitar;
             btnEliminarItem.Enabled = habilitar;
@@ -520,12 +451,104 @@ namespace MiniSistemaFacturacion.Forms
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void label10_Click(object sender, EventArgs e)
         {
+        }
 
+        private void chkCredito_CheckedChanged(object sender, EventArgs e)
+        {
+            // Actualizar saldo pendiente cuando cambia el estado de crédito
+            if (chkCredito.Checked)
+            {
+                txtSaldoPendiente.Text = txtTotalNeto.Text;
+            }
+            else
+            {
+                txtSaldoPendiente.Text = "0.00";
+            }
+        }
+
+        private void btnBuscarCliente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var frmBusqueda = new FrmBusquedaClientes())
+                {
+                    if (frmBusqueda.ShowDialog() == DialogResult.OK)
+                    {
+                        var clienteSeleccionado = frmBusqueda.ClienteSeleccionado;
+                        if (clienteSeleccionado != null)
+                        {
+                            // Asignar el cliente seleccionado
+                            _clienteSeleccionado = clienteSeleccionado;
+                            txtClientes.Text = clienteSeleccionado.GetIdentificadorCompleto();
+                            
+                            // Auto-seleccionar tipo de comprobante según tipo de cliente
+                            SeleccionarTipoComprobanteSegunCliente(clienteSeleccionado);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar cliente: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SeleccionarTipoComprobanteSegunCliente(Cliente cliente)
+        {
+            try
+            {
+                if (cliente == null) return;
+
+                // Auto-seleccionar tipo de comprobante según tipo de cliente
+                if (cliente.EsCreditoFiscal())
+                {
+                    // Cliente de Crédito Fiscal -> Factura con Valor Fiscal (índice 0)
+                    if (cmbTipoComprobante.Items.Count > 0)
+                    {
+                        cmbTipoComprobante.SelectedIndex = 0;
+                    }
+                }
+                else
+                {
+                    // Consumidor Final -> Factura para Consumidor Final (índice 1)
+                    if (cmbTipoComprobante.Items.Count > 1)
+                    {
+                        cmbTipoComprobante.SelectedIndex = 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al seleccionar tipo de comprobante: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnBuscarProducto_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var frmBusqueda = new FrmBusquedaProductos())
+                {
+                    if (frmBusqueda.ShowDialog() == DialogResult.OK)
+                    {
+                        var productoSeleccionado = frmBusqueda.ProductoSeleccionado;
+                        if (productoSeleccionado != null)
+                        {
+                            // Asignar el producto seleccionado
+                            _productoSeleccionado = productoSeleccionado;
+                            txtProductos.Text = productoSeleccionado.Descripcion;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar producto: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

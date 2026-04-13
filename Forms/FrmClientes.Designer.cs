@@ -39,6 +39,8 @@
             this.txtDireccionCli = new System.Windows.Forms.TextBox();
             this.txtTelefonoCli = new System.Windows.Forms.TextBox();
             this.txtCorreoCli = new System.Windows.Forms.TextBox();
+            this.cmbTipoCliente = new System.Windows.Forms.ComboBox();
+            this.txtRNC = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,6 +48,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.btnLimpiar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
@@ -145,6 +149,26 @@
             this.txtCorreoCli.Size = new System.Drawing.Size(137, 20);
             this.txtCorreoCli.TabIndex = 10;
             // 
+            // cmbTipoCliente
+            // 
+            this.cmbTipoCliente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipoCliente.FormattingEnabled = true;
+            this.cmbTipoCliente.Items.AddRange(new object[] {
+            "CF - Consumidor Final",
+            "CCF - Crédito Fiscal"});
+            this.cmbTipoCliente.Location = new System.Drawing.Point(816, 37);
+            this.cmbTipoCliente.Name = "cmbTipoCliente";
+            this.cmbTipoCliente.Size = new System.Drawing.Size(150, 21);
+            this.cmbTipoCliente.TabIndex = 11;
+            this.cmbTipoCliente.SelectedValueChanged += new System.EventHandler(this.cmbTipoCliente_SelectedValueChanged);
+            // 
+            // txtRNC
+            // 
+            this.txtRNC.Location = new System.Drawing.Point(972, 37);
+            this.txtRNC.Name = "txtRNC";
+            this.txtRNC.Size = new System.Drawing.Size(100, 20);
+            this.txtRNC.TabIndex = 12;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -215,6 +239,26 @@
             this.label7.TabIndex = 17;
             this.label7.Text = "Buscar Cliente";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(771, 21);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(39, 17);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Tipo";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(972, 21);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(35, 17);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "RNC";
+            // 
             // btnLimpiar
             // 
             this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -232,6 +276,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(893, 438);
             this.Controls.Add(this.btnLimpiar);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -239,6 +285,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtRNC);
+            this.Controls.Add(this.cmbTipoCliente);
             this.Controls.Add(this.txtCorreoCli);
             this.Controls.Add(this.txtTelefonoCli);
             this.Controls.Add(this.txtDireccionCli);
@@ -281,5 +329,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.ComboBox cmbTipoCliente;
+        private System.Windows.Forms.TextBox txtRNC;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }

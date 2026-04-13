@@ -36,7 +36,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.cmbProductos = new System.Windows.Forms.ComboBox();
+            this.txtProductos = new System.Windows.Forms.TextBox();
+            this.btnBuscarProducto = new System.Windows.Forms.Button();
             this.btnAnadir = new System.Windows.Forms.Button();
             this.btnEliminarItem = new System.Windows.Forms.Button();
             this.numCantidad = new System.Windows.Forms.NumericUpDown();
@@ -52,7 +53,8 @@
             this.btnCancelar = new System.Windows.Forms.Button();
             this.chkEnviarEmail = new System.Windows.Forms.CheckBox();
             this.chkImprimirDirecto = new System.Windows.Forms.CheckBox();
-            this.cmbClientes = new System.Windows.Forms.ComboBox();
+            this.txtClientes = new System.Windows.Forms.TextBox();
+            this.btnBuscarCliente = new System.Windows.Forms.Button();
             this.chkCredito = new System.Windows.Forms.CheckBox();
             this.cmbTipoComprobante = new System.Windows.Forms.ComboBox();
             this.lblTipoComprobante = new System.Windows.Forms.Label();
@@ -142,22 +144,32 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "No. Factura:";
             // 
-            // cmbProductos
+            // txtProductos
             // 
-            this.cmbProductos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbProductos.FormattingEnabled = true;
-            this.cmbProductos.Location = new System.Drawing.Point(86, 109);
-            this.cmbProductos.Name = "cmbProductos";
-            this.cmbProductos.Size = new System.Drawing.Size(373, 26);
-            this.cmbProductos.TabIndex = 11;
+            this.txtProductos.Location = new System.Drawing.Point(86, 109);
+            this.txtProductos.Name = "txtProductos";
+            this.txtProductos.ReadOnly = true;
+            this.txtProductos.Size = new System.Drawing.Size(373, 24);
+            this.txtProductos.TabIndex = 11;
+            // 
+            // btnBuscarProducto
+            // 
+            this.btnBuscarProducto.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscarProducto.Location = new System.Drawing.Point(465, 108);
+            this.btnBuscarProducto.Name = "btnBuscarProducto";
+            this.btnBuscarProducto.Size = new System.Drawing.Size(29, 22);
+            this.btnBuscarProducto.TabIndex = 12;
+            this.btnBuscarProducto.Text = "+";
+            this.btnBuscarProducto.UseVisualStyleBackColor = true;
+            this.btnBuscarProducto.Click += new System.EventHandler(this.btnBuscarProducto_Click);
             // 
             // btnAnadir
             // 
             this.btnAnadir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAnadir.Location = new System.Drawing.Point(461, 122);
+            this.btnAnadir.Location = new System.Drawing.Point(460, 140);
             this.btnAnadir.Name = "btnAnadir";
             this.btnAnadir.Size = new System.Drawing.Size(91, 26);
-            this.btnAnadir.TabIndex = 12;
+            this.btnAnadir.TabIndex = 13;
             this.btnAnadir.Text = "Añadir";
             this.btnAnadir.UseVisualStyleBackColor = true;
             this.btnAnadir.Click += new System.EventHandler(this.btnAnadir_Click_1);
@@ -165,10 +177,10 @@
             // btnEliminarItem
             // 
             this.btnEliminarItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEliminarItem.Location = new System.Drawing.Point(558, 122);
+            this.btnEliminarItem.Location = new System.Drawing.Point(558, 140);
             this.btnEliminarItem.Name = "btnEliminarItem";
             this.btnEliminarItem.Size = new System.Drawing.Size(91, 26);
-            this.btnEliminarItem.TabIndex = 13;
+            this.btnEliminarItem.TabIndex = 14;
             this.btnEliminarItem.Text = "Eliminar";
             this.btnEliminarItem.UseVisualStyleBackColor = true;
             this.btnEliminarItem.Click += new System.EventHandler(this.btnEliminarItem_Click_1);
@@ -183,7 +195,7 @@
             0});
             this.numCantidad.Name = "numCantidad";
             this.numCantidad.Size = new System.Drawing.Size(120, 24);
-            this.numCantidad.TabIndex = 14;
+            this.numCantidad.TabIndex = 15;
             this.numCantidad.Value = new decimal(new int[] {
             1,
             0,
@@ -194,69 +206,73 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(22, 531);
+            this.label6.Location = new System.Drawing.Point(42, 543);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 18);
             this.label6.TabIndex = 15;
             this.label6.Text = "Subtotal:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(114, 531);
+            this.label7.Location = new System.Drawing.Point(191, 543);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(102, 18);
             this.label7.TabIndex = 16;
             this.label7.Text = "ITBIS (18%):";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(222, 531);
+            this.label8.Location = new System.Drawing.Point(370, 543);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(92, 18);
             this.label8.TabIndex = 17;
             this.label8.Text = "Total Neto:";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(325, 531);
+            this.label9.Location = new System.Drawing.Point(518, 543);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(135, 18);
             this.label9.TabIndex = 18;
             this.label9.Text = "Saldo Pendiente:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtSubtotal
             // 
-            this.txtSubtotal.Location = new System.Drawing.Point(8, 507);
+            this.txtSubtotal.Location = new System.Drawing.Point(13, 516);
             this.txtSubtotal.Name = "txtSubtotal";
             this.txtSubtotal.ReadOnly = true;
-            this.txtSubtotal.Size = new System.Drawing.Size(86, 24);
+            this.txtSubtotal.Size = new System.Drawing.Size(128, 24);
             this.txtSubtotal.TabIndex = 19;
             // 
             // txtIVA
             // 
-            this.txtIVA.Location = new System.Drawing.Point(102, 507);
+            this.txtIVA.Location = new System.Drawing.Point(181, 516);
             this.txtIVA.Name = "txtIVA";
             this.txtIVA.ReadOnly = true;
-            this.txtIVA.Size = new System.Drawing.Size(100, 24);
+            this.txtIVA.Size = new System.Drawing.Size(128, 24);
             this.txtIVA.TabIndex = 20;
             // 
             // txtTotalNeto
             // 
-            this.txtTotalNeto.Location = new System.Drawing.Point(208, 507);
+            this.txtTotalNeto.Location = new System.Drawing.Point(351, 516);
             this.txtTotalNeto.Name = "txtTotalNeto";
             this.txtTotalNeto.ReadOnly = true;
-            this.txtTotalNeto.Size = new System.Drawing.Size(100, 24);
+            this.txtTotalNeto.Size = new System.Drawing.Size(128, 24);
             this.txtTotalNeto.TabIndex = 21;
             // 
             // txtSaldoPendiente
             // 
-            this.txtSaldoPendiente.Location = new System.Drawing.Point(314, 507);
+            this.txtSaldoPendiente.Location = new System.Drawing.Point(521, 516);
             this.txtSaldoPendiente.Name = "txtSaldoPendiente";
             this.txtSaldoPendiente.ReadOnly = true;
             this.txtSaldoPendiente.Size = new System.Drawing.Size(128, 24);
@@ -276,7 +292,7 @@
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(557, 465);
+            this.btnCancelar.Location = new System.Drawing.Point(558, 465);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(91, 25);
             this.btnCancelar.TabIndex = 24;
@@ -287,7 +303,7 @@
             // chkEnviarEmail
             // 
             this.chkEnviarEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnviarEmail.Location = new System.Drawing.Point(8, 434);
+            this.chkEnviarEmail.Location = new System.Drawing.Point(11, 434);
             this.chkEnviarEmail.Name = "chkEnviarEmail";
             this.chkEnviarEmail.Size = new System.Drawing.Size(104, 24);
             this.chkEnviarEmail.TabIndex = 1;
@@ -302,17 +318,29 @@
             this.chkImprimirDirecto.TabIndex = 0;
             this.chkImprimirDirecto.Text = "Imprimir";
             // 
-            // cmbClientes
+            // txtClientes
             // 
-            this.cmbClientes.Location = new System.Drawing.Point(174, 47);
-            this.cmbClientes.Name = "cmbClientes";
-            this.cmbClientes.Size = new System.Drawing.Size(285, 26);
-            this.cmbClientes.TabIndex = 4;
+            this.txtClientes.Location = new System.Drawing.Point(174, 47);
+            this.txtClientes.Name = "txtClientes";
+            this.txtClientes.ReadOnly = true;
+            this.txtClientes.Size = new System.Drawing.Size(285, 24);
+            this.txtClientes.TabIndex = 4;
+            // 
+            // btnBuscarCliente
+            // 
+            this.btnBuscarCliente.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscarCliente.Location = new System.Drawing.Point(465, 48);
+            this.btnBuscarCliente.Name = "btnBuscarCliente";
+            this.btnBuscarCliente.Size = new System.Drawing.Size(29, 22);
+            this.btnBuscarCliente.TabIndex = 5;
+            this.btnBuscarCliente.Text = "🔍 Search";
+            this.btnBuscarCliente.UseVisualStyleBackColor = true;
+            this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);
             // 
             // chkCredito
             // 
             this.chkCredito.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkCredito.Location = new System.Drawing.Point(204, 434);
+            this.chkCredito.Location = new System.Drawing.Point(210, 435);
             this.chkCredito.Name = "chkCredito";
             this.chkCredito.Size = new System.Drawing.Size(147, 24);
             this.chkCredito.TabIndex = 25;
@@ -371,7 +399,10 @@
             this.Controls.Add(this.chkCredito);
             this.Controls.Add(this.chkImprimirDirecto);
             this.Controls.Add(this.chkEnviarEmail);
-            this.Controls.Add(this.cmbClientes);
+            this.Controls.Add(this.txtClientes);
+            this.Controls.Add(this.btnBuscarCliente);
+            this.Controls.Add(this.txtProductos);
+            this.Controls.Add(this.btnBuscarProducto);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardarFactura);
             this.Controls.Add(this.txtSaldoPendiente);
@@ -385,7 +416,6 @@
             this.Controls.Add(this.numCantidad);
             this.Controls.Add(this.btnEliminarItem);
             this.Controls.Add(this.btnAnadir);
-            this.Controls.Add(this.cmbProductos);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
@@ -416,7 +446,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cmbProductos;
+        private System.Windows.Forms.TextBox txtProductos;
+        private System.Windows.Forms.Button btnBuscarProducto;
         private System.Windows.Forms.Button btnAnadir;
         private System.Windows.Forms.Button btnEliminarItem;
         private System.Windows.Forms.NumericUpDown numCantidad;
@@ -432,7 +463,8 @@
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.CheckBox chkEnviarEmail;
         private System.Windows.Forms.CheckBox chkImprimirDirecto;
-        private System.Windows.Forms.ComboBox cmbClientes;
+        private System.Windows.Forms.TextBox txtClientes;
+        private System.Windows.Forms.Button btnBuscarCliente;
         private System.Windows.Forms.CheckBox chkCredito;
         private System.Windows.Forms.ComboBox cmbTipoComprobante;
         private System.Windows.Forms.Label lblTipoComprobante;

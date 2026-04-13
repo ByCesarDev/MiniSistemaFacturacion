@@ -32,8 +32,8 @@ namespace MiniSistemaFacturacion.DataAccess
             try
             {
                 string query = @"
-                    INSERT INTO Clientes (Nombre, Cedula, Direccion, Telefono, Email)
-                    VALUES (@Nombre, @Cedula, @Direccion, @Telefono, @Email);
+                    INSERT INTO Clientes (Nombre, Cedula, Direccion, Telefono, Email, TipoCliente, RNC)
+                    VALUES (@Nombre, @Cedula, @Direccion, @Telefono, @Email, @TipoCliente, @RNC);
                     SELECT SCOPE_IDENTITY();";
 
                 SqlParameter[] parameters = new SqlParameter[]
@@ -42,7 +42,9 @@ namespace MiniSistemaFacturacion.DataAccess
                     DbHelper.Instance.CreateParameter("@Cedula", cliente.Cedula),
                     DbHelper.Instance.CreateParameter("@Direccion", cliente.Direccion ?? (object)DBNull.Value),
                     DbHelper.Instance.CreateParameter("@Telefono", cliente.Telefono ?? (object)DBNull.Value),
-                    DbHelper.Instance.CreateParameter("@Email", cliente.Email ?? (object)DBNull.Value)
+                    DbHelper.Instance.CreateParameter("@Email", cliente.Email ?? (object)DBNull.Value),
+                    DbHelper.Instance.CreateParameter("@TipoCliente", cliente.TipoCliente),
+                    DbHelper.Instance.CreateParameter("@RNC", cliente.RNC ?? (object)DBNull.Value)
                 };
 
                 object result = DbHelper.Instance.ExecuteScalar(query, parameters);
@@ -78,7 +80,9 @@ namespace MiniSistemaFacturacion.DataAccess
                         Cedula = @Cedula, 
                         Direccion = @Direccion, 
                         Telefono = @Telefono, 
-                        Email = @Email
+                        Email = @Email,
+                        TipoCliente = @TipoCliente,
+                        RNC = @RNC
                     WHERE ID_Cliente = @ID_Cliente";
 
                 SqlParameter[] parameters = new SqlParameter[]
@@ -88,7 +92,9 @@ namespace MiniSistemaFacturacion.DataAccess
                     DbHelper.Instance.CreateParameter("@Cedula", cliente.Cedula),
                     DbHelper.Instance.CreateParameter("@Direccion", cliente.Direccion ?? (object)DBNull.Value),
                     DbHelper.Instance.CreateParameter("@Telefono", cliente.Telefono ?? (object)DBNull.Value),
-                    DbHelper.Instance.CreateParameter("@Email", cliente.Email ?? (object)DBNull.Value)
+                    DbHelper.Instance.CreateParameter("@Email", cliente.Email ?? (object)DBNull.Value),
+                    DbHelper.Instance.CreateParameter("@TipoCliente", cliente.TipoCliente),
+                    DbHelper.Instance.CreateParameter("@RNC", cliente.RNC ?? (object)DBNull.Value)
                 };
 
                 return DbHelper.Instance.ExecuteNonQuery(query, parameters);
@@ -186,7 +192,7 @@ namespace MiniSistemaFacturacion.DataAccess
             {
                 string query = @"
                     SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
-                           FechaCreacion, Estado
+                           TipoCliente, RNC, FechaCreacion, Estado
                     FROM Clientes
                     WHERE ID_Cliente = @ID_Cliente";
 
@@ -250,17 +256,33 @@ namespace MiniSistemaFacturacion.DataAccess
 
             try
             {
-                string query = @"
-                    SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
-                           FechaCreacion, Estado
-                    FROM Clientes
-                    ORDER BY ID_Cliente";
+                // Verificar si las columnas TipoCliente y RNC existen
+                bool tieneTipoCliente = ColumnExists("Clientes", "TipoCliente");
+                bool tieneRNC = ColumnExists("Clientes", "RNC");
+
+                string query;
+                if (tieneTipoCliente && tieneRNC)
+                {
+                    query = @"
+                        SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                               TipoCliente, RNC, FechaCreacion, Estado
+                        FROM Clientes
+                        ORDER BY ID_Cliente";
+                }
+                else
+                {
+                    query = @"
+                        SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                               FechaCreacion, Estado
+                        FROM Clientes
+                        ORDER BY ID_Cliente";
+                }
 
                 DataTable dt = DbHelper.Instance.ExecuteQuery(query);
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    clientes.Add(MapearCliente(row));
+                    clientes.Add(MapearCliente(row, tieneTipoCliente, tieneRNC));
                 }
             }
             catch (Exception ex)
@@ -418,7 +440,142 @@ namespace MiniSistemaFacturacion.DataAccess
 
         #endregion
 
+        #region Search Methods
+
+        /// <summary>
+        /// Busca clientes por nombre y/o RNC
+        /// </summary>
+        /// <param name="nombre">Nombre del cliente (opcional)</param>
+        /// <param name="rnc">RNC/Cédula del cliente (opcional)</param>
+        /// <returns>Lista de clientes que coinciden con los criterios</returns>
+        public List<Cliente> BuscarClientes(string nombre = null, string rnc = null)
+        {
+            try
+            {
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string query = "SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, FechaCreacion, Estado FROM Clientes WHERE Estado = 1";
+
+                if (!string.IsNullOrWhiteSpace(nombre))
+                {
+                    query += " AND Nombre LIKE @Nombre";
+                    parameters.Add(DbHelper.Instance.CreateParameter("@Nombre", $"%{nombre}%"));
+                }
+
+                if (!string.IsNullOrWhiteSpace(rnc))
+                {
+                    query += " AND Cedula LIKE @Cedula";
+                    parameters.Add(DbHelper.Instance.CreateParameter("@Cedula", $"%{rnc}%"));
+                }
+
+                query += " ORDER BY Nombre";
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parameters.ToArray());
+                List<Cliente> clientes = new List<Cliente>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    clientes.Add(MapearCliente(row));
+                }
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al buscar clientes: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los últimos N clientes registrados
+        /// </summary>
+        /// <param name="cantidad">Número de clientes a obtener</param>
+        /// <returns>Lista de los últimos clientes</returns>
+        public List<Cliente> ObtenerUltimosClientes(int cantidad = 100)
+        {
+            try
+            {
+                string query = @"
+                    SELECT TOP (@Cantidad) ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, FechaCreacion, Estado 
+                    FROM Clientes 
+                    WHERE Estado = 1 
+                    ORDER BY FechaCreacion DESC";
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    DbHelper.Instance.CreateParameter("@Cantidad", cantidad)
+                };
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parameters);
+                List<Cliente> clientes = new List<Cliente>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    clientes.Add(MapearCliente(row));
+                }
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener últimos clientes: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Busca clientes por nombre (búsqueda parcial)
+        /// </summary>
+        /// <param name="nombre">Nombre o parte del nombre a buscar</param>
+        /// <returns>Lista de clientes que coinciden</returns>
+        public List<Cliente> BuscarPorNombre(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return new List<Cliente>();
+
+            return BuscarClientes(nombre, null);
+        }
+
+        /// <summary>
+        /// Busca clientes por RNC/Cédula (búsqueda exacta o parcial)
+        /// </summary>
+        /// <param name="rnc">RNC/Cédula a buscar</param>
+        /// <returns>Lista de clientes que coinciden</returns>
+        public List<Cliente> BuscarPorRNC(string rnc)
+        {
+            if (string.IsNullOrWhiteSpace(rnc))
+                return new List<Cliente>();
+
+            return BuscarClientes(null, rnc);
+        }
+
+        #endregion
+
         #region Utility Methods
+
+        /// <summary>
+        /// Obtiene todos los clientes activos
+        /// </summary>
+        /// <returns>Lista de clientes activos</returns>
+        public List<Cliente> ObtenerClientesActivos()
+        {
+            try
+            {
+                string query = "SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, FechaCreacion, Estado FROM Clientes WHERE Estado = 1 ORDER BY Nombre";
+                
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query);
+                List<Cliente> clientes = new List<Cliente>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    clientes.Add(MapearCliente(row));
+                }
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener clientes activos: {ex.Message}", ex);
+            }
+        }
 
         /// <summary>
         /// Obtiene el número total de clientes
@@ -463,6 +620,11 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <returns>Objeto Cliente mapeado</returns>
         private Cliente MapearCliente(DataRow row)
         {
+            return MapearCliente(row, true, true);
+        }
+
+        private Cliente MapearCliente(DataRow row, bool tieneTipoCliente, bool tieneRNC)
+        {
             Cliente cliente = new Cliente
             {
                 ID_Cliente = Convert.ToInt32(row["ID_Cliente"]),
@@ -475,7 +637,46 @@ namespace MiniSistemaFacturacion.DataAccess
                 Estado = Convert.ToBoolean(row["Estado"])
             };
 
+            // Asignar TipoCliente y RNC solo si las columnas existen
+            if (tieneTipoCliente && row.Table.Columns.Contains("TipoCliente"))
+            {
+                cliente.TipoCliente = row["TipoCliente"] != DBNull.Value ? row["TipoCliente"].ToString() : "CF";
+            }
+            else
+            {
+                cliente.TipoCliente = "CF"; // Valor por defecto
+            }
+
+            if (tieneRNC && row.Table.Columns.Contains("RNC"))
+            {
+                cliente.RNC = row["RNC"] != DBNull.Value ? row["RNC"].ToString() : null;
+            }
+
             return cliente;
+        }
+
+        private bool ColumnExists(string tableName, string columnName)
+        {
+            try
+            {
+                string query = @"
+                    SELECT COUNT(*) 
+                    FROM INFORMATION_SCHEMA.COLUMNS 
+                    WHERE TABLE_NAME = @TableName AND COLUMN_NAME = @ColumnName";
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    DbHelper.Instance.CreateParameter("@TableName", tableName),
+                    DbHelper.Instance.CreateParameter("@ColumnName", columnName)
+                };
+
+                object result = DbHelper.Instance.ExecuteScalar(query, parameters);
+                return Convert.ToInt32(result) > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion

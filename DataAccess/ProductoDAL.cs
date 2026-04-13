@@ -705,6 +705,32 @@ namespace MiniSistemaFacturacion.DataAccess
         }
 
         /// <summary>
+        /// Obtiene todos los productos activos
+        /// </summary>
+        /// <returns>Lista de productos activos</returns>
+        public List<Producto> ObtenerProductosActivos()
+        {
+            try
+            {
+                string query = "SELECT ID_Producto, Codigo, Descripcion, PrecioUnitario, Stock, StockMinimo, Categoria, FechaCreacion, Estado FROM Productos WHERE Estado = 1 ORDER BY Descripcion";
+                
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query);
+                List<Producto> productos = new List<Producto>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    productos.Add(MapearProducto(row));
+                }
+
+                return productos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener productos activos: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
         /// Obtiene todas las categorías de productos
         /// </summary>
         /// <returns>Lista de categorías únicas</returns>
@@ -748,12 +774,15 @@ namespace MiniSistemaFacturacion.DataAccess
                 Codigo = row["Codigo"].ToString(),
                 Descripcion = row["Descripcion"].ToString(),
                 PrecioUnitario = Convert.ToDecimal(row["PrecioUnitario"]),
-                Stock = Convert.ToInt32(row["Stock"]),
-                StockMinimo = Convert.ToInt32(row["StockMinimo"]),
+                Stock = row["Stock"] != DBNull.Value ? Convert.ToInt32(row["Stock"]) : 0,
+                StockMinimo = row["StockMinimo"] != DBNull.Value ? Convert.ToInt32(row["StockMinimo"]) : 0,
                 Categoria = row["Categoria"] != DBNull.Value ? row["Categoria"].ToString() : null,
                 Estado = Convert.ToBoolean(row["Estado"]),
                 FechaCreacion = Convert.ToDateTime(row["FechaCreacion"])
             };
+
+            // Depuración: mostrar información del producto mapeado
+            System.Diagnostics.Debug.WriteLine($"Producto mapeado: {producto.Descripcion} - Stock: {producto.Stock} - StockMinimo: {producto.StockMinimo}");
 
             return producto;
         }
@@ -799,6 +828,104 @@ namespace MiniSistemaFacturacion.DataAccess
             catch (Exception ex)
             {
                 throw new Exception($"Error al insertar producto con procedimiento: {ex.Message}", ex);
+            }
+        }
+
+        #endregion
+
+        #region Search Methods
+
+        /// <summary>
+        /// Busca productos por descripción, código y/o categoría
+        /// </summary>
+        /// <param name="descripcion">Descripción del producto (opcional)</param>
+        /// <param name="codigo">Código del producto (opcional)</param>
+        /// <param name="categoria">Categoría del producto (opcional)</param>
+        /// <returns>Lista de productos que coinciden con los criterios</returns>
+        public List<Producto> BuscarProductos(string descripcion = "", string codigo = "", string categoria = "")
+        {
+            try
+            {
+                List<string> condiciones = new List<string>();
+                List<SqlParameter> parametros = new List<SqlParameter>();
+
+                if (!string.IsNullOrWhiteSpace(descripcion))
+                {
+                    condiciones.Add("p.Descripcion LIKE @Descripcion");
+                    parametros.Add(new SqlParameter("@Descripcion", $"%{descripcion}%"));
+                }
+
+                if (!string.IsNullOrWhiteSpace(codigo))
+                {
+                    condiciones.Add("p.Codigo LIKE @Codigo");
+                    parametros.Add(new SqlParameter("@Codigo", $"%{codigo}%"));
+                }
+
+                if (!string.IsNullOrWhiteSpace(categoria))
+                {
+                    condiciones.Add("p.Categoria LIKE @Categoria");
+                    parametros.Add(new SqlParameter("@Categoria", $"%{categoria}%"));
+                }
+
+                // Siempre filtrar por productos activos
+                condiciones.Add("p.Estado = 1");
+
+                string whereClause = condiciones.Count > 0 ? "WHERE " + string.Join(" AND ", condiciones) : "WHERE p.Estado = 1";
+
+                string query = $@"
+                    SELECT p.ID_Producto, p.Codigo, p.Descripcion, p.PrecioUnitario, p.Stock, p.StockMinimo, 
+                           p.Categoria, p.FechaCreacion, p.Estado
+                    FROM Productos p
+                    {whereClause}
+                    ORDER BY p.Descripcion";
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parametros.ToArray());
+                List<Producto> productos = new List<Producto>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    productos.Add(MapearProducto(row));
+                }
+
+                return productos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al buscar productos: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los últimos N productos agregados
+        /// </summary>
+        /// <param name="cantidad">Número de productos a obtener</param>
+        /// <returns>Lista de los últimos productos</returns>
+        public List<Producto> ObtenerUltimosProductos(int cantidad = 100)
+        {
+            try
+            {
+                string query = @"
+                    SELECT TOP (@Cantidad) 
+                           p.ID_Producto, p.Codigo, p.Descripcion, p.PrecioUnitario, p.Stock, p.StockMinimo, 
+                           p.Categoria, p.FechaCreacion, p.Estado
+                    FROM Productos p
+                    WHERE p.Estado = 1
+                    ORDER BY p.FechaCreacion DESC";
+
+                SqlParameter[] parametros = { new SqlParameter("@Cantidad", cantidad) };
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parametros);
+                List<Producto> productos = new List<Producto>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    productos.Add(MapearProducto(row));
+                }
+
+                return productos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener últimos productos: {ex.Message}", ex);
             }
         }
 

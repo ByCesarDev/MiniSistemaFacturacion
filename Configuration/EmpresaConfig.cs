@@ -1,6 +1,5 @@
 using MiniSistemaFacturacion.DataAccess;
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -88,58 +87,61 @@ namespace MiniSistemaFacturacion.Configuration
 
         #region Constructor
 
-        /// <summary>
-        /// Constructor privado que carga la configuración desde App.config
-        /// </summary>
         private EmpresaConfig()
         {
-            CargarConfiguracion();
+            CargarConfiguracionDesdeBD();
         }
 
         #endregion
 
-        #region Configuration Methods
+        #region Cargar Configuración
 
         /// <summary>
-        /// Carga la configuración desde el archivo App.config
+        /// Carga la configuración desde la base de datos
         /// </summary>
-        private void CargarConfiguracion()
+        private void CargarConfiguracionDesdeBD()
         {
             try
             {
-                Nombre = GetConfigValue("EmpresaNombre", "Mi Empresa S.A.");
-                Direccion = GetConfigValue("EmpresaDireccion", "Dirección no configurada");
-                Telefono = GetConfigValue("EmpresaTelefono", "Teléfono no configurado");
-                Email = GetConfigValue("EmpresaEmail", "email@empresa.com");
-                RNC = GetConfigValue("EmpresaRNC", "123456789");
-                NCFActual = GetConfigValue("NCFActual", "01010000001");
-                NCFConsumidorFinal = GetConfigValue("NCFConsumidorFinal", "B0100000001");
-                RutaPdfTickets = GetConfigValue("RutaPdfTickets", "./TicketsPDF/");
+                var dal = new ConfiguracionEmpresaDAL();
+                var dt = dal.ObtenerConfiguracionActiva();
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    // Cargar desde la base de datos
+                    var row = dt.Rows[0];
+                    Nombre = row["Nombre"].ToString() ?? "Mi Empresa S.A.";
+                    Direccion = row["Direccion"].ToString() ?? "Dirección no configurada";
+                    Telefono = row["Telefono"].ToString() ?? "Teléfono no configurado";
+                    Email = row["Email"].ToString() ?? "email@empresa.com";
+                    RNC = row["RNC"].ToString() ?? "123456789";
+                    NCFActual = row["NCFActual"].ToString() ?? "01010000001";
+                    NCFConsumidorFinal = row["NCFConsumidorFinal"].ToString() ?? "B0100000001";
+                    RutaPdfTickets = row["RutaPdfTickets"].ToString() ?? "./TicketsPDF/";
+                }
+                else
+                {
+                    // Si no hay configuración en BD, usar valores por defecto
+                    SetValoresPorDefecto();
+                }
             }
             catch
             {
-                // Si hay error al cargar configuración, usar valores por defecto
                 SetValoresPorDefecto();
             }
         }
 
         /// <summary>
-        /// Obtiene un valor de configuración del App.config
+        /// Recarga la configuración desde la base de datos
         /// </summary>
-        /// <param name="key">Clave de configuración</param>
-        /// <param name="defaultValue">Valor por defecto si no existe</param>
-        /// <returns>Valor de configuración</returns>
-        private string GetConfigValue(string key, string defaultValue)
+        public void RecargarConfiguracion()
         {
-            try
-            {
-                return ConfigurationManager.AppSettings[key] ?? defaultValue;
-            }
-            catch
-            {
-                return defaultValue;
-            }
+            CargarConfiguracionDesdeBD();
         }
+
+        #endregion
+
+        #region Configuration Methods
 
         /// <summary>
         /// Establece valores por defecto en caso de error
@@ -292,16 +294,17 @@ namespace MiniSistemaFacturacion.Configuration
             if (string.IsNullOrWhiteSpace(ncf))
                 return false;
 
-            // Validar longitud (11 caracteres para NCF estándar)
+            // Los NCF modernos tienen 11 caracteres (ej: B0100000001)
             if (ncf.Length != 11)
                 return false;
 
-            // Validar que todos los caracteres sean dígitos
-            if (!ncf.All(char.IsDigit))
+            // El primer carácter debe ser una letra (Serie, usualmente 'B' o 'E')
+            if (!char.IsLetter(ncf[0]))
                 return false;
 
-            // Validar que sea numérico
-            return long.TryParse(ncf, out _);
+            // Los 10 caracteres restantes deben ser números
+            string parteNumerica = ncf.Substring(1);
+            return parteNumerica.All(char.IsDigit);
         }
 
         /// <summary>

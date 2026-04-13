@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Configuration;
+using MiniSistemaFacturacion.DataAccess;
 using EmpresaConfig = MiniSistemaFacturacion.Configuration.EmpresaConfig;
 
 namespace MiniSistemaFacturacion.Forms
@@ -33,34 +33,7 @@ namespace MiniSistemaFacturacion.Forms
 
         #region Métodos Privados
 
-        /// <summary>
-        /// Carga la configuración actual en los controles del formulario
-        /// </summary>
-        private void CargarConfiguracionActual()
-        {
-            try
-            {
-                var config = EmpresaConfig.Instance;
-
-                // Datos de la empresa
-                txtNombre.Text = config.Nombre ?? string.Empty;
-                txtDireccion.Text = config.Direccion ?? string.Empty;
-                txtTelefono.Text = config.Telefono ?? string.Empty;
-                txtEmail.Text = config.Email ?? string.Empty;
-                txtRNC.Text = config.RNC ?? string.Empty;
-
-                // Configuración fiscal
-                txtNCFActual.Text = config.NCFActual ?? string.Empty;
-                txtNCFConsumidorFinal.Text = config.NCFConsumidorFinal ?? string.Empty;
-                txtRutaPdfTickets.Text = config.RutaPdfTickets ?? string.Empty;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al cargar configuración: {ex.Message}", 
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        
         /// <summary>
         /// Valida los datos ingresados antes de guardar
         /// </summary>
@@ -103,10 +76,10 @@ namespace MiniSistemaFacturacion.Forms
                 return false;
             }
 
-            // Validar formato del NCF (11 dígitos)
+            // Validar formato del NCF
             if (!EmpresaConfig.Instance.ValidarNCF(txtNCFActual.Text))
             {
-                MessageBox.Show("El NCF Actual debe contener exactamente 11 dígitos numéricos.", 
+                MessageBox.Show("El NCF debe tener 11 caracteres (ejemplo: B0100000001).", 
                     "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNCFActual.Focus();
                 return false;
@@ -190,28 +163,28 @@ namespace MiniSistemaFacturacion.Forms
         }
 
         /// <summary>
-        /// Guarda la configuración en el archivo App.config
+        /// Guarda la configuración en la base de datos
         /// </summary>
         private void GuardarConfiguracion()
         {
             try
             {
-                var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.None);
-                var appSettings = config.AppSettings.Settings;
+                var dal = new ConfiguracionEmpresaDAL();
+                
+                // Guardar en base de datos
+                dal.GuardarConfiguracion(
+                    txtNombre.Text.Trim(),
+                    txtDireccion.Text.Trim(),
+                    txtTelefono.Text.Trim(),
+                    txtEmail.Text.Trim(),
+                    txtRNC.Text.Trim(),
+                    txtNCFActual.Text.Trim(),
+                    txtNCFConsumidorFinal.Text.Trim(),
+                    txtRutaPdfTickets.Text.Trim()
+                );
 
-                // Actualizar o agregar valores
-                UpdateOrCreateSetting(appSettings, config, "EmpresaNombre", txtNombre.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "EmpresaDireccion", txtDireccion.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "EmpresaTelefono", txtTelefono.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "EmpresaEmail", txtEmail.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "EmpresaRNC", txtRNC.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "NCFActual", txtNCFActual.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "NCFConsumidorFinal", txtNCFConsumidorFinal.Text.Trim());
-                UpdateOrCreateSetting(appSettings, config, "RutaPdfTickets", txtRutaPdfTickets.Text.Trim());
-
-                // Guardar cambios
-                config.Save(System.Configuration.ConfigurationSaveMode.Modified);
-                System.Configuration.ConfigurationManager.RefreshSection("appSettings");
+                // Recargar la configuración en el singleton
+                EmpresaConfig.Instance.RecargarConfiguracion();
 
                 MessageBox.Show("Configuración guardada exitosamente.", 
                     "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -227,18 +200,29 @@ namespace MiniSistemaFacturacion.Forms
         }
 
         /// <summary>
-        /// Actualiza o crea una configuración en el App.config
+        /// Carga la configuración actual desde la base de datos
         /// </summary>
-        private void UpdateOrCreateSetting(KeyValueConfigurationCollection appSettings, 
-            System.Configuration.Configuration config, string key, string value)
+        private void CargarConfiguracionActual()
         {
-            if (appSettings[key] == null)
+            try
             {
-                appSettings.Add(key, value);
+                var config = EmpresaConfig.Instance;
+                txtNombre.Text = config.Nombre ?? string.Empty;
+                txtDireccion.Text = config.Direccion ?? string.Empty;
+                txtTelefono.Text = config.Telefono ?? string.Empty;
+                txtEmail.Text = config.Email ?? string.Empty;
+                txtRNC.Text = config.RNC ?? string.Empty;
+                txtNCFActual.Text = config.NCFActual ?? string.Empty;
+                txtNCFConsumidorFinal.Text = config.NCFConsumidorFinal ?? string.Empty;
+                txtRutaPdfTickets.Text = config.RutaPdfTickets ?? string.Empty;
             }
-            else
+            catch (Exception ex)
             {
-                appSettings[key].Value = value;
+                MessageBox.Show($"Error al cargar configuración: {ex.Message}", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                
+                // Cargar valores por defecto
+                RestablecerValoresPorDefecto();
             }
         }
 

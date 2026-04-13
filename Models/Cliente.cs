@@ -5,6 +5,15 @@ using System.Linq;
 namespace MiniSistemaFacturacion.Models
 {
     /// <summary>
+    /// Enumeración para tipos de cliente
+    /// </summary>
+    public enum TipoClienteEnum
+    {
+        ConsumidorFinal = 0,  // CF
+        CreditoFiscal = 1     // CCF
+    }
+
+    /// <summary>
     /// Entidad que representa un cliente en el sistema
     /// Created by: Cesar Reyes
     /// Date: 2026-04-07
@@ -53,6 +62,19 @@ namespace MiniSistemaFacturacion.Models
         public string Email { get; set; }
 
         /// <summary>
+        /// Tipo de cliente (CF = Consumidor Final, CCF = Crédito Fiscal)
+        /// </summary>
+        [Required(ErrorMessage = "El tipo de cliente es requerido")]
+        [StringLength(3, ErrorMessage = "El tipo de cliente no puede exceder 3 caracteres")]
+        public string TipoCliente { get; set; }
+
+        /// <summary>
+        /// RNC del cliente (obligatorio para Crédito Fiscal)
+        /// </summary>
+        [StringLength(20, ErrorMessage = "El RNC no puede exceder 20 caracteres")]
+        public string RNC { get; set; }
+
+        /// <summary>
         /// Fecha de creación del registro
         /// </summary>
         public DateTime FechaCreacion { get; set; }
@@ -71,6 +93,7 @@ namespace MiniSistemaFacturacion.Models
         /// </summary>
         public Cliente()
         {
+            TipoCliente = "CF"; // Consumidor Final por defecto
             FechaCreacion = DateTime.Now;
             Estado = true;
         }
@@ -84,6 +107,24 @@ namespace MiniSistemaFacturacion.Models
         {
             Nombre = nombre;
             Cedula = cedula;
+            TipoCliente = "CF"; // Consumidor Final por defecto
+            FechaCreacion = DateTime.Now;
+            Estado = true;
+        }
+
+        /// <summary>
+        /// Constructor completo
+        /// </summary>
+        /// <param name="nombre">Nombre del cliente</param>
+        /// <param name="cedula">Cédula del cliente</param>
+        /// <param name="tipoCliente">Tipo de cliente</param>
+        /// <param name="rnc">RNC del cliente (opcional)</param>
+        public Cliente(string nombre, string cedula, string tipoCliente, string rnc = null)
+        {
+            Nombre = nombre;
+            Cedula = cedula;
+            TipoCliente = tipoCliente;
+            RNC = rnc;
             FechaCreacion = DateTime.Now;
             Estado = true;
         }
@@ -104,10 +145,24 @@ namespace MiniSistemaFacturacion.Models
             if (string.IsNullOrWhiteSpace(Cedula))
                 return false;
 
+            if (string.IsNullOrWhiteSpace(TipoCliente))
+                return false;
+
             if (Nombre.Length > 100)
                 return false;
 
             if (Cedula.Length > 20)
+                return false;
+
+            if (TipoCliente.Length > 3)
+                return false;
+
+            // Validar que TipoCliente sea un valor válido
+            if (TipoCliente != "CF" && TipoCliente != "CCF")
+                return false;
+
+            // Validar RNC para clientes de Crédito Fiscal
+            if (TipoCliente == "CCF" && string.IsNullOrWhiteSpace(RNC))
                 return false;
 
             if (!string.IsNullOrWhiteSpace(Direccion) && Direccion.Length > 200)
@@ -117,6 +172,9 @@ namespace MiniSistemaFacturacion.Models
                 return false;
 
             if (!string.IsNullOrWhiteSpace(Email) && Email.Length > 100)
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(RNC) && RNC.Length > 20)
                 return false;
 
             return true;
@@ -134,11 +192,25 @@ namespace MiniSistemaFacturacion.Models
             if (string.IsNullOrWhiteSpace(Cedula))
                 return "La cédula es requerida";
 
+            if (string.IsNullOrWhiteSpace(TipoCliente))
+                return "El tipo de cliente es requerido";
+
             if (Nombre.Length > 100)
                 return "El nombre no puede exceder 100 caracteres";
 
             if (Cedula.Length > 20)
                 return "La cédula no puede exceder 20 caracteres";
+
+            if (TipoCliente.Length > 3)
+                return "El tipo de cliente no puede exceder 3 caracteres";
+
+            // Validar que TipoCliente sea un valor válido
+            if (TipoCliente != "CF" && TipoCliente != "CCF")
+                return "El tipo de cliente debe ser 'CF' (Consumidor Final) o 'CCF' (Crédito Fiscal)";
+
+            // Validar RNC para clientes de Crédito Fiscal
+            if (TipoCliente == "CCF" && string.IsNullOrWhiteSpace(RNC))
+                return "El RNC es obligatorio para clientes de Crédito Fiscal";
 
             if (!string.IsNullOrWhiteSpace(Direccion) && Direccion.Length > 200)
                 return "La dirección no puede exceder 200 caracteres";
@@ -148,6 +220,9 @@ namespace MiniSistemaFacturacion.Models
 
             if (!string.IsNullOrWhiteSpace(Email) && Email.Length > 100)
                 return "El email no puede exceder 100 caracteres";
+
+            if (!string.IsNullOrWhiteSpace(RNC) && RNC.Length > 20)
+                return "El RNC no puede exceder 20 caracteres";
 
             return string.Empty;
         }
@@ -182,6 +257,10 @@ namespace MiniSistemaFacturacion.Models
         {
             string info = $"Nombre: {Nombre}\n";
             info += $"Cédula: {Cedula}\n";
+            info += $"Tipo: {GetTipoClienteDescripcion()}\n";
+            
+            if (!string.IsNullOrWhiteSpace(RNC))
+                info += $"RNC: {RNC}\n";
             
             if (!string.IsNullOrWhiteSpace(Direccion))
                 info += $"Dirección: {Direccion}\n";
@@ -247,6 +326,65 @@ namespace MiniSistemaFacturacion.Models
             }
 
             return Cedula;
+        }
+
+        /// <summary>
+        /// Verifica si el cliente es Consumidor Final
+        /// </summary>
+        /// <returns>True si es Consumidor Final</returns>
+        public bool EsConsumidorFinal()
+        {
+            return TipoCliente == "CF";
+        }
+
+        /// <summary>
+        /// Verifica si el cliente es de Crédito Fiscal
+        /// </summary>
+        /// <returns>True si es de Crédito Fiscal</returns>
+        public bool EsCreditoFiscal()
+        {
+            return TipoCliente == "CCF";
+        }
+
+        /// <summary>
+        /// Obtiene la descripción del tipo de cliente
+        /// </summary>
+        /// <returns>Descripción del tipo de cliente</returns>
+        public string GetTipoClienteDescripcion()
+        {
+            switch (TipoCliente)
+            {
+                case "CF":
+                    return "Consumidor Final";
+                case "CCF":
+                    return "Crédito Fiscal";
+                default:
+                    return "Desconocido";
+            }
+        }
+
+        /// <summary>
+        /// Formatea el RNC para mostrar
+        /// </summary>
+        /// <returns>RNC formateado o string vacío si no tiene</returns>
+        public string GetFormattedRNC()
+        {
+            if (string.IsNullOrWhiteSpace(RNC))
+                return string.Empty;
+
+            return RNC;
+        }
+
+        /// <summary>
+        /// Obtiene el identificador completo del cliente (con tipo)
+        /// </summary>
+        /// <returns>Identificador con tipo de cliente</returns>
+        public string GetIdentificadorCompleto()
+        {
+            if (EsCreditoFiscal() && !string.IsNullOrWhiteSpace(RNC))
+                return $"{Nombre} ({GetTipoClienteDescripcion()}) - RNC: {RNC}";
+            else
+                return $"{Nombre} ({GetTipoClienteDescripcion()}) - Cédula: {GetFormattedCedula()}";
         }
 
         #endregion

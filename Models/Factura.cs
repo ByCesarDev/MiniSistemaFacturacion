@@ -118,6 +118,17 @@ namespace MiniSistemaFacturacion.Models
         public string TipoVenta { get; set; }
 
         /// <summary>
+        /// Forma de pago (EFECTIVO, TARJETA, TRANSFERENCIA, CHEQUE)
+        /// </summary>
+        [StringLength(20, ErrorMessage = "La forma de pago no puede exceder 20 caracteres")]
+        public string FormaPago { get; set; }
+
+        /// <summary>
+        /// Indica si la factura es a crédito
+        /// </summary>
+        public bool Credito { get; set; }
+
+        /// <summary>
         /// Tipo de comprobante fiscal (01, 02, 03, 14, 15, 16)
         /// </summary>
         [StringLength(2, ErrorMessage = "El tipo de comprobante no puede exceder 2 caracteres")]

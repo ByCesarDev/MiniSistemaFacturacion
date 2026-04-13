@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.DataAccess;
 using MiniSistemaFacturacion.Models;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -28,6 +29,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             dgvClientes.DataSource = clienteDAL.ObtenerTodos();
         }
+        
         private void LimpiarCampos()
         {
             txtNombreCli.Clear();
@@ -35,7 +37,12 @@ namespace MiniSistemaFacturacion.Forms
             txtDireccionCli.Clear();
             txtTelefonoCli.Clear();
             txtCorreoCli.Clear();
+            txtRNC.Clear();
             txtIdCli.Clear();
+            
+            // Establecer valores por defecto
+            cmbTipoCliente.SelectedIndex = 0; // CF - Consumidor Final por defecto
+            txtRNC.Enabled = false; // RNC deshabilitado para CF
 
             idClienteSeleccionado = 0;
             estadoClienteSeleccionado = 1;
@@ -49,20 +56,49 @@ namespace MiniSistemaFacturacion.Forms
                 txtTelefonoCli.Text.Trim() == "" ||
                 txtCorreoCli.Text.Trim() == "")
             {
-                MessageBox.Show("Complete todos los campos.");
+                MessageBox.Show("Complete todos los campos obligatorios.");
                 return false;
             }
 
+            // Validar teléfono
             if (!txtTelefonoCli.Text.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' '))
             {
                 MessageBox.Show("El teléfono solo puede contener números, +, - y espacios.");
                 return false;
             }
 
+            // Validar correo
             if (!txtCorreoCli.Text.Contains("@") || !txtCorreoCli.Text.Contains("."))
             {
                 MessageBox.Show("Ingrese un correo válido.");
                 return false;
+            }
+
+            // Validar tipo de cliente
+            if (cmbTipoCliente.SelectedIndex == -1)
+            {
+                MessageBox.Show("Seleccione un tipo de cliente.");
+                return false;
+            }
+
+            // Validar RNC para Crédito Fiscal
+            string tipoCliente = cmbTipoCliente.SelectedItem.ToString();
+            if (tipoCliente.StartsWith("CCF"))
+            {
+                string rnc = txtRNC.Text.Trim();
+                if (string.IsNullOrWhiteSpace(rnc))
+                {
+                    MessageBox.Show("El RNC es obligatorio para clientes de Crédito Fiscal.");
+                    return false;
+                }
+
+                // Validar formato y dígito verificador del RNC
+                string mensajeErrorRNC = RNCValidator.GetValidationMessage(rnc);
+                if (!string.IsNullOrEmpty(mensajeErrorRNC))
+                {
+                    MessageBox.Show($"RNC inválido: {mensajeErrorRNC}", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
             }
 
             return true;
@@ -100,6 +136,18 @@ namespace MiniSistemaFacturacion.Forms
                 txtDireccionCli.Text = fila.Cells["Direccion"].Value.ToString();
                 txtTelefonoCli.Text = fila.Cells["Telefono"].Value.ToString();
                 txtCorreoCli.Text = fila.Cells["Email"].Value.ToString();
+                
+                // Cargar TipoCliente y RNC si existen en el DataGridView
+                if (dgvClientes.Columns["TipoCliente"] != null && fila.Cells["TipoCliente"].Value != null)
+                {
+                    string tipoCliente = fila.Cells["TipoCliente"].Value.ToString();
+                    cmbTipoCliente.SelectedItem = tipoCliente == "CF" ? "CF - Consumidor Final" : "CCF - Crédito Fiscal";
+                }
+                
+                if (dgvClientes.Columns["RNC"] != null && fila.Cells["RNC"].Value != null)
+                {
+                    txtRNC.Text = fila.Cells["RNC"].Value.ToString();
+                }
             }
         }
 
@@ -122,6 +170,11 @@ namespace MiniSistemaFacturacion.Forms
 
                 if (confirm != DialogResult.Yes) return;
 
+                // Obtener tipo cliente del ComboBox
+                string tipoClienteSeleccion = cmbTipoCliente.SelectedItem.ToString();
+                string tipoCliente = tipoClienteSeleccion.StartsWith("CF") ? "CF" : "CCF";
+                string rnc = txtRNC.Text.Trim();
+
                 Cliente cliente = new Cliente
                 {
                     ID_Cliente = idClienteSeleccionado,
@@ -129,8 +182,11 @@ namespace MiniSistemaFacturacion.Forms
                     Cedula = txtCedulaCli.Text.Trim(),
                     Direccion = txtDireccionCli.Text.Trim(),
                     Telefono = txtTelefonoCli.Text.Trim(),
-                    Email = txtCorreoCli.Text.Trim()
+                    Email = txtCorreoCli.Text.Trim(),
+                    TipoCliente = tipoCliente,
+                    RNC = tipoCliente == "CF" ? null : rnc
                 };
+                
                 int actualizado = clienteDAL.Actualizar(cliente);
 
                 if (actualizado > 0)
@@ -169,7 +225,6 @@ namespace MiniSistemaFacturacion.Forms
             if (cambiado > 0)
             {
                 MessageBox.Show("Estado actualizado.");
-
                 CargarClientes();
                 LimpiarCampos();
             }
@@ -181,14 +236,22 @@ namespace MiniSistemaFacturacion.Forms
 
             try
             {
+                // Obtener tipo cliente del ComboBox
+                string tipoClienteSeleccion = cmbTipoCliente.SelectedItem.ToString();
+                string tipoCliente = tipoClienteSeleccion.StartsWith("CF") ? "CF" : "CCF";
+                string rnc = txtRNC.Text.Trim();
+
                 Cliente cliente = new Cliente
                 {
                     Nombre = txtNombreCli.Text.Trim(),
                     Cedula = txtCedulaCli.Text.Trim(),
                     Direccion = txtDireccionCli.Text.Trim(),
                     Telefono = txtTelefonoCli.Text.Trim(),
-                    Email = txtCorreoCli.Text.Trim()
+                    Email = txtCorreoCli.Text.Trim(),
+                    TipoCliente = tipoCliente,
+                    RNC = tipoCliente == "CF" ? null : rnc
                 };
+                
                 int insertado = clienteDAL.Insertar(cliente);
 
                 if (insertado > 0)
@@ -211,6 +274,29 @@ namespace MiniSistemaFacturacion.Forms
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
+        }
+
+        private void cmbTipoCliente_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmbTipoCliente.SelectedItem != null)
+            {
+                string seleccion = cmbTipoCliente.SelectedItem.ToString();
+                
+                // Habilitar RNC solo para Crédito Fiscal
+                if (seleccion.StartsWith("CCF"))
+                {
+                    txtRNC.Enabled = true;
+                    txtRNC.BackColor = SystemColors.Window;
+                    label9.ForeColor = SystemColors.ControlText;
+                }
+                else
+                {
+                    txtRNC.Enabled = false;
+                    txtRNC.Clear();
+                    txtRNC.BackColor = SystemColors.Control;
+                    label9.ForeColor = SystemColors.GrayText;
+                }
+            }
         }
     }
 }
