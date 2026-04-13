@@ -50,7 +50,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 18);
+            this.label1.Size = new System.Drawing.Size(87, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Descripción:";
             // 
@@ -58,7 +58,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.txtDescripcion.Location = new System.Drawing.Point(100, 12);
             this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(200, 24);
+            this.txtDescripcion.Size = new System.Drawing.Size(200, 21);
             this.txtDescripcion.TabIndex = 1;
             this.txtDescripcion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDescripcion_KeyPress);
             // 
@@ -68,7 +68,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 18);
+            this.label2.Size = new System.Drawing.Size(56, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Código:";
             // 
@@ -76,7 +76,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.txtCodigo.Location = new System.Drawing.Point(100, 42);
             this.txtCodigo.Name = "txtCodigo";
-            this.txtCodigo.Size = new System.Drawing.Size(200, 24);
+            this.txtCodigo.Size = new System.Drawing.Size(200, 21);
             this.txtCodigo.TabIndex = 3;
             this.txtCodigo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCodigo_KeyPress);
             // 
@@ -86,7 +86,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(306, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(86, 18);
+            this.label3.Size = new System.Drawing.Size(73, 15);
             this.label3.TabIndex = 4;
             this.label3.Text = "Categoría:";
             // 
@@ -94,7 +94,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.txtCategoria.Location = new System.Drawing.Point(379, 12);
             this.txtCategoria.Name = "txtCategoria";
-            this.txtCategoria.Size = new System.Drawing.Size(150, 24);
+            this.txtCategoria.Size = new System.Drawing.Size(150, 21);
             this.txtCategoria.TabIndex = 5;
             this.txtCategoria.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCategoria_KeyPress);
             // 
@@ -143,9 +143,9 @@ namespace MiniSistemaFacturacion.Forms
             // btnSeleccionar
             // 
             this.btnSeleccionar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionar.Location = new System.Drawing.Point(456, 431);
+            this.btnSeleccionar.Location = new System.Drawing.Point(434, 431);
             this.btnSeleccionar.Name = "btnSeleccionar";
-            this.btnSeleccionar.Size = new System.Drawing.Size(75, 30);
+            this.btnSeleccionar.Size = new System.Drawing.Size(97, 30);
             this.btnSeleccionar.TabIndex = 9;
             this.btnSeleccionar.Text = "Seleccionar";
             this.btnSeleccionar.UseVisualStyleBackColor = true;
@@ -169,12 +169,12 @@ namespace MiniSistemaFacturacion.Forms
             this.lblResultados.ForeColor = System.Drawing.Color.Blue;
             this.lblResultados.Location = new System.Drawing.Point(12, 440);
             this.lblResultados.Name = "lblResultados";
-            this.lblResultados.Size = new System.Drawing.Size(0, 17);
+            this.lblResultados.Size = new System.Drawing.Size(0, 13);
             this.lblResultados.TabIndex = 11;
             // 
             // FrmBusquedaProductos
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 473);
             this.Controls.Add(this.lblResultados);

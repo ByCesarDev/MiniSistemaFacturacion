@@ -50,46 +50,52 @@ namespace MiniSistemaFacturacion.Forms
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(120, 67);
+            this.txtNombre.Location = new System.Drawing.Point(127, 54);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(300, 22);
+            this.txtNombre.Size = new System.Drawing.Size(226, 20);
             this.txtNombre.TabIndex = 1;
             // 
             // txtCedula
             // 
             this.txtCedula.BackColor = System.Drawing.SystemColors.Control;
-            this.txtCedula.Location = new System.Drawing.Point(120, 107);
+            this.txtCedula.Location = new System.Drawing.Point(127, 87);
+            this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.ReadOnly = true;
-            this.txtCedula.Size = new System.Drawing.Size(200, 22);
+            this.txtCedula.Size = new System.Drawing.Size(151, 20);
             this.txtCedula.TabIndex = 2;
             // 
             // txtDireccion
             // 
-            this.txtDireccion.Location = new System.Drawing.Point(120, 147);
+            this.txtDireccion.Location = new System.Drawing.Point(127, 119);
+            this.txtDireccion.Margin = new System.Windows.Forms.Padding(2);
             this.txtDireccion.Name = "txtDireccion";
-            this.txtDireccion.Size = new System.Drawing.Size(400, 22);
+            this.txtDireccion.Size = new System.Drawing.Size(301, 20);
             this.txtDireccion.TabIndex = 3;
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Location = new System.Drawing.Point(120, 187);
+            this.txtTelefono.Location = new System.Drawing.Point(127, 152);
+            this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
             this.txtTelefono.Name = "txtTelefono";
-            this.txtTelefono.Size = new System.Drawing.Size(200, 22);
+            this.txtTelefono.Size = new System.Drawing.Size(151, 20);
             this.txtTelefono.TabIndex = 4;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(120, 227);
+            this.txtEmail.Location = new System.Drawing.Point(127, 184);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(300, 22);
+            this.txtEmail.Size = new System.Drawing.Size(226, 20);
             this.txtEmail.TabIndex = 5;
             // 
             // txtRNC
             // 
-            this.txtRNC.Location = new System.Drawing.Point(120, 307);
+            this.txtRNC.Location = new System.Drawing.Point(127, 249);
+            this.txtRNC.Margin = new System.Windows.Forms.Padding(2);
             this.txtRNC.Name = "txtRNC";
-            this.txtRNC.Size = new System.Drawing.Size(200, 22);
+            this.txtRNC.Size = new System.Drawing.Size(151, 20);
             this.txtRNC.TabIndex = 7;
             // 
             // cmbTipoCliente
@@ -99,62 +105,69 @@ namespace MiniSistemaFacturacion.Forms
             this.cmbTipoCliente.Items.AddRange(new object[] {
             "CF - Consumidor Final",
             "CCF - Crédito Fiscal"});
-            this.cmbTipoCliente.Location = new System.Drawing.Point(120, 267);
+            this.cmbTipoCliente.Location = new System.Drawing.Point(127, 217);
+            this.cmbTipoCliente.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTipoCliente.Name = "cmbTipoCliente";
-            this.cmbTipoCliente.Size = new System.Drawing.Size(200, 24);
+            this.cmbTipoCliente.Size = new System.Drawing.Size(151, 21);
             this.cmbTipoCliente.TabIndex = 6;
             // 
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(10, 70);
+            this.lblNombre.Location = new System.Drawing.Point(8, 57);
+            this.lblNombre.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(143, 16);
+            this.lblNombre.Size = new System.Drawing.Size(115, 13);
             this.lblNombre.TabIndex = 0;
             this.lblNombre.Text = "Nombre/Razón Social:";
             // 
             // lblCedula
             // 
             this.lblCedula.AutoSize = true;
-            this.lblCedula.Location = new System.Drawing.Point(10, 73);
+            this.lblCedula.Location = new System.Drawing.Point(8, 90);
+            this.lblCedula.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCedula.Name = "lblCedula";
-            this.lblCedula.Size = new System.Drawing.Size(53, 16);
+            this.lblCedula.Size = new System.Drawing.Size(43, 13);
             this.lblCedula.TabIndex = 0;
             this.lblCedula.Text = "Cédula:";
             // 
             // lblDireccion
             // 
             this.lblDireccion.AutoSize = true;
-            this.lblDireccion.Location = new System.Drawing.Point(10, 150);
+            this.lblDireccion.Location = new System.Drawing.Point(8, 122);
+            this.lblDireccion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDireccion.Name = "lblDireccion";
-            this.lblDireccion.Size = new System.Drawing.Size(67, 16);
+            this.lblDireccion.Size = new System.Drawing.Size(55, 13);
             this.lblDireccion.TabIndex = 0;
             this.lblDireccion.Text = "Dirección:";
             // 
             // lblTelefono
             // 
             this.lblTelefono.AutoSize = true;
-            this.lblTelefono.Location = new System.Drawing.Point(10, 190);
+            this.lblTelefono.Location = new System.Drawing.Point(8, 154);
+            this.lblTelefono.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTelefono.Name = "lblTelefono";
-            this.lblTelefono.Size = new System.Drawing.Size(64, 16);
+            this.lblTelefono.Size = new System.Drawing.Size(52, 13);
             this.lblTelefono.TabIndex = 0;
             this.lblTelefono.Text = "Teléfono:";
             // 
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(10, 193);
+            this.lblEmail.Location = new System.Drawing.Point(8, 184);
+            this.lblEmail.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(44, 16);
+            this.lblEmail.Size = new System.Drawing.Size(35, 13);
             this.lblEmail.TabIndex = 0;
             this.lblEmail.Text = "Email:";
             // 
             // lblTipoCliente
             // 
             this.lblTipoCliente.AutoSize = true;
-            this.lblTipoCliente.Location = new System.Drawing.Point(10, 270);
+            this.lblTipoCliente.Location = new System.Drawing.Point(8, 219);
+            this.lblTipoCliente.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTipoCliente.Name = "lblTipoCliente";
-            this.lblTipoCliente.Size = new System.Drawing.Size(82, 16);
+            this.lblTipoCliente.Size = new System.Drawing.Size(66, 13);
             this.lblTipoCliente.TabIndex = 0;
             this.lblTipoCliente.Text = "Tipo Cliente:";
             // 
@@ -162,26 +175,29 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblRNC.AutoSize = true;
             this.lblRNC.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblRNC.Location = new System.Drawing.Point(10, 273);
+            this.lblRNC.Location = new System.Drawing.Point(8, 256);
+            this.lblRNC.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblRNC.Name = "lblRNC";
-            this.lblRNC.Size = new System.Drawing.Size(39, 16);
+            this.lblRNC.Size = new System.Drawing.Size(33, 13);
             this.lblRNC.TabIndex = 0;
             this.lblRNC.Text = "RNC:";
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(350, 357);
+            this.btnGuardar.Location = new System.Drawing.Point(281, 290);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(100, 30);
+            this.btnGuardar.Size = new System.Drawing.Size(75, 24);
             this.btnGuardar.TabIndex = 8;
             this.btnGuardar.Text = "Guardar";
             this.btnGuardar.UseVisualStyleBackColor = true;
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(460, 357);
+            this.btnCancelar.Location = new System.Drawing.Point(364, 290);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(100, 30);
+            this.btnCancelar.Size = new System.Drawing.Size(75, 24);
             this.btnCancelar.TabIndex = 9;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
@@ -190,17 +206,18 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.Location = new System.Drawing.Point(12, 15);
+            this.lblTitulo.Location = new System.Drawing.Point(9, 12);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(153, 25);
+            this.lblTitulo.Size = new System.Drawing.Size(127, 20);
             this.lblTitulo.TabIndex = 11;
             this.lblTitulo.Text = "Editar Clientes";
             // 
             // FrmEditarCliente
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 400);
+            this.ClientSize = new System.Drawing.Size(450, 325);
             this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
@@ -220,6 +237,7 @@ namespace MiniSistemaFacturacion.Forms
             this.Controls.Add(this.txtNombre);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmEditarCliente";
