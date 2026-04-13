@@ -377,13 +377,25 @@ namespace MiniSistemaFacturacion.Forms
         {
             if (dgvDetalle.SelectedRows.Count > 0)
             {
-                int idProducto = Convert.ToInt32(dgvDetalle.SelectedRows[0].Cells[0].Value);
-                var itemAEliminar = listaDetalles.FirstOrDefault(d => d.ID_Producto == idProducto);
-
-                if (itemAEliminar != null)
+                int rowIndex = dgvDetalle.SelectedRows[0].Index;
+                
+                if (rowIndex >= 0 && rowIndex < listaDetalles.Count)
                 {
-                    listaDetalles.Remove(itemAEliminar);
-                    ActualizarInterfaz();
+                    var itemAEliminar = listaDetalles[rowIndex];
+
+                    if (itemAEliminar != null)
+                    {
+                        listaDetalles.Remove(itemAEliminar);
+                        ActualizarInterfaz();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se encontró el producto a eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("La selección no es válida. Por favor, seleccione una fila válida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
