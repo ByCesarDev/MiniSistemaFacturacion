@@ -720,7 +720,7 @@ namespace MiniSistemaFacturacion.DataAccess
 
             if (tieneRNC && row.Table.Columns.Contains("RNC"))
             {
-                cliente.RNC = row["RNC"] != DBNull.Value ? row["RNC"].ToString() : null;
+                cliente.RNC = row["RNC"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["RNC"].ToString()) ? row["RNC"].ToString() : "N/A";
             }
 
             return cliente;
