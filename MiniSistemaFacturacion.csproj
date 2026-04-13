@@ -244,6 +244,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include="Database\script.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\FrmAgregarCliente.resx">
