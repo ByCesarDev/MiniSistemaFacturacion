@@ -208,6 +208,15 @@ namespace MiniSistemaFacturacion.Forms
                     Width = 200,
                     ReadOnly = true
                 });
+
+                dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Tipo",
+                    HeaderText = "Tipo",
+                    DataPropertyName = "TipoCliente",
+                    Width = 60,
+                    ReadOnly = true
+                });
             }
             catch (Exception ex)
             {

@@ -395,6 +395,8 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                // Ahora se mostrará el valor real de la base de datos
+                
                 // Verificar si es la columna RNC
                 if (dgvClientes.Columns["RNC"].Index == e.ColumnIndex)
                 {
@@ -417,29 +419,7 @@ namespace MiniSistemaFacturacion.Forms
                         e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Regular);
                     }
                 }
-
-                // También podemos formatear la columna TipoCliente para mejor visualización
-                if (dgvClientes.Columns["TipoCliente"].Index == e.ColumnIndex && e.Value != null)
-                {
-                    string tipoCliente = e.Value.ToString();
-                    switch (tipoCliente)
-                    {
-                        case "CF":
-                            e.Value = "Consumidor Final";
-                            e.CellStyle.ForeColor = SystemColors.ControlText;
-                            break;
-                        case "CCF":
-                            e.Value = "Crédito Fiscal";
-                            e.CellStyle.ForeColor = SystemColors.ControlText;
-                            break;
-                        default:
-                            e.Value = "Desconocido";
-                            e.CellStyle.ForeColor = SystemColors.GrayText;
-                            break;
-                    }
-                    e.FormattingApplied = true;
-                }
-
+                
                 // Formatear la columna Estado para mejor visualización
                 if (dgvClientes.Columns["Estado"].Index == e.ColumnIndex && e.Value != null)
                 {

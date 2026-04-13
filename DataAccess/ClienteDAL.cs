@@ -310,21 +310,43 @@ namespace MiniSistemaFacturacion.DataAccess
                 bool tieneRNC = ColumnExists("Clientes", "RNC");
 
                 string query;
-                if (tieneTipoCliente && tieneRNC)
+                if (tieneTipoCliente)
                 {
-                    query = @"
-                        SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
-                               TipoCliente, RNC, FechaCreacion, Estado
-                        FROM Clientes
-                        ORDER BY ID_Cliente";
+                    if (tieneRNC)
+                    {
+                        query = @"
+                            SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                                   TipoCliente, RNC, FechaCreacion, Estado
+                            FROM Clientes
+                            ORDER BY ID_Cliente";
+                    }
+                    else
+                    {
+                        query = @"
+                            SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                                   TipoCliente, FechaCreacion, Estado
+                            FROM Clientes
+                            ORDER BY ID_Cliente";
+                    }
                 }
                 else
                 {
-                    query = @"
-                        SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
-                               FechaCreacion, Estado
-                        FROM Clientes
-                        ORDER BY ID_Cliente";
+                    if (tieneRNC)
+                    {
+                        query = @"
+                            SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                                   RNC, FechaCreacion, Estado
+                            FROM Clientes
+                            ORDER BY ID_Cliente";
+                    }
+                    else
+                    {
+                        query = @"
+                            SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                                   FechaCreacion, Estado
+                            FROM Clientes
+                            ORDER BY ID_Cliente";
+                    }
                 }
 
                 DataTable dt = DbHelper.Instance.ExecuteQuery(query);
@@ -502,7 +524,7 @@ namespace MiniSistemaFacturacion.DataAccess
             try
             {
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string query = "SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, FechaCreacion, Estado FROM Clientes WHERE Estado = 1";
+                string query = "SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, TipoCliente, RNC, FechaCreacion, Estado FROM Clientes WHERE Estado = 1";
 
                 if (!string.IsNullOrWhiteSpace(nombre))
                 {
@@ -544,7 +566,7 @@ namespace MiniSistemaFacturacion.DataAccess
             try
             {
                 string query = @"
-                    SELECT TOP (@Cantidad) ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, FechaCreacion, Estado 
+                    SELECT TOP (@Cantidad) ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, TipoCliente, RNC, FechaCreacion, Estado 
                     FROM Clientes 
                     WHERE Estado = 1 
                     ORDER BY FechaCreacion DESC";
@@ -693,7 +715,7 @@ namespace MiniSistemaFacturacion.DataAccess
             }
             else
             {
-                cliente.TipoCliente = "CF"; // Valor por defecto
+                cliente.TipoCliente = "CF"; // Valor por defecto si la columna no existe
             }
 
             if (tieneRNC && row.Table.Columns.Contains("RNC"))
