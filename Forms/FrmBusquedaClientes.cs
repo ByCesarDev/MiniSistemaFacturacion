@@ -22,7 +22,7 @@ namespace MiniSistemaFacturacion.Forms
         #region Properties
 
         private ClienteDAL _clienteDAL;
-        private List<Cliente> _clientesEncontrados;
+        private BindingList<Cliente> _clientesEncontrados;
         public Cliente ClienteSeleccionado { get; private set; }
 
         #endregion
@@ -33,7 +33,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             InitializeComponent();
             _clienteDAL = new ClienteDAL();
-            _clientesEncontrados = new List<Cliente>();
+            _clientesEncontrados = new BindingList<Cliente>();
         }
 
         #endregion
@@ -50,10 +50,9 @@ namespace MiniSistemaFacturacion.Forms
                 // Cargar automáticamente los últimos 100 clientes
                 try
                 {
-                    _clientesEncontrados = _clienteDAL.ObtenerUltimosClientes(100);
+                    _clientesEncontrados = new BindingList<Cliente>(_clienteDAL.ObtenerUltimosClientes(100));
                     
                     // Mostrar resultados
-                    dgvClientes.DataSource = null;
                     dgvClientes.DataSource = _clientesEncontrados;
                     dgvClientes.Refresh();
                     dgvClientes.Update();
@@ -277,10 +276,9 @@ namespace MiniSistemaFacturacion.Forms
                 }
 
                 // Buscar clientes
-                _clientesEncontrados = _clienteDAL.BuscarClientes(nombre, cedula);
+                _clientesEncontrados = new BindingList<Cliente>(_clienteDAL.BuscarClientes(nombre, cedula));
 
                 // Mostrar resultados
-                dgvClientes.DataSource = null;
                 dgvClientes.DataSource = _clientesEncontrados;
                 dgvClientes.Refresh();
                 dgvClientes.Update();
@@ -307,9 +305,8 @@ namespace MiniSistemaFacturacion.Forms
                 txtRNC.Clear();
                 
                 // Recargar los últimos 100 clientes
-                _clientesEncontrados = _clienteDAL.ObtenerUltimosClientes(100);
+                _clientesEncontrados = new BindingList<Cliente>(_clienteDAL.ObtenerUltimosClientes(100));
                 
-                dgvClientes.DataSource = null;
                 dgvClientes.DataSource = _clientesEncontrados;
                 dgvClientes.Refresh();
                 dgvClientes.Update();

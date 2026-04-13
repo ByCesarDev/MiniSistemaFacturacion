@@ -50,7 +50,7 @@ namespace MiniSistemaFacturacion.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvClientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClientes.Location = new System.Drawing.Point(16, 98);
-            this.dgvClientes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvClientes.Margin = new System.Windows.Forms.Padding(4);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersWidth = 51;
@@ -62,7 +62,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBuscar.Location = new System.Drawing.Point(749, 15);
-            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(133, 37);
             this.btnBuscar.TabIndex = 1;
@@ -74,7 +74,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimpiar.Location = new System.Drawing.Point(891, 15);
-            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(4);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(133, 37);
             this.btnLimpiar.TabIndex = 2;
@@ -85,8 +85,8 @@ namespace MiniSistemaFacturacion.Forms
             // btnSeleccionar
             // 
             this.btnSeleccionar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionar.Location = new System.Drawing.Point(749, 475);
-            this.btnSeleccionar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSeleccionar.Location = new System.Drawing.Point(754, 493);
+            this.btnSeleccionar.Margin = new System.Windows.Forms.Padding(4);
             this.btnSeleccionar.Name = "btnSeleccionar";
             this.btnSeleccionar.Size = new System.Drawing.Size(133, 37);
             this.btnSeleccionar.TabIndex = 3;
@@ -97,8 +97,8 @@ namespace MiniSistemaFacturacion.Forms
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(891, 475);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancelar.Location = new System.Drawing.Point(896, 493);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(133, 37);
             this.btnCancelar.TabIndex = 4;
@@ -109,7 +109,7 @@ namespace MiniSistemaFacturacion.Forms
             // txtNombre
             // 
             this.txtNombre.Location = new System.Drawing.Point(107, 59);
-            this.txtNombre.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(4);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(265, 22);
             this.txtNombre.TabIndex = 5;
@@ -117,8 +117,8 @@ namespace MiniSistemaFacturacion.Forms
             // 
             // txtRNC
             // 
-            this.txtRNC.Location = new System.Drawing.Point(453, 59);
-            this.txtRNC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtRNC.Location = new System.Drawing.Point(528, 59);
+            this.txtRNC.Margin = new System.Windows.Forms.Padding(4);
             this.txtRNC.Name = "txtRNC";
             this.txtRNC.Size = new System.Drawing.Size(199, 22);
             this.txtRNC.TabIndex = 6;
@@ -142,9 +142,9 @@ namespace MiniSistemaFacturacion.Forms
             this.lblRNC.Location = new System.Drawing.Point(395, 63);
             this.lblRNC.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRNC.Name = "lblRNC";
-            this.lblRNC.Size = new System.Drawing.Size(49, 18);
+            this.lblRNC.Size = new System.Drawing.Size(116, 18);
             this.lblRNC.TabIndex = 8;
-            this.lblRNC.Text = "RNC:";
+            this.lblRNC.Text = "RNC / Cedula:";
             // 
             // lblResultados
             // 
@@ -186,7 +186,7 @@ namespace MiniSistemaFacturacion.Forms
             this.Controls.Add(this.dgvClientes);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmBusquedaClientes";

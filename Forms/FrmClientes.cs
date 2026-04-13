@@ -18,7 +18,7 @@ namespace MiniSistemaFacturacion.Forms
     public partial class FrmClientes : Form
     {
         private ClienteDAL clienteDAL = new ClienteDAL();
-        private List<Cliente> todosLosClientes = new List<Cliente>();
+        private BindingList<Cliente> todosLosClientes = new BindingList<Cliente>();
         private Cliente clienteSeleccionado = null;
 
         // Los controles ahora están definidos en el Designer
@@ -174,8 +174,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
-                todosLosClientes = clienteDAL.ObtenerTodos();
-                dgvClientes.DataSource = null;
+                todosLosClientes = new BindingList<Cliente>(clienteDAL.ObtenerTodos());
                 dgvClientes.DataSource = todosLosClientes;
                 
                 ActualizarBotones();
@@ -228,7 +227,6 @@ namespace MiniSistemaFacturacion.Forms
 
                 if (string.IsNullOrEmpty(textoBusqueda))
                 {
-                    dgvClientes.DataSource = null;
                     dgvClientes.DataSource = todosLosClientes;
                 }
                 else
@@ -240,8 +238,7 @@ namespace MiniSistemaFacturacion.Forms
                                    (c.ID_Cliente.ToString().Contains(textoBusqueda)))
                         .ToList();
 
-                    dgvClientes.DataSource = null;
-                    dgvClientes.DataSource = clientesFiltrados;
+                    dgvClientes.DataSource = new BindingList<Cliente>(clientesFiltrados);
                 }
             }
             catch (Exception ex)
