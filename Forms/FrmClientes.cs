@@ -33,6 +33,7 @@ namespace MiniSistemaFacturacion.Forms
             ConfigurarDataGridView();
             ConfigurarEventos();
             CargarClientes();
+            dgvClientes.AutoResizeColumns();
         }
 
         private void ConfigurarFormulario()
@@ -44,6 +45,11 @@ namespace MiniSistemaFacturacion.Forms
         private void ConfigurarDataGridView()
         {
             // Configurar columnas
+            dgvClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvClientes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            dgvClientes.RowHeadersVisible = false;
+            dgvClientes.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
+            dgvClientes.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvClientes.Columns.Clear();
 
             // Columna ID
@@ -52,7 +58,7 @@ namespace MiniSistemaFacturacion.Forms
                 Name = "ID_Cliente",
                 HeaderText = "ID",
                 DataPropertyName = "ID_Cliente",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 5
             };
             dgvClientes.Columns.Add(colId);
@@ -64,7 +70,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Nombre/Razón Social",
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 35
+                FillWeight = 30
             };
             dgvClientes.Columns.Add(colNombre);
 
@@ -74,7 +80,7 @@ namespace MiniSistemaFacturacion.Forms
                 Name = "Cedula",
                 HeaderText = "Cédula",
                 DataPropertyName = "Cedula",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 15
             };
             dgvClientes.Columns.Add(colCedula);
@@ -86,7 +92,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Dirección",
                 DataPropertyName = "Direccion",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 15
+                FillWeight = 20
             };
             dgvClientes.Columns.Add(colDireccion);
 
@@ -96,7 +102,7 @@ namespace MiniSistemaFacturacion.Forms
                 Name = "Telefono",
                 HeaderText = "Teléfono",
                 DataPropertyName = "Telefono",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 15
             };
             dgvClientes.Columns.Add(colTelefono);
@@ -118,7 +124,7 @@ namespace MiniSistemaFacturacion.Forms
                 Name = "TipoCliente",
                 HeaderText = "Tipo",
                 DataPropertyName = "TipoCliente",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 10
             };
             dgvClientes.Columns.Add(colTipoCliente);
@@ -140,7 +146,7 @@ namespace MiniSistemaFacturacion.Forms
                 Name = "Estado",
                 HeaderText = "Estado",
                 DataPropertyName = "Estado",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 10
             };
             dgvClientes.Columns.Add(colEstado);

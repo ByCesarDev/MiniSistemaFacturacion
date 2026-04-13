@@ -48,22 +48,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvClientes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvClientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClientes.Location = new System.Drawing.Point(9, 110);
-            this.dgvClientes.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvClientes.Location = new System.Drawing.Point(12, 135);
+            this.dgvClientes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersWidth = 51;
             this.dgvClientes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvClientes.Size = new System.Drawing.Size(807, 390);
+            this.dgvClientes.Size = new System.Drawing.Size(1817, 620);
             this.dgvClientes.TabIndex = 6;
             // 
             // btnNuevo
             // 
             this.btnNuevo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNuevo.Location = new System.Drawing.Point(9, 69);
-            this.btnNuevo.Margin = new System.Windows.Forms.Padding(2);
+            this.btnNuevo.Location = new System.Drawing.Point(12, 85);
+            this.btnNuevo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(75, 28);
+            this.btnNuevo.Size = new System.Drawing.Size(100, 34);
             this.btnNuevo.TabIndex = 3;
             this.btnNuevo.Text = "Nuevo";
             this.btnNuevo.UseVisualStyleBackColor = true;
@@ -71,10 +71,10 @@
             // btnEditar
             // 
             this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditar.Location = new System.Drawing.Point(88, 69);
-            this.btnEditar.Margin = new System.Windows.Forms.Padding(2);
+            this.btnEditar.Location = new System.Drawing.Point(117, 85);
+            this.btnEditar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(75, 28);
+            this.btnEditar.Size = new System.Drawing.Size(100, 34);
             this.btnEditar.TabIndex = 4;
             this.btnEditar.Text = "Editar";
             this.btnEditar.UseVisualStyleBackColor = true;
@@ -82,29 +82,28 @@
             // btnEliminar
             // 
             this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEliminar.Location = new System.Drawing.Point(168, 69);
-            this.btnEliminar.Margin = new System.Windows.Forms.Padding(2);
+            this.btnEliminar.Location = new System.Drawing.Point(224, 85);
+            this.btnEliminar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEliminar.Name = "btnEliminar";
-            this.btnEliminar.Size = new System.Drawing.Size(75, 28);
+            this.btnEliminar.Size = new System.Drawing.Size(100, 34);
             this.btnEliminar.TabIndex = 5;
             this.btnEliminar.Text = "Eliminar";
             this.btnEliminar.UseVisualStyleBackColor = true;
             // 
             // txtBusqueda
             // 
-            this.txtBusqueda.Location = new System.Drawing.Point(55, 38);
-            this.txtBusqueda.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBusqueda.Location = new System.Drawing.Point(73, 47);
+            this.txtBusqueda.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtBusqueda.Name = "txtBusqueda";
-            this.txtBusqueda.Size = new System.Drawing.Size(313, 20);
+            this.txtBusqueda.Size = new System.Drawing.Size(416, 22);
             this.txtBusqueda.TabIndex = 2;
             // 
             // lblBusqueda
             // 
             this.lblBusqueda.AutoSize = true;
-            this.lblBusqueda.Location = new System.Drawing.Point(9, 41);
-            this.lblBusqueda.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBusqueda.Location = new System.Drawing.Point(12, 50);
             this.lblBusqueda.Name = "lblBusqueda";
-            this.lblBusqueda.Size = new System.Drawing.Size(43, 13);
+            this.lblBusqueda.Size = new System.Drawing.Size(52, 16);
             this.lblBusqueda.TabIndex = 1;
             this.lblBusqueda.Text = "Buscar:";
             // 
@@ -112,18 +111,17 @@
             // 
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.Location = new System.Drawing.Point(9, 12);
-            this.lblTitulo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTitulo.Location = new System.Drawing.Point(12, 15);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(167, 20);
+            this.lblTitulo.Size = new System.Drawing.Size(201, 25);
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Gestión de Clientes";
             // 
             // FrmClientes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 528);
+            this.ClientSize = new System.Drawing.Size(1841, 790);
             this.Controls.Add(this.dgvClientes);
             this.Controls.Add(this.btnEliminar);
             this.Controls.Add(this.btnEditar);
@@ -132,8 +130,8 @@
             this.Controls.Add(this.lblBusqueda);
             this.Controls.Add(this.lblTitulo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(680, 415);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(901, 500);
             this.Name = "FrmClientes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gestión de Clientes";
