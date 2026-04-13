@@ -55,14 +55,15 @@
             this.chkEnviarEmail = new System.Windows.Forms.CheckBox();
             this.chkImprimirDirecto = new System.Windows.Forms.CheckBox();
             this.txtClientes = new System.Windows.Forms.TextBox();
-            this.btnBuscarCliente = new System.Windows.Forms.Button();
             this.chkCredito = new System.Windows.Forms.CheckBox();
             this.cmbTipoComprobante = new System.Windows.Forms.ComboBox();
             this.lblTipoComprobante = new System.Windows.Forms.Label();
             this.cmbFormaPago = new System.Windows.Forms.ComboBox();
             this.lblFormaPago = new System.Windows.Forms.Label();
+            this.btnBuscarCliente = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnBuscarCliente)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -327,17 +328,6 @@
             this.txtClientes.Size = new System.Drawing.Size(285, 24);
             this.txtClientes.TabIndex = 4;
             // 
-            // btnBuscarCliente
-            // 
-            this.btnBuscarCliente.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscarCliente.Location = new System.Drawing.Point(465, 48);
-            this.btnBuscarCliente.Name = "btnBuscarCliente";
-            this.btnBuscarCliente.Size = new System.Drawing.Size(29, 22);
-            this.btnBuscarCliente.TabIndex = 5;
-            this.btnBuscarCliente.Text = "🔍 Search";
-            this.btnBuscarCliente.UseVisualStyleBackColor = true;
-            this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);
-            // 
             // chkCredito
             // 
             this.chkCredito.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -388,11 +378,25 @@
             this.lblFormaPago.Text = "Forma de pago:";
             this.lblFormaPago.Click += new System.EventHandler(this.label10_Click);
             // 
+            // btnBuscarCliente
+            // 
+            this.btnBuscarCliente.BackColor = System.Drawing.Color.Transparent;
+            this.btnBuscarCliente.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBuscarCliente.Image = ((System.Drawing.Image)(resources.GetObject("btnBuscarCliente.Image")));
+            this.btnBuscarCliente.Location = new System.Drawing.Point(468, 46);
+            this.btnBuscarCliente.Name = "btnBuscarCliente";
+            this.btnBuscarCliente.Size = new System.Drawing.Size(27, 30);
+            this.btnBuscarCliente.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnBuscarCliente.TabIndex = 30;
+            this.btnBuscarCliente.TabStop = false;
+            this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);
+            // 
             // FrmFacturacion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(661, 573);
+            this.Controls.Add(this.btnBuscarCliente);
             this.Controls.Add(this.cmbFormaPago);
             this.Controls.Add(this.lblFormaPago);
             this.Controls.Add(this.cmbTipoComprobante);
@@ -401,7 +405,6 @@
             this.Controls.Add(this.chkImprimirDirecto);
             this.Controls.Add(this.chkEnviarEmail);
             this.Controls.Add(this.txtClientes);
-            this.Controls.Add(this.btnBuscarCliente);
             this.Controls.Add(this.txtProductos);
             this.Controls.Add(this.btnBuscarProducto);
             this.Controls.Add(this.btnCancelar);
@@ -433,6 +436,7 @@
             this.Load += new System.EventHandler(this.FrmFacturacion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCantidad)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnBuscarCliente)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -466,11 +470,11 @@
         private System.Windows.Forms.CheckBox chkEnviarEmail;
         private System.Windows.Forms.CheckBox chkImprimirDirecto;
         private System.Windows.Forms.TextBox txtClientes;
-        private System.Windows.Forms.Button btnBuscarCliente;
         private System.Windows.Forms.CheckBox chkCredito;
         private System.Windows.Forms.ComboBox cmbTipoComprobante;
         private System.Windows.Forms.Label lblTipoComprobante;
         private System.Windows.Forms.ComboBox cmbFormaPago;
         private System.Windows.Forms.Label lblFormaPago;
+        private System.Windows.Forms.PictureBox btnBuscarCliente;
     }
 }
