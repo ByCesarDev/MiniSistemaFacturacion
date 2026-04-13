@@ -213,6 +213,55 @@ namespace MiniSistemaFacturacion.DataAccess
         }
 
         /// <summary>
+        /// Obtiene un cliente por su RNC
+        /// </summary>
+        /// <param name="rnc">RNC del cliente</param>
+        /// <returns>Cliente encontrado o null</returns>
+        public Cliente ObtenerPorRNC(string rnc)
+        {
+            Cliente cliente = null;
+
+            try
+            {
+                // Verificar si la columna RNC existe
+                bool tieneRNC = ColumnExists("Clientes", "RNC");
+
+                string query;
+                if (tieneRNC)
+                {
+                    query = @"
+                        SELECT ID_Cliente, Nombre, Cedula, Direccion, Telefono, Email, 
+                               TipoCliente, RNC, FechaCreacion, Estado
+                        FROM Clientes
+                        WHERE RNC = @RNC AND Estado = 1";
+                }
+                else
+                {
+                    // Si no existe la columna, no puede haber duplicados por RNC
+                    return null;
+                }
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    DbHelper.Instance.CreateParameter("@RNC", rnc)
+                };
+
+                DataTable dt = DbHelper.Instance.ExecuteQuery(query, parameters);
+
+                if (dt.Rows.Count > 0)
+                {
+                    cliente = MapearCliente(dt.Rows[0], true, tieneRNC);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener cliente por RNC: {ex.Message}", ex);
+            }
+
+            return cliente;
+        }
+
+        /// <summary>
         /// Obtiene un cliente por su cédula
         /// </summary>
         /// <param name="cedula">Cédula del cliente</param>

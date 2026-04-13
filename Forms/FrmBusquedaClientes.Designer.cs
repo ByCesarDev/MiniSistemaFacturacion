@@ -28,6 +28,7 @@ namespace MiniSistemaFacturacion.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBusquedaClientes));
             this.dgvClientes = new System.Windows.Forms.DataGridView();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.btnLimpiar = new System.Windows.Forms.Button();
@@ -48,20 +49,22 @@ namespace MiniSistemaFacturacion.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvClientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClientes.Location = new System.Drawing.Point(12, 80);
+            this.dgvClientes.Location = new System.Drawing.Point(16, 98);
+            this.dgvClientes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersWidth = 51;
-            this.dgvClientes.Size = new System.Drawing.Size(760, 300);
+            this.dgvClientes.Size = new System.Drawing.Size(1013, 369);
             this.dgvClientes.TabIndex = 0;
             this.dgvClientes.DoubleClick += new System.EventHandler(this.dgvClientes_DoubleClick);
             // 
             // btnBuscar
             // 
             this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscar.Location = new System.Drawing.Point(562, 12);
+            this.btnBuscar.Location = new System.Drawing.Point(749, 15);
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(100, 30);
+            this.btnBuscar.Size = new System.Drawing.Size(133, 37);
             this.btnBuscar.TabIndex = 1;
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
@@ -70,9 +73,10 @@ namespace MiniSistemaFacturacion.Forms
             // btnLimpiar
             // 
             this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpiar.Location = new System.Drawing.Point(668, 12);
+            this.btnLimpiar.Location = new System.Drawing.Point(891, 15);
+            this.btnLimpiar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(100, 30);
+            this.btnLimpiar.Size = new System.Drawing.Size(133, 37);
             this.btnLimpiar.TabIndex = 2;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -81,9 +85,10 @@ namespace MiniSistemaFacturacion.Forms
             // btnSeleccionar
             // 
             this.btnSeleccionar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionar.Location = new System.Drawing.Point(562, 386);
+            this.btnSeleccionar.Location = new System.Drawing.Point(749, 475);
+            this.btnSeleccionar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSeleccionar.Name = "btnSeleccionar";
-            this.btnSeleccionar.Size = new System.Drawing.Size(100, 30);
+            this.btnSeleccionar.Size = new System.Drawing.Size(133, 37);
             this.btnSeleccionar.TabIndex = 3;
             this.btnSeleccionar.Text = "Seleccionar";
             this.btnSeleccionar.UseVisualStyleBackColor = true;
@@ -92,9 +97,10 @@ namespace MiniSistemaFacturacion.Forms
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(668, 386);
+            this.btnCancelar.Location = new System.Drawing.Point(891, 475);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(100, 30);
+            this.btnCancelar.Size = new System.Drawing.Size(133, 37);
             this.btnCancelar.TabIndex = 4;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
@@ -102,17 +108,19 @@ namespace MiniSistemaFacturacion.Forms
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(80, 48);
+            this.txtNombre.Location = new System.Drawing.Point(107, 59);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(200, 20);
+            this.txtNombre.Size = new System.Drawing.Size(265, 22);
             this.txtNombre.TabIndex = 5;
             this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNombre_KeyPress);
             // 
             // txtRNC
             // 
-            this.txtRNC.Location = new System.Drawing.Point(340, 48);
+            this.txtRNC.Location = new System.Drawing.Point(453, 59);
+            this.txtRNC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtRNC.Name = "txtRNC";
-            this.txtRNC.Size = new System.Drawing.Size(150, 20);
+            this.txtRNC.Size = new System.Drawing.Size(199, 22);
             this.txtRNC.TabIndex = 6;
             this.txtRNC.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtRNC_KeyPress);
             // 
@@ -120,9 +128,10 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.Location = new System.Drawing.Point(12, 51);
+            this.lblNombre.Location = new System.Drawing.Point(16, 63);
+            this.lblNombre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(55, 15);
+            this.lblNombre.Size = new System.Drawing.Size(73, 18);
             this.lblNombre.TabIndex = 7;
             this.lblNombre.Text = "Nombre:";
             // 
@@ -130,9 +139,10 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblRNC.AutoSize = true;
             this.lblRNC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRNC.Location = new System.Drawing.Point(296, 51);
+            this.lblRNC.Location = new System.Drawing.Point(395, 63);
+            this.lblRNC.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRNC.Name = "lblRNC";
-            this.lblRNC.Size = new System.Drawing.Size(38, 15);
+            this.lblRNC.Size = new System.Drawing.Size(49, 18);
             this.lblRNC.TabIndex = 8;
             this.lblRNC.Text = "RNC:";
             // 
@@ -140,9 +150,10 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblResultados.AutoSize = true;
             this.lblResultados.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResultados.Location = new System.Drawing.Point(12, 424);
+            this.lblResultados.Location = new System.Drawing.Point(16, 522);
+            this.lblResultados.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblResultados.Name = "lblResultados";
-            this.lblResultados.Size = new System.Drawing.Size(118, 13);
+            this.lblResultados.Size = new System.Drawing.Size(139, 17);
             this.lblResultados.TabIndex = 9;
             this.lblResultados.Text = "Mostrando 0 clientes";
             // 
@@ -150,17 +161,18 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.Location = new System.Drawing.Point(12, 15);
+            this.lblTitulo.Location = new System.Drawing.Point(16, 18);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(197, 20);
+            this.lblTitulo.Size = new System.Drawing.Size(224, 25);
             this.lblTitulo.TabIndex = 10;
             this.lblTitulo.Text = "Búsqueda de Clientes";
             // 
             // FrmBusquedaClientes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 450);
+            this.ClientSize = new System.Drawing.Size(1045, 554);
             this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.lblResultados);
             this.Controls.Add(this.lblRNC);
@@ -173,6 +185,8 @@ namespace MiniSistemaFacturacion.Forms
             this.Controls.Add(this.btnBuscar);
             this.Controls.Add(this.dgvClientes);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmBusquedaClientes";

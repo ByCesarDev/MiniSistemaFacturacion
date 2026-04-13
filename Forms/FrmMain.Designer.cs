@@ -39,6 +39,8 @@
             this.cuentasPorCobrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configuracionEmpresaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarDatosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -61,10 +63,6 @@
             // 
             this.menuStrip1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clientesToolStripMenuItem,
-            this.productosToolStripMenuItem,
-            this.configuracionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -136,19 +134,44 @@
             // configuracionToolStripMenuItem
             // 
             this.configuracionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.configuracionEmpresaToolStripMenuItem});
+            this.configuracionEmpresaToolStripMenuItem,
+            this.borrarDatosToolStripMenuItem});
             this.configuracionToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(130, 23);
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(133, 23);
             this.configuracionToolStripMenuItem.Text = "Configuración";
             // 
             // configuracionEmpresaToolStripMenuItem
             // 
             this.configuracionEmpresaToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.configuracionEmpresaToolStripMenuItem.Name = "configuracionEmpresaToolStripMenuItem";
-            this.configuracionEmpresaToolStripMenuItem.Size = new System.Drawing.Size(244, 26);
+            this.configuracionEmpresaToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
             this.configuracionEmpresaToolStripMenuItem.Text = "Configuración de Empresa";
             this.configuracionEmpresaToolStripMenuItem.Click += new System.EventHandler(this.configuracionEmpresaToolStripMenuItem_Click);
+            // 
+            // borrarDatosToolStripMenuItem
+            // 
+            this.borrarDatosToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.borrarDatosToolStripMenuItem.Name = "borrarDatosToolStripMenuItem";
+            this.borrarDatosToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.borrarDatosToolStripMenuItem.Text = "Borrar Datos";
+            this.borrarDatosToolStripMenuItem.Click += new System.EventHandler(this.borrarDatosToolStripMenuItem_Click);
+            // 
+            // reportesToolStripMenuItem
+            // 
+            this.reportesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportesToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reportesToolStripMenuItem.Name = "reportesToolStripMenuItem";
+            this.reportesToolStripMenuItem.Size = new System.Drawing.Size(89, 23);
+            this.reportesToolStripMenuItem.Text = "Reportes";
+            this.reportesToolStripMenuItem.Click += new System.EventHandler(this.reportesToolStripMenuItem_Click);
+            // 
+            // Agregar todos los items al menuStrip1 después de inicializarlos
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clientesToolStripMenuItem,
+            this.productosToolStripMenuItem,
+            this.configuracionToolStripMenuItem,
+            this.reportesToolStripMenuItem});
             // 
             // pictureBox1
             // 
@@ -316,6 +339,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmMain";
@@ -329,6 +353,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CuentasPorCobrar)).EndInit();
+            
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,6 +371,8 @@
         private System.Windows.Forms.ToolStripMenuItem buscarFacturaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cuentasPorCobrarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configuracionEmpresaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem borrarDatosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reportesToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox2;

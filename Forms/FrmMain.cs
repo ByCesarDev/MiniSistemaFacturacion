@@ -3,36 +3,57 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LiveCharts;
+using MiniSistemaFacturacion.DataAccess;
 
 namespace MiniSistemaFacturacion.Forms
 {
     public partial class FrmMain : Form
     {
+
         public FrmMain()
         {
-            InitializeComponent();
-            this.DoubleBuffered = true;
-
-            // Guardamos una copia de la imagen que pusiste en el diseñador
-            // antes de que el código empiece a cambiar el fondo.
-            if (this.BackgroundImage != null)
+            try
             {
-                _imagenOriginal = (Image)this.BackgroundImage.Clone();
+                InitializeComponent();
+                this.DoubleBuffered = true;
+
+                // Guardamos una copia de la imagen que pusiste en el diseñador
+                // antes de que el código empiece a cambiar el fondo.
+                if (this.BackgroundImage != null)
+                {
+                    _imagenOriginal = (Image)this.BackgroundImage.Clone();
+                }
+
+                // Dashboard movido a FrmReportes
+                // InicializarDashboard();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error en constructor de FrmMain: {ex.Message}\n\nStackTrace: {ex.StackTrace}", 
+                    "Error de Inicialización", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FrmMain_Resize(object sender, EventArgs e)
         {
-            // Solo si hay una imagen asignada
-            if (this.BackgroundImage != null)
+            try
             {
-                ActualizarFondoAdaptable();
+                // Solo si hay una imagen asignada
+                if (this.BackgroundImage != null)
+                {
+                    ActualizarFondoAdaptable();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error en FrmMain_Resize: {ex.Message}\n\nStackTrace: {ex.StackTrace}", 
+                    "Error de Redimensionamiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -40,49 +61,55 @@ namespace MiniSistemaFacturacion.Forms
 
         private void ActualizarFondoAdaptable()
         {
-            if (_imagenOriginal == null) return;
-
-            // ClientSize ya nos da el área interna del Form (sin bordes ni barra de título)
-            // Si el Form está maximizado, ClientSize.Height será: Alto de Pantalla - Alto de Barra de Tareas - Alto de Bordes
-            int canvasWidth = this.ClientSize.Width;
-            int canvasHeight = this.ClientSize.Height;
-
-            if (canvasWidth <= 0 || canvasHeight <= 0) return;
-
-            // Calculamos las proporciones
-            float ratioX = (float)canvasWidth / (float)_imagenOriginal.Width;
-            float ratioY = (float)canvasHeight / (float)_imagenOriginal.Height;
-
-            // Si usas Math.Max, la imagen cubrirá todo el fondo (tipo 'Cover' en CSS)
-            // Si usas Math.Min, la imagen se verá completa sin recortarse (tipo 'Contain')
-            float ratio = Math.Max(ratioX, ratioY);
-
-            int newWidth = (int)(_imagenOriginal.Width * ratio);
-            int newHeight = (int)(_imagenOriginal.Height * ratio);
-
-            Bitmap bmp = new Bitmap(canvasWidth, canvasHeight);
-            using (Graphics g = Graphics.FromImage(bmp))
+            try
             {
-                // Centramos la imagen en el lienzo
-                int posX = (canvasWidth - newWidth) / 2;
-                int posY = canvasHeight - newHeight; // Alinea la base de la imagen con el borde inferior
+                if (_imagenOriginal == null) return;
 
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.Clear(this.BackColor); // Limpia el fondo con el color del formulario
-                g.DrawImage(_imagenOriginal, posX, posY, newWidth, newHeight);
+                // ClientSize ya nos da el área interna del Form (sin bordes ni barra de título)
+                // Si el Form está maximizado, ClientSize.Height será: Alto de Pantalla - Alto de Barra de Tareas - Alto de Bordes
+                int canvasWidth = this.ClientSize.Width;
+                int canvasHeight = this.ClientSize.Height;
+
+                if (canvasWidth <= 0 || canvasHeight <= 0) return;
+
+                // Calculamos las proporciones
+                float ratioX = (float)canvasWidth / (float)_imagenOriginal.Width;
+                float ratioY = (float)canvasHeight / (float)_imagenOriginal.Height;
+
+                // Si usas Math.Max, la imagen cubrirá todo el fondo (tipo 'Cover' en CSS)
+                // Si usas Math.Min, la imagen se verá completa sin recortarse (tipo 'Contain')
+                float ratio = Math.Max(ratioX, ratioY);
+
+                int newWidth = (int)(_imagenOriginal.Width * ratio);
+                int newHeight = (int)(_imagenOriginal.Height * ratio);
+
+                Bitmap bmp = new Bitmap(canvasWidth, canvasHeight);
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    // Centramos la imagen en el lienzo
+                    int posX = (canvasWidth - newWidth) / 2;
+                    int posY = canvasHeight - newHeight; // Alinea la base de la imagen con el borde inferior
+
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.Clear(this.BackColor); // Limpia el fondo con el color del formulario
+                    g.DrawImage(_imagenOriginal, posX, posY, newWidth, newHeight);
+                }
+
+                // Gestión de memoria: IMPORTANTE
+                Image anterior = this.BackgroundImage;
+                this.BackgroundImage = bmp;
+
+                if (anterior != null)
+                {
+                    anterior.Dispose();
+                }
             }
-
-            // Gestión de memoria: IMPORTANTE
-            Image anterior = this.BackgroundImage;
-            this.BackgroundImage = bmp;
-
-            if (anterior != null)
+            catch (Exception ex)
             {
-                anterior.Dispose();
+                MessageBox.Show($"Error en ActualizarFondoAdaptable: {ex.Message}\n\nStackTrace: {ex.StackTrace}", 
+                    "Error de Fondo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -125,6 +152,49 @@ namespace MiniSistemaFacturacion.Forms
         {
             FrmConfiguracionEmpresa frm = new FrmConfiguracionEmpresa();
             frm.ShowDialog();
+        }
+
+        private void reportesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmReportes frm = new FrmReportes();
+            frm.ShowDialog();
+        }
+
+        private void borrarDatosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var result = MessageBox.Show(
+                    "¿Está seguro de que desea borrar TODOS los registros de:\n\n" +
+                    "· Detalles de Facturas\n" +
+                    "· Pagos\n" +
+                    "· Facturas\n\n" +
+                    "Esta acción no se puede deshacer.",
+                    "Confirmar Borrado Masivo",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    var facturacionDAL = new FacturacionDAL();
+                    facturacionDAL.BorrarTodosLosRegistros();
+                    
+                    MessageBox.Show(
+                        "Todos los registros han sido borrados exitosamente.\n\n" +
+                        "Revise la consola para ver los detalles de los registros borrados.",
+                        "Borrado Completado",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error al borrar los registros: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // Evento único para la entrada del mouse (MouseEnter)

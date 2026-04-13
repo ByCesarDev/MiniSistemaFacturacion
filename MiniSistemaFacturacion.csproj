@@ -53,7 +53,13 @@
   <PropertyGroup>
     <StartupObject>MiniSistemaFacturacion.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Recurso_2logosisfac.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.HashCode.6.0.0\lib\net462\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
@@ -162,6 +168,12 @@
     <Compile Include="Forms\FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmReportes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReportes.Designer.cs">
+      <DependentUpon>FrmReportes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmProductos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -209,6 +221,24 @@
     <Compile Include="BusinessLogic\TransaccionHelper.cs" />
     <!-- UTILS -->
     <Compile Include="Utils\RNCValidator.cs" />
+    <Compile Include="Utils\ValidadorCliente.cs" />
+    <Compile Include="Utils\FormularioClienteBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\DesignModeHelper.cs" />
+    <!-- NEW CLIENT FORMS -->
+    <Compile Include="Forms\FrmAgregarCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmAgregarCliente.Designer.cs">
+      <DependentUpon>FrmAgregarCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmEditarCliente.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmEditarCliente.Designer.cs">
+      <DependentUpon>FrmEditarCliente.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -216,14 +246,29 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\FrmAgregarCliente.resx">
+      <DependentUpon>FrmAgregarCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmBusquedaClientes.resx">
+      <DependentUpon>FrmBusquedaClientes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmBusquedaFacturas.resx">
       <DependentUpon>FrmBusquedaFacturas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmBusquedaProductos.resx">
+      <DependentUpon>FrmBusquedaProductos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmClientes.resx">
       <DependentUpon>FrmClientes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmConfiguracionEmpresa.resx">
+      <DependentUpon>FrmConfiguracionEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmCuentasPorCobrar.resx">
       <DependentUpon>frmCuentasPorCobrar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmEditarCliente.resx">
+      <DependentUpon>FrmEditarCliente.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmFacturacion.resx">
       <DependentUpon>frmFacturacion.cs</DependentUpon>
@@ -233,6 +278,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmProductos.resx">
       <DependentUpon>FrmProductos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReportes.resx">
+      <DependentUpon>FrmReportes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSelectorClientes.resx">
+      <DependentUpon>FrmSelectorClientes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmVistaPreviaPdf.resx">
       <DependentUpon>FrmVistaPreviaPdf.cs</DependentUpon>
@@ -264,6 +315,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Recurso_2logosisfac.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\QuestPDF.2026.2.4\build\net4\QuestPDF.targets" Condition="Exists('packages\QuestPDF.2026.2.4\build\net4\QuestPDF.targets')" />
