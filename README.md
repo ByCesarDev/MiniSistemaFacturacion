@@ -391,10 +391,21 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 6. Habilitar protocolos TCP/IP en SQL Server Configuration Manager
 
 ### Paso 2: Crear Base de Datos
-1. Conectarse a SQL Server Management Studio
-2. Ejecutar el script SQL proporcionado en el archivo `Database/Scripts/CreateDatabase.sql`
-3. Verificar que todas las tablas y procedimientos se hayan creado correctamente
-4. Ejecutar script de datos de prueba si se desea población inicial
+1. Conectarse a SQL Server Management Studio con autenticación mixta
+2. **Crear estructura de base de datos**:
+   - Ejecutar el script `Database/01_CreateTables.sql`
+   - Este script crea: base de datos, tablas, índices, constraints y vistas
+3. **Crear procedimientos almacenados**:
+   - Ejecutar el script `Database/03_StoredProcedures.sql`
+   - Este script crea: 15 procedimientos almacenados para operaciones CRUD y reportes
+4. **Insertar datos iniciales**:
+   - Ejecutar el script `Database/02_InsertData.sql`
+   - Este script inserta: configuración de empresa, clientes, productos y datos de prueba
+5. **Verificar instalación**:
+   - Confirmar que todas las tablas se hayan creado correctamente
+   - Verificar que los procedimientos almacenados funcionen
+   - Comprobar que las vistas optimizadas funcionen correctamente
+   - Validar que los datos de prueba sean visibles
 
 ### Paso 3: Configurar Aplicación
 1. Abrir el archivo `App.config` del proyecto
