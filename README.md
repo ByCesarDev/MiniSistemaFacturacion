@@ -2,7 +2,55 @@
 
 **Proyecto Final - Programación III**
 
-## 📋 Descripción General
+<details>
+<summary>📋 Índice de Contenido (Click para expandir)</summary>
+
+- [📋 Descripción General](#-descripción-general)
+- [🏗️ Arquitectura del Sistema](#️-arquitectura-del-sistema)
+  - [Estructura en Capas](#estructura-en-capas)
+  - [Capa de Presentación (UI)](#capa-de-presentación-ui)
+  - [Capa de Lógica de Negocio](#capa-de-lógica-de-negocio)
+  - [Capa de Acceso a Datos](#capa-de-acceso-a-datos)
+  - [Capa de Entidades](#capa-de-entidades)
+  - [Capa de Servicios](#capa-de-servicios)
+  - [Capa de Utilidades](#capa-de-utilidades)
+- [🗄️ Base de Datos](#️-base-de-datos)
+  - [Entidades Principales](#entidades-principales)
+  - [Características Técnicas](#características-técnicas)
+- [⚡ Funcionalidades Principales](#-funcionalidades-principales)
+  - [🧾 Módulo de Facturación](#-módulo-de-facturación)
+  - [💳 Módulo de Cuentas por Cobrar](#-módulo-de-cuentas-por-cobrar)
+  - [👥 Módulo de Clientes](#-módulo-de-clientes)
+  - [📦 Módulo de Inventario](#-módulo-de-inventario)
+- [🔧 Tecnologías Utilizadas](#-tecnologías-utilizadas)
+  - [Stack Tecnológico](#stack-tecnológico)
+  - [Características Técnicas](#características-técnicas-1)
+- [📊 Características Destacadas](#-características-destacadas)
+  - [🎫 Sistema de PDF Tickets](#-sistema-de-pdf-tickets)
+  - [🔍 Búsqueda y Edición Avanzada](#-búsqueda-y-edición-avanzada)
+  - [🔄 Transacciones Atómicas](#-transacciones-atómicas)
+  - [🛡️ Validaciones Robustas](#️-validaciones-robustas)
+  - [📈 Gestión de Stock](#-gestión-de-stock)
+  - [🛠️ Mejas Recientes y Correcciones](#️-mejas-recientes-y-correcciones)
+- [🚀 Instalación y Configuración](#-instalación-y-configuración)
+  - [6.1 Requisitos](#61-requisitos)
+  - [6.2 Instalación](#62-instalación)
+  - [6.3 Manual de Usuario](#63-manual-de-usuario)
+- [📈 Reportes y Consultas](#-reportes-y-consultas)
+  - [📊 Reportes Disponibles](#-reportes-disponibles)
+  - [🔍 Consultas Avanzadas](#-consultas-avanzadas)
+- [🛠️ Mantenimiento y Soporte](#️-mantenimiento-y-soporte)
+  - [🔧 Operaciones de Mantenimiento](#-operaciones-de-mantenimiento)
+  - [📋 Guía de Solución de Problemas](#-guía-de-solución-de-problemas)
+  - [6.4 Consideraciones Técnicas para Futuras Versiones](#64-consideraciones-técnicas-para-futuras-versiones)
+- [� Equipo de Desarrollo](#-equipo-de-desarrollo)
+  - [🎯 Responsabilidades por Módulo](#-responsabilidades-por-módulo)
+  - [📅 Timeline del Proyecto](#-timeline-del-proyecto)
+- [📞 Contacto y Soporte](#-contacto-y-soporte)
+
+</details>
+
+## �📋 Descripción General
 
 Aplicación de escritorio desarrollada en C# con Windows Forms y SQL Server Express que implementa un sistema completo de facturación y gestión de cuentas por cobrar. El proyecto utiliza una arquitectura en capas con patrones de diseño modernos para garantizar mantenibilidad y escalabilidad.
 
@@ -11,40 +59,171 @@ Aplicación de escritorio desarrollada en C# con Windows Forms y SQL Server Expr
 ## 🏗️ Arquitectura del Sistema
 
 ### Estructura en Capas
+
+El sistema implementa una arquitectura en capas limpia y escalable que separa claramente las responsabilidades y facilita el mantenimiento y la evolución del software.
+
 ```
 MiniSistemaFacturacion/
-├── 📁 Models/                    (Entidades de Negocio)
-│   ├── Cliente.cs                  (Gestión de clientes)
-│   ├── Producto.cs                 (Gestión de inventario)
-│   ├── Factura.cs                 (Cabecera de facturas)
-│   ├── DetalleFactura.cs          (Detalles de facturas)
-│   └── Pago.cs                    (Registro de pagos)
+├── 📁 Models/                    (Capa de Entidades de Negocio)
+│   ├── Cliente.cs                  (Entidad Cliente con validaciones)
+│   ├── Producto.cs                 (Entidad Producto con control de stock)
+│   ├── Factura.cs                 (Entidad Factura con cálculos automáticos)
+│   ├── DetalleFactura.cs          (Entidad Detalle de Factura)
+│   ├── Pago.cs                    (Entidad Pago con formas de pago)
+│   └── EmpresaConfig.cs           (Configuración de datos de empresa)
 ├── 📁 DataAccess/               (Capa de Acceso a Datos)
-│   ├── DbHelper.cs                (Conexión y utilidades SQL)
+│   ├── DbHelper.cs                (Utilidades de conexión SQL)
 │   ├── ConnectionStringManager.cs   (Gestión de connection strings)
-│   ├── ClienteDAL.cs             (CRUD de clientes)
-│   └── ProductoDAL.cs            (CRUD de productos)
-├── 📁 BusinessLogic/            (Lógica de Negocio)
-│   ├── FacturacionManager.cs       (Proceso de facturación)
-│   ├── PagoManager.cs            (Gestión de pagos)
-│   └── TransaccionHelper.cs      (Utilidades de transacciones)
-├── 📁 Forms/                    (Interfaz de Usuario)
-│   ├── frmMain.cs                (Menú principal)
-│   ├── frmClientes.cs            (Gestión de clientes)
-│   ├── frmProductos.cs           (Gestión de productos)
-│   ├── frmFacturacion.cs        (Proceso de facturación)
+│   ├── ClienteDAL.cs             (CRUD completo de clientes)
+│   ├── ProductoDAL.cs            (CRUD completo de productos)
+│   ├── FacturaDAL.cs             (CRUD completo de facturas)
+│   ├── DetalleFacturaDAL.cs      (CRUD completo de detalles)
+│   ├── PagoDAL.cs                (CRUD completo de pagos)
+│   └── ReportesDAL.cs            (Consultas y reportes)
+├── 📁 BusinessLogic/            (Capa de Lógica de Negocio)
+│   ├── FacturacionManager.cs       (Proceso completo de facturación)
+│   ├── PagoManager.cs            (Gestión de pagos y saldos)
+│   ├── TransaccionHelper.cs      (Utilidades de transacciones ACID)
+│   ├── StockManager.cs           (Control de inventario)
+│   ├── NCFManager.cs             (Generación de NCF fiscal)
+│   └── ValidacionManager.cs      (Validaciones de negocio)
+├── 📁 Forms/                    (Capa de Presentación - UI)
+│   ├── frmMain.cs                (Menú principal y navegación)
+│   ├── frmClientes.cs            (Gestión CRUD de clientes)
+│   ├── frmProductos.cs           (Gestión CRUD de productos)
+│   ├── frmFacturacion.cs        (Proceso completo de facturación)
 │   ├── FrmVistaPreviaPdf.cs     (Vista previa e impresión de PDF)
-│   ├── FrmBusquedaFacturas.cs   (Búsqueda avanzada de facturas)
+│   ├── FrmBusquedaFacturas.cs   (Búsqueda avanzada y edición)
 │   ├── FrmSelectorClientes.cs    (Selector intuitivo de clientes)
-│   └── frmCuentasPorCobrar.cs  (Gestión de pagos)
-├── 📁 Services/                (Servicios especializados)
-│   ├── PdfTicketService.cs       (Generación de PDF en formato ticket)
-│   └── EmpresaConfig.cs         (Configuración de datos de empresa)
-├── 📁 Utilities/               (Herramientas auxiliares)
-├── 📁 Resources/               (Recursos de la aplicación)
+│   ├── frmCuentasPorCobrar.cs  (Gestión de pagos y saldos)
+│   ├── FrmAgregarCliente.cs     (Formulario de alta de clientes)
+│   ├── FrmEditarCliente.cs      (Formulario de edición de clientes)
+│   ├── FrmAgregarProducto.cs    (Formulario de alta de productos)
+│   ├── FrmEditarProducto.cs     (Formulario de edición de productos)
+│   ├── FrmRegistrarPago.cs       (Formulario de registro de pagos)
+│   └── FrmReportes.cs           (Generación de reportes)
+├── 📁 Services/                (Capa de Servicios Especializados)
+│   ├── PdfTicketService.cs       (Generación de PDF tickets 80mm)
+│   ├── EmpresaConfigService.cs   (Gestión de configuración empresarial)
+│   ├── EmailService.cs           (Envío de notificaciones por email)
+│   ├── BackupService.cs          (Servicios de backup y restauración)
+│   └── LoggingService.cs        (Registro de eventos y errores)
+├── 📁 Utilities/               (Capa de Utilidades Auxiliares)
+│   ├── FormHelper.cs             (Utilidades para formularios)
+│   ├── ValidationHelper.cs       (Validaciones comunes)
+│   ├── FormatHelper.cs           (Formateo de datos)
+│   ├── SecurityHelper.cs         (Utilidades de seguridad)
+│   └── Constants.cs              (Constantes del sistema)
+├── 📁 Resources/               (Recursos de la Aplicación)
+│   ├── Images/                   (Imágenes e iconos)
+│   ├── Styles/                   (Estilos y temas)
+│   └── Localization/             (Recursos de localización)
+├── 📁 Database/                 (Scripts y Utilidades de BD)
+│   ├── Scripts/                  (Scripts SQL de creación)
+│   ├── Procedures/               (Procedimientos almacenados)
+│   └── Backups/                  (Copias de seguridad)
+├── 📁 Tests/                    (Pruebas Unitarias)
+│   ├── UnitTests/                (Pruebas unitarias)
+│   └── IntegrationTests/         (Pruebas de integración)
 ├── App.config                   (Configuración de la aplicación)
-└── Program.cs                  (Punto de entrada)
+├── packages.config              (Configuración de paquetes NuGet)
+└── Program.cs                  (Punto de entrada principal)
 ```
+
+### Capa de Presentación (UI)
+
+**Responsabilidades**:
+- Interfaz de usuario intuitiva y responsiva
+- Validaciones visuales en tiempo real
+- Manejo de eventos de usuario
+- Navegación entre módulos
+- Presentación de datos y reportes
+
+**Características**:
+- **Windows Forms**: Framework clásico de escritorio
+- **DataGridView Optimizado**: Manejo eficiente de grandes volúmenes de datos
+- **WebView2 Integration**: Vista previa nativa de PDF
+- **Atajos de Teclado**: F3 búsqueda, Ctrl+N nuevo, Ctrl+S guardar
+- **Validaciones en Tiempo Real**: Feedback inmediato al usuario
+
+### Capa de Lógica de Negocio
+
+**Responsabilidades**:
+- Implementación de reglas de negocio
+- Coordinación de transacciones complejas
+- Cálculos automáticos (IVA, totales, saldos)
+- Validaciones de integridad
+- Gestión de estados de entidades
+
+**Patrones Implementados**:
+- **Transaction Script**: Para procesos de facturación
+- **Domain Model**: Entidades con comportamiento
+- **Specification Pattern**: Para reglas de validación complejas
+- **Command Pattern**: Para operaciones reversibles
+
+### Capa de Acceso a Datos
+
+**Responsabilidades**:
+- Abstracción completa de la base de datos
+- Operaciones CRUD optimizadas
+- Manejo de conexiones y transacciones
+- Mapeo objeto-relacional
+- Optimización de consultas
+
+**Características**:
+- **ADO.NET Nativo**: Máximo rendimiento y control
+- **Connection Pooling**: Optimización de recursos
+- **Parameterized Queries**: Prevención de SQL injection
+- **Bulk Operations**: Para operaciones masivas
+- **Caching Strategy**: Reducción de consultas repetitivas
+
+### Capa de Entidades
+
+**Responsabilidades**:
+- Definición del modelo de dominio
+- Validaciones mediante Data Annotations
+- Propiedades calculadas y navegación
+- Estado y comportamiento de objetos
+- Serialización y persistencia
+
+**Características**:
+- **POCO Objects**: Plain Old CLR Objects
+- **Data Annotations**: Validaciones automáticas
+- **Navigation Properties**: Relaciones entre entidades
+- **Calculated Properties**: Propiedades derivadas
+- **Immutability**: Donde sea apropiado
+
+### Capa de Servicios
+
+**Responsabilidades**:
+- Servicios especializados y reutilizables
+- Integración con sistemas externos
+- Generación de documentos y reportes
+- Comunicación y notificaciones
+- Tareas asíncronas y en segundo plano
+
+**Servicios Principales**:
+- **PdfTicketService**: Generación de PDF en formato ticket
+- **EmpresaConfigService**: Gestión de configuración empresarial
+- **EmailService**: Notificaciones automáticas
+- **BackupService**: Copias de seguridad programadas
+- **LoggingService**: Registro centralizado de eventos
+
+### Capa de Utilidades
+
+**Responsabilidades**:
+- Funciones auxiliares reutilizables
+- Helper classes para operaciones comunes
+- Constantes y configuraciones globales
+- Extension methods para tipos comunes
+- Seguridad y encriptación
+
+**Utilidades Clave**:
+- **FormHelper**: Operaciones comunes en formularios
+- **ValidationHelper**: Validaciones complejas
+- **FormatHelper**: Formateo de fechas, números, moneda
+- **SecurityHelper**: Hashing, encriptación, validación
+- **Constants**: Constantes del sistema y mensajes
 
 ## 🗄️ Base de Datos
 
@@ -179,20 +358,47 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 
 ## 🚀 Instalación y Configuración
 
-### Requisitos del Sistema
-- **Sistema Operativo**: Windows 10 o superior
-- **.NET Framework**: 4.7.2 o superior
-- **Base de Datos**: SQL Server Express 2019+
-- **RAM**: Mínimo 4GB recomendado
-- **Espacio**: 500MB disponibles
+# ANEXOS
 
-### Pasos de Instalación
-1. **Instalar SQL Server Express** con autenticación mixta
-2. **Ejecutar scripts SQL** desde `/Database/Scripts/`
-3. **Configurar connection string** en `App.config`
-4. **Ejecutar aplicación** desde `MiniSistemaFacturacion.exe`
+## 6.1 Requisitos
 
-### Configuración de Base de Datos
+### Requisitos del Sistema Operativo
+- **Sistema Operativo**: Windows 10 versión 1903 o superior
+- **Arquitectura**: x64 (64 bits)
+- **Memoria RAM**: Mínimo 4GB, recomendado 8GB
+- **Espacio en Disco**: 500MB disponibles para instalación
+- **Procesador**: Intel Core i3 o equivalente AMD
+
+### Requisitos de Software
+- **.NET Framework**: Versión 4.7.2 o superior (requerido por la aplicación)
+- **Visual Studio**: Versión 2019 o 2022 (para desarrollo y compilación)
+- **SQL Server**: SQL Server Express 2019 o superior con autenticación mixta
+- **Windows SDK**: Versión compatible con Visual Studio
+
+### Requisitos de Hardware Adicional
+- **Impresora**: Opcional, recomendada impresora térmica 80mm para tickets
+- **Monitor**: Resolución mínima 1366x768, recomendada 1920x1080
+- **Mouse y Teclado**: Dispositivos de entrada estándar
+
+## 6.2 Instalación
+
+### Paso 1: Instalar SQL Server Express
+1. Descargar SQL Server Express 2019 desde el sitio oficial de Microsoft
+2. Ejecutar el instalador como administrador
+3. Seleccionar "Custom" installation
+4. Configurar instancia con autenticación mixta (Windows + SQL Server)
+5. Establecer contraseña para usuario 'sa'
+6. Habilitar protocolos TCP/IP en SQL Server Configuration Manager
+
+### Paso 2: Crear Base de Datos
+1. Conectarse a SQL Server Management Studio
+2. Ejecutar el script SQL proporcionado en el archivo `Database/Scripts/CreateDatabase.sql`
+3. Verificar que todas las tablas y procedimientos se hayan creado correctamente
+4. Ejecutar script de datos de prueba si se desea población inicial
+
+### Paso 3: Configurar Aplicación
+1. Abrir el archivo `App.config` del proyecto
+2. Modificar la cadena de conexión según la configuración local:
 ```xml
 <connectionStrings>
   <add name="MiniSistemaFacturacionDB" 
@@ -200,6 +406,146 @@ using (SqlTransaction transaction = connection.BeginTransaction())
        providerName="System.Data.SqlClient" />
 </connectionStrings>
 ```
+3. Guardar los cambios
+
+### Paso 4: Compilar y Ejecutar
+1. Abrir la solución en Visual Studio
+2. Restaurar paquetes NuGet automáticamente
+3. Compilar la solución (Build Solution)
+4. Ejecutar la aplicación (F5 o Start Debugging)
+
+### Verificación de Instalación
+- La aplicación debe iniciar mostrando el menú principal
+- Verificar conexión a base de datos en el menú Clientes
+- Confirmar que los datos de prueba son visibles
+
+## 6.3 Manual de Usuario
+
+### Inicio del Sistema
+1. **Ejecutar la Aplicación**: Hacer doble clic en `MiniSistemaFacturacion.exe`
+2. **Menú Principal**: Se muestra la interfaz principal con acceso a todos los módulos
+3. **Navegación**: Utilizar los botones del menú para acceder a cada módulo
+
+### Gestión de Clientes
+
+#### Crear Nuevo Cliente
+1. Hacer clic en **Clientes** en el menú principal
+2. Hacer clic en el botón **Nuevo**
+3. Completar todos los campos obligatorios:
+   - **Nombre**: Nombre completo del cliente
+   - **Cédula**: Número de cédula (formato: XXX-XXXXXXX-X)
+   - **RNC**: Opcional, para clientes empresariales
+   - **Dirección**: Dirección completa
+   - **Teléfono**: Número de teléfono
+   - **Email**: Correo electrónico
+4. Hacer clic en **Guardar** para registrar el cliente
+5. El sistema validará que la cédula no exista previamente
+
+#### Buscar Clientes
+1. En la pantalla de Clientes, usar el campo de búsqueda
+2. Escribir parte del nombre, cédula o RNC
+3. La lista se filtrará automáticamente
+4. Para búsqueda rápida, usar atajo **F3** en cualquier campo de cliente
+
+#### Editar Cliente
+1. Seleccionar el cliente en la lista
+2. Hacer clic en **Editar**
+3. Modificar los datos necesarios
+4. Hacer clic en **Guardar** para confirmar cambios
+
+#### Eliminar Cliente
+1. Seleccionar el cliente en la lista
+2. Hacer clic en **Eliminar**
+3. Confirmar la eliminación en el diálogo
+4. **Nota**: Clientes con facturas no pueden ser eliminados
+
+### Gestión de Productos
+
+#### Crear Nuevo Producto
+1. Hacer clic en **Productos** en el menú principal
+2. Hacer clic en **Nuevo**
+3. Completar los campos:
+   - **Código**: Código único del producto
+   - **Descripción**: Nombre detallado del producto
+   - **Precio Unitario**: Precio de venta (formato: 9999.99)
+   - **Stock Actual**: Cantidad disponible
+   - **Stock Mínimo**: Nivel para alertas
+4. Hacer clic en **Guardar**
+
+#### Control de Stock
+- **Alerta Verde**: Stock normal (por encima del mínimo)
+- **Alerta Amarilla**: Stock bajo (igual al mínimo)
+- **Alerta Roja**: Stock crítico (por debajo del mínimo)
+- **Sin Stock**: Producto agotado
+
+### Proceso de Facturación
+
+#### Crear Nueva Factura
+1. Hacer clic en **Facturación** en el menú principal
+2. **Seleccionar Cliente**:
+   - Hacer clic en el botón de selección de clientes
+   - Usar búsqueda rápida (F3) para encontrar cliente
+   - Doble clic para seleccionar
+3. **Agregar Productos**:
+   - Hacer clic en **Añadir Producto**
+   - Seleccionar producto de la lista
+   - Ingresar cantidad deseada
+   - Verificar stock disponible
+   - Hacer clic en **Aceptar**
+4. **Revisar Totales**:
+   - **Subtotal**: Calculado automáticamente
+   - **IVA**: 18% aplicado automáticamente
+   - **Total**: Subtotal + IVA
+5. **Guardar Factura**:
+   - Hacer clic en **Guardar Factura**
+   - El sistema generará NCF automáticamente
+   - Se creará PDF ticket automáticamente
+   - Stock se actualizará automáticamente
+
+#### Edición de Facturas
+1. En la pantalla de facturación, hacer clic en **Buscar Facturas**
+2. Ingresar número de factura o criterios de búsqueda
+3. Seleccionar factura y hacer clic en **Editar**
+4. Modificar detalles según necesidad
+5. Guardar cambios
+
+### Gestión de Cuentas por Cobrar
+
+#### Registrar Pago
+1. Hacer clic en **Cuentas por Cobrar** en el menú principal
+2. Se mostrará lista de facturas con saldo pendiente
+3. Seleccionar factura a pagar
+4. Hacer clic en **Registrar Pago**
+5. Completar datos del pago:
+   - **Monto**: Cantidad a pagar (no puede exceder saldo)
+   - **Forma de Pago**: Seleccionar de la lista (Efectivo, Tarjeta, Transferencia, Cheque)
+   - **Referencia**: Número de referencia (obligatorio para tarjeta y transferencia)
+   - **Observaciones**: Comentarios adicionales
+6. Hacer clic en **Guardar Pago**
+7. El sistema actualizará saldo y estado de factura automáticamente
+
+#### Consultar Historial de Pagos
+1. Seleccionar factura en la lista
+2. Hacer clic en **Ver Historial**
+3. Se mostrarán todos los pagos realizados
+4. Incluye fecha, monto y forma de pago
+
+### Atajos de Teclado
+- **F3**: Búsqueda rápida de clientes
+- **Ctrl+N**: Nuevo registro (cliente, producto, factura)
+- **Ctrl+S**: Guardar cambios
+- **Esc**: Cancelar operación o cerrar formulario
+- **Enter**: Confirmar acción o mover al siguiente campo
+
+### Mensajes del Sistema
+- **Verde**: Operación exitosa
+- **Amarillo**: Advertencia o información importante
+- **Rojo**: Error o validación fallida
+
+### Exportación e Impresión
+- **PDF Tickets**: Se generan automáticamente al guardar facturas
+- **Vista Previa**: WebView2 integrado para visualización
+- **Impresión**: Compatible con impresoras térmicas 80mm y estándar
 
 ## 📈 Reportes y Consultas
 
