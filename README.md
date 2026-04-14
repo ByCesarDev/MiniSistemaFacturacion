@@ -3,7 +3,7 @@
 **Proyecto Final - Programación III**
 
 <details>
-<summary>📋 Índice de Contenido (Click para expandir)</summary>
+<summary> Índice de Contenido (Click para expandir)</summary>
 
 - [Descripción General](#-descripción-general)
 - [ Arquitectura del Sistema](#️-arquitectura-del-sistema)
