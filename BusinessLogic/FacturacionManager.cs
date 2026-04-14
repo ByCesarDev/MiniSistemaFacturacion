@@ -515,7 +515,7 @@ namespace MiniSistemaFacturacion.BusinessLogic
             decimal totalNeto = totalBruto + valorImpuesto;
 
             // Definir saldo y estado según el tipo de venta
-            decimal saldoPendiente = (factura.TipoVenta == "Credito") ? totalNeto : 0m;
+            decimal saldoPendiente = (factura.Credito) ? totalNeto : 0m;
             string estado = (saldoPendiente == 0) ? "Pagada" : "Pendiente";
 
             string query = @"
