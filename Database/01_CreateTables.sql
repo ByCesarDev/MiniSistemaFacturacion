@@ -4,6 +4,7 @@
 -- Autor: César Reyes
 -- =============================================
 
+
 -- Crear base de datos si no existe
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'MiniSistemaFacturacion')
 BEGIN
