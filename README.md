@@ -5,8 +5,8 @@
 <details>
 <summary>📋 Índice de Contenido (Click para expandir)</summary>
 
-- [📋 Descripción General](#-descripción-general)
-- [🏗️ Arquitectura del Sistema](#️-arquitectura-del-sistema)
+- [Descripción General](#-descripción-general)
+- [ Arquitectura del Sistema](#️-arquitectura-del-sistema)
   - [Estructura en Capas](#estructura-en-capas)
   - [Capa de Presentación (UI)](#capa-de-presentación-ui)
   - [Capa de Lógica de Negocio](#capa-de-lógica-de-negocio)
@@ -14,49 +14,49 @@
   - [Capa de Entidades](#capa-de-entidades)
   - [Capa de Servicios](#capa-de-servicios)
   - [Capa de Utilidades](#capa-de-utilidades)
-- [🗄️ Base de Datos](#️-base-de-datos)
+- [ Base de Datos](#️-base-de-datos)
   - [Entidades Principales](#entidades-principales)
   - [Características Técnicas](#características-técnicas)
-- [⚡ Funcionalidades Principales](#-funcionalidades-principales)
-  - [🧾 Módulo de Facturación](#-módulo-de-facturación)
-  - [💳 Módulo de Cuentas por Cobrar](#-módulo-de-cuentas-por-cobrar)
-  - [👥 Módulo de Clientes](#-módulo-de-clientes)
-  - [📦 Módulo de Inventario](#-módulo-de-inventario)
-- [🔧 Tecnologías Utilizadas](#-tecnologías-utilizadas)
+- [ Funcionalidades Principales](#-funcionalidades-principales)
+  - [ Módulo de Facturación](#-módulo-de-facturación)
+  - [Módulo de Cuentas por Cobrar](#-módulo-de-cuentas-por-cobrar)
+  - [ Módulo de Clientes](#-módulo-de-clientes)
+  - [ Módulo de Inventario](#-módulo-de-inventario)
+- [ Tecnologías Utilizadas](#-tecnologías-utilizadas)
   - [Stack Tecnológico](#stack-tecnológico)
   - [Características Técnicas](#características-técnicas-1)
-- [📊 Características Destacadas](#-características-destacadas)
-  - [🎫 Sistema de PDF Tickets](#-sistema-de-pdf-tickets)
-  - [🔍 Búsqueda y Edición Avanzada](#-búsqueda-y-edición-avanzada)
-  - [🔄 Transacciones Atómicas](#-transacciones-atómicas)
-  - [🛡️ Validaciones Robustas](#️-validaciones-robustas)
-  - [📈 Gestión de Stock](#-gestión-de-stock)
-  - [🛠️ Mejas Recientes y Correcciones](#️-mejas-recientes-y-correcciones)
-- [🚀 Instalación y Configuración](#-instalación-y-configuración)
+- [ Características Destacadas](#-características-destacadas)
+  - [ Sistema de PDF Tickets](#-sistema-de-pdf-tickets)
+  - [ Búsqueda y Edición Avanzada](#-búsqueda-y-edición-avanzada)
+  - [ Transacciones Atómicas](#-transacciones-atómicas)
+  - [ Validaciones Robustas](#️-validaciones-robustas)
+  - [ Gestión de Stock](#-gestión-de-stock)
+  - [ Mejas Recientes y Correcciones](#️-mejas-recientes-y-correcciones)
+- [ Instalación y Configuración](#-instalación-y-configuración)
   - [6.1 Requisitos](#61-requisitos)
   - [6.2 Instalación](#62-instalación)
   - [6.3 Manual de Usuario](#63-manual-de-usuario)
-- [📈 Reportes y Consultas](#-reportes-y-consultas)
-  - [📊 Reportes Disponibles](#-reportes-disponibles)
-  - [🔍 Consultas Avanzadas](#-consultas-avanzadas)
-- [🛠️ Mantenimiento y Soporte](#️-mantenimiento-y-soporte)
-  - [🔧 Operaciones de Mantenimiento](#-operaciones-de-mantenimiento)
-  - [📋 Guía de Solución de Problemas](#-guía-de-solución-de-problemas)
+- [ Reportes y Consultas](#-reportes-y-consultas)
+  - [ Reportes Disponibles](#-reportes-disponibles)
+  - [ Consultas Avanzadas](#-consultas-avanzadas)
+- [ Mantenimiento y Soporte](#️-mantenimiento-y-soporte)
+  - [ Operaciones de Mantenimiento](#-operaciones-de-mantenimiento)
+  - [ Guía de Solución de Problemas](#-guía-de-solución-de-problemas)
   - [6.4 Consideraciones Técnicas para Futuras Versiones](#64-consideraciones-técnicas-para-futuras-versiones)
-- [� Equipo de Desarrollo](#-equipo-de-desarrollo)
-  - [🎯 Responsabilidades por Módulo](#-responsabilidades-por-módulo)
-  - [📅 Timeline del Proyecto](#-timeline-del-proyecto)
-- [📞 Contacto y Soporte](#-contacto-y-soporte)
+- [ Equipo de Desarrollo](#-equipo-de-desarrollo)
+  - [ Responsabilidades por Módulo](#-responsabilidades-por-módulo)
+  - [ Timeline del Proyecto](#-timeline-del-proyecto)
+- [ Contacto y Soporte](#-contacto-y-soporte)
 
 </details>
 
-## �📋 Descripción General
+##  Descripción General
 
 Aplicación de escritorio desarrollada en C# con Windows Forms y SQL Server Express que implementa un sistema completo de facturación y gestión de cuentas por cobrar. El proyecto utiliza una arquitectura en capas con patrones de diseño modernos para garantizar mantenibilidad y escalabilidad.
 
-**🆕 Características Recientes**: Sistema completo de generación de PDF en formato ticket, búsqueda avanzada de facturas, edición de facturas existentes, selector de clientes intuitivo y mejoras significativas en la experiencia de usuario.
+** Características Recientes**: Sistema completo de generación de PDF en formato ticket, búsqueda avanzada de facturas, edición de facturas existentes, selector de clientes intuitivo y mejoras significativas en la experiencia de usuario.
 
-## 🏗️ Arquitectura del Sistema
+##  Arquitectura del Sistema
 
 ### Estructura en Capas
 
@@ -225,7 +225,7 @@ MiniSistemaFacturacion/
 - **SecurityHelper**: Hashing, encriptación, validación
 - **Constants**: Constantes del sistema y mensajes
 
-## 🗄️ Base de Datos
+##  Base de Datos
 
 ### Entidades Principales
 - **Clientes**: Información completa de clientes con validación de cédulas y RNC
@@ -241,39 +241,39 @@ MiniSistemaFacturacion/
 - **Índices**: Optimizados para consultas frecuentes
 - **Datos de Prueba**: 15 clientes, 40 productos, transacciones reales
 
-## ⚡ Funcionalidades Principales
+##  Funcionalidades Principales
 
-### 🧾 Módulo de Facturación
+###  Módulo de Facturación
 - **Creación de Facturas**: Selección de cliente y productos con selector intuitivo
 - **Cálculos Automáticos**: Subtotal, IVA (18%), Total Neto
 - **Control de Stock**: Validación y actualización automática
 - **Números de Factura**: Generación automática y única con NCF
 - **Transacciones Atómicas**: Garantía de integridad de datos
-- **🆕 Edición de Facturas**: Modificación completa de facturas existentes
-- **🆕 Vista Previa PDF**: Generación instantánea de tickets en formato 80mm
-- **🆕 Búsqueda Avanzada**: Filtrado por número, cliente, fechas y estados
-- **🆕 Selector de Clientes**: Búsqueda rápida con atajo F3 y DataGridView
+- ** Edición de Facturas**: Modificación completa de facturas existentes
+- ** Vista Previa PDF**: Generación instantánea de tickets en formato 80mm
+- ** Búsqueda Avanzada**: Filtrado por número, cliente, fechas y estados
+- ** Selector de Clientes**: Búsqueda rápida con atajo F3 y DataGridView
 
-### 💳 Módulo de Cuentas por Cobrar
+###  Módulo de Cuentas por Cobrar
 - **Registro de Pagos**: Múltiples formas de pago
 - **Actualización de Saldos**: Automática y en tiempo real
 - **Estados de Factura**: Pendiente → Parcial → Pagada
 - **Historial de Pagos**: Consulta completa por factura
 - **Formas de Pago**: Efectivo, Tarjeta, Transferencia, Cheque
 
-### 👥 Módulo de Clientes
+###  Módulo de Clientes
 - **Gestión Completa**: CRUD de clientes
 - **Validaciones**: Formato de cédula, email, teléfono
 - **Búsquedas**: Por nombre, cédula o dirección
 - **Estado**: Clientes activos/inactivos
 
-### 📦 Módulo de Inventario
+###  Módulo de Inventario
 - **Control de Stock**: Actualización automática al facturar
 - **Alertas**: Productos con stock bajo o crítico
 - **Categorías**: Organización por categorías
 - **Precios**: Gestión de precios unitarios
 
-## 🔧 Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 ### Stack Tecnológico
 - **Lenguaje**: C# (.NET Framework 4.7.2)
@@ -281,9 +281,9 @@ MiniSistemaFacturacion/
 - **Base de Datos**: SQL Server Express
 - **Acceso a Datos**: ADO.NET nativo
 - **Patrones**: Singleton, Repository, Transaction Script
-- **🆕 PDF Generation**: QuestPDF para tickets de 80mm
-- **🆕 WebView Integration**: Microsoft.Web.WebView2 para vista previa nativa
-- **🆕 Assembly Binding**: Redirección de versiones para compatibilidad
+- ** PDF Generation**: QuestPDF para tickets de 80mm
+- ** WebView Integration**: Microsoft.Web.WebView2 para vista previa nativa
+- ** Assembly Binding**: Redirección de versiones para compatibilidad
 
 ### Características Técnicas
 - **Conexión Pooling**: Optimización de recursos
@@ -292,9 +292,9 @@ MiniSistemaFacturacion/
 - **Manejo de Excepciones**: Captura y gestión de errores
 - **Configuración**: Archivos .config flexibles
 
-## 📊 Características Destacadas
+##  Características Destacadas
 
-### 🎫 Sistema de PDF Tickets
+###  Sistema de PDF Tickets
 - **Formato 80mm**: Diseño optimizado para impresoras térmicas
 - **Generación Instantánea**: PDF creado al momento de guardar factura
 - **Vista Previa Integrada**: WebView2 para visualización nativa
@@ -302,13 +302,13 @@ MiniSistemaFacturacion/
 - **Datos de Empresa**: Configuración completa de información comercial
 - **NCF Incluido**: Cumplimiento con normativa fiscal dominicana
 
-### 🔍 Búsqueda y Edición Avanzada
+###  Búsqueda y Edición Avanzada
 - **Búsqueda Multi-criterio**: Por número, cliente, rango de fechas
 - **Edición Completa**: Modificación de facturas existentes manteniendo NCF
 - **Selector de Clientes**: Búsqueda rápida con DataGridView y atajo F3
 - **Actualización en Tiempo Real**: Subtotales calculados al editar cantidades
 
-### 🔄 Transacciones Atómicas
+###  Transacciones Atómicas
 ```csharp
 // Ejemplo: Creación de factura completa
 using (SqlTransaction transaction = connection.BeginTransaction())
@@ -337,26 +337,26 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 }
 ```
 
-### 🛡️ Validaciones Robustas
+###  Validaciones Robustas
 - **Data Annotations**: Validaciones automáticas en entidades
 - **Validaciones de Negocio**: Lógica específica por módulo
 - **Validaciones de Integridad**: Referencias y relaciones
 - **Mensajes Claros**: Feedback amigable para usuarios
 
-### 📈 Gestión de Stock
+###  Gestión de Stock
 - **Control en Tiempo Real**: Actualización automática
 - **Alertas Inteligentes**: Stock bajo y crítico
 - **Prevención de Ventas**: Bloqueo si no hay stock
 - **Reportes**: Estado actual del inventario
 
-### 🛠️ Mejas Recientes y Correcciones
+###  Mejas Recientes y Correcciones
 - **DataGridView Mejorado**: Edición fluida sin errores DBNull
 - **Actualización en Tiempo Real**: Subtotales calculados al editar cantidades
 - **Manejo de Errores**: Captura silenciosa para mejor experiencia
 - **Compatibilidad de Versiones**: Assembly binding redirects funcionales
 - **Interfaz Optimizada**: Selector de clientes y búsqueda intuitiva
 
-## 🚀 Instalación y Configuración
+##  Instalación y Configuración
 
 # ANEXOS
 
@@ -558,34 +558,34 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 - **Vista Previa**: WebView2 integrado para visualización
 - **Impresión**: Compatible con impresoras térmicas 80mm y estándar
 
-## 📈 Reportes y Consultas
+##  Reportes y Consultas
 
-### 📊 Reportes Disponibles
+###  Reportes Disponibles
 - **Facturas por Período**: Rango de fechas configurable
 - **Clientes con Deuda**: Listado de saldos pendientes
 - **Productos Más Vendidos**: Ranking por cantidad
 - **Inventario Actual**: Stock disponible y valor
 - **Cuentas por Cobrar**: Resumen de pagos pendientes
-- **🆕 Tickets PDF**: Generación instantánea en formato 80mm
-- **🆕 Búsqueda Avanzada**: Multi-criterio con filtros flexibles
+- ** Tickets PDF**: Generación instantánea en formato 80mm
+- ** Búsqueda Avanzada**: Multi-criterio con filtros flexibles
 
-### 🔍 Consultas Avanzadas
+###  Consultas Avanzadas
 - **Búsqueda de Clientes**: Por nombre, cédula, teléfono con selector intuitivo
 - **Búsqueda de Productos**: Por código, descripción, categoría
 - **Historial de Facturas**: Por cliente o período con edición directa
 - **Estado de Pagos**: Detalle completo por factura
-- **🆕 Búsqueda de Facturas**: Por número, cliente, fechas y estados
-- **🆕 Edición en Línea**: Modificación directa desde resultados de búsqueda
+- ** Búsqueda de Facturas**: Por número, cliente, fechas y estados
+- ** Edición en Línea**: Modificación directa desde resultados de búsqueda
 
-## 🛠️ Mantenimiento y Soporte
+##  Mantenimiento y Soporte
 
-### 🔧 Operaciones de Mantenimiento
+###  Operaciones de Mantenimiento
 - **Backups Automáticos**: Programación de copias de seguridad
 - **Optimización de Índices**: Mantenimiento de rendimiento
 - **Limpieza de Logs**: Rotación automática de archivos
 - **Actualización de Datos**: Procesos batch para actualización
 
-### 📋 Guía de Solución de Problemas
+###  Guía de Solución de Problemas
 - **Conexión Fallida**: Verificar SQL Server services
 - **Errores de Transacción**: Revisar espacio en disco
 - **Problemas de Performance**: Rebuild de índices
@@ -611,31 +611,31 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 - **Real-time Sync**: Sincronización en tiempo real entre múltiples ubicaciones
 - **Backup Strategies**: Estrategias avanzadas de recuperación ante desastres
 
-## 👥 Equipo de Desarrollo
+##  Equipo de Desarrollo
 
-### 🎯 Responsabilidades por Módulo
+###  Responsabilidades por Módulo
 - **César Reyes**: Backend & Base de Datos (100% completado)
 - **Julio Garcia**: Módulo de Clientes (UI y validaciones)
 - **Luis Garcia**: Módulo de Inventario (UI y gestión de stock)
 - **Marileidi**: Módulo de Ventas y Cobros (UI y lógica)
 
-### 📅 Timeline del Proyecto
-- **Semana 1**: Diseño de base de datos y ERD ✅
-- **Semana 2**: Implementación de backend y DAL ✅
-- **Semana 3**: Desarrollo de lógica de negocio ✅
-- **Semana 4**: Desarrollo de interfaces de usuario ✅
-- **Semana 5**: Integración, pruebas y documentación ✅
-- **🆕 Mejoras Adicionales**: PDF tickets, búsqueda avanzada, edición de facturas ✅
+###  Timeline del Proyecto
+- **Semana 1**: Diseño de base de datos y ERD 
+- **Semana 2**: Implementación de backend y DAL 
+- **Semana 3**: Desarrollo de lógica de negocio 
+- **Semana 4**: Desarrollo de interfaces de usuario 
+- **Semana 5**: Integración, pruebas y documentación 
+- ** Mejoras Adicionales**: PDF tickets, búsqueda avanzada, edición de facturas 
 
-## 📞 Contacto y Soporte
+##  Contacto y Soporte
 
-### 📧 Información del Proyecto
+###  Información del Proyecto
 - **Institución**: Universidad Abierta para Adultos - UAPA
 - **Curso**: Programación III
 - **Profesor**: Diógenes Amaury Martínez Silverio
 - **Año**: 2026
 
-### 🌐 Repositorio del Código
+###  Repositorio del Código
 - **Git**: [https://github.com/ByCesarDev/MiniSistemaFacturacion.git](https://github.com/ByCesarDev/MiniSistemaFacturacion.git)
 - **Documentación**: Incluida en este Repo y en el código fuente
 - **Issues**: Reportar a través del sistema de seguimiento
@@ -644,6 +644,6 @@ using (SqlTransaction transaction = connection.BeginTransaction())
 
 **Nota**: Este proyecto fue desarrollado como trabajo final para el curso de Programación III, demostrando el dominio de conceptos avanzados de programación, diseño de bases de datos y desarrollo de aplicaciones empresariales.
 
-**🆕 Funcionalidades Completas**: Sistema robusto con generación de PDF tickets, búsqueda avanzada, edición de facturas, selector de clientes intuitivo y experiencia de usuario optimizada para entornos empresariales reales.
+** Funcionalidades Completas**: Sistema robusto con generación de PDF tickets, búsqueda avanzada, edición de facturas, selector de clientes intuitivo y experiencia de usuario optimizada para entornos empresariales reales.
 
 © 2026 - Equipo de Desarrollo - Todos los derechos reservados
