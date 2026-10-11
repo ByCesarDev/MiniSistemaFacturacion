@@ -1,7 +1,9 @@
 using System;
 using System.Configuration;
 using System.IO;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -62,6 +64,31 @@ namespace MiniSistemaFacturacion.DataAccess
             }
         }
 
+        private static void AsegurarPermisosDirectorio(string dirPath)
+        {
+            try
+            {
+                var directoryInfo = new DirectoryInfo(dirPath);
+                var directorySecurity = directoryInfo.GetAccessControl();
+
+                var usersSid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
+                var rule = new FileSystemAccessRule(
+                    usersSid,
+                    FileSystemRights.Modify,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                    PropagationFlags.None,
+                    AccessControlType.Allow);
+
+                directorySecurity.AddAccessRule(rule);
+                directoryInfo.SetAccessControl(directorySecurity);
+            }
+            catch
+            {
+                // Si el proceso actual no posee permisos administrativos para modificar ACLs,
+                // continuamos sin fallar para permitir la escritura estándar.
+            }
+        }
+
         private static bool GuardarEnProgramData(string connectionString, bool protectWithDpapi, out string error)
         {
             error = null;
@@ -73,6 +100,7 @@ namespace MiniSistemaFacturacion.DataAccess
                 {
                     Directory.CreateDirectory(dir);
                 }
+                AsegurarPermisosDirectorio(dir);
 
                 byte[] data;
                 if (protectWithDpapi)
