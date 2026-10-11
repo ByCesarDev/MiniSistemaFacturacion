@@ -1,368 +1,203 @@
+# Master Plan — Sistema de Usuarios y Seguridad para MiniSistemaFacturacion
 
-# Master Plan — Sistema de Usuarios para MiniSistemaFacturacion
+> **Estado general del proyecto:** En progreso (Fases 1 y 2 completadas)  
+> **Objetivo:** Evolucionar el proyecto de *Programación III* a los estándares funcionales y de seguridad de *Ingeniería de Software II*, sin reescribir módulos existentes ni cambiar de tecnología base.
 
-Repositorio accesible
+---
 
-El objetivo es convertir tu proyecto de Programación III en una versión ampliada que cumpla los requisitos funcionales de Ingeniería de Software II, sin reescribir los módulos existentes ni cambiar de tecnología.
+## 1. Diagnóstico Técnico y Entorno
 
-He revisado la estructura del repositorio, el punto de entrada, la configuración, el formulario principal, la conexión a SQL Server, la lógica de facturación y los scripts de base de datos. Hay varios detalles concretos que debemos considerar.
+| Parámetro | Detalle |
+| :--- | :--- |
+| **Repositorio** | [MiniSistemaFacturacion](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion) |
+| **Rama** | `master` |
+| **Lenguaje** | C# |
+| **Framework** | .NET Framework 4.7.2 |
+| **Interfaz** | Windows Forms (WinForms) |
+| **Base de Datos** | SQL Server Express (`localhost\SQLEXPRESS`) |
+| **Acceso a Datos** | ADO.NET clásico mediante [DbHelper.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/DataAccess/DbHelper.cs) (Singleton) |
+| **Tasa de Impuesto** | 18.00% (ITBIS unificado en base de datos, código y [App.config](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/App.config)) |
 
-## 1. Diagnóstico técnico
+---
 
-Proyecto actual
+## 2. Arquitectura Objetivo y Flujo de Autenticación
 
-Rama master
-
-Lenguaje
-
-C#
-
-Framework
-
-.NET Framework 4.7.2
-
-Interfaz
-
-Windows Forms
-
-Base de datos
-
-SQL Server Express
-
-Acceso a datos
-
-ADO.NET
-
-Arquitectura
-
-Capas
-
-### Hallazgos importantes
-
-1. `Program.cs` inicia directamente `Application.Run(new Forms.FrmMain())`. Actualmente no existe una barrera de autenticación al arrancar.
-2. `FrmMain.cs` abre los módulos mediante eventos como `clientesToolStripMenuItem_Click`, `facturaciónToolStripMenuItem_Click` y `reportesToolStripMenuItem_Click`.
-3. `DbHelper.cs` centraliza las conexiones y operaciones SQL. Podemos reutilizarlo para `UsuarioDAL`.
-4. `App.config` contiene la cadena de conexión `MiniSistemaFacturacionDB`, apuntando a `localhost\SQLEXPRESS` mediante autenticación integrada.
-5. Las carpetas `Models`, `BusinessLogic` y `Forms` no contienen todavía las clases de autenticación y administración de usuarios propuestas.
-6. `FrmMain.cs` tiene una opción `borrarDatosToolStripMenuItem_Click` que permite eliminar registros de facturas, detalles y pagos. Esta operación debe restringirse exclusivamente al administrador.
-7. El proyecto usa un `.csproj` clásico de .NET Framework. Por tanto, agregar archivos `.cs` requiere verificar que estén incluidos en el proyecto, no simplemente crearlos en las carpetas.
-
-Estos hallazgos justifican implementar la autenticación como una extensión de la arquitectura existente.
-
-## 2. Arquitectura objetivo
-
-Program.cs
-
-Inicio de la aplicación
-
-FrmLogin
-
-Validación de credenciales
-
-UsuarioManager + UsuarioDAL
-
-Autenticación, roles y permisos
-
-SQL Server
-
-Usuarios, credenciales y auditoría básica
-
-FrmMain
-
-Menú según permisos del usuario autenticado
-
-La sesión debe existir únicamente después de autenticar correctamente al usuario. Ningún formulario administrativo debería depender de una variable modificable libremente para decidir si alguien es administrador.
-
-## 3. Archivos que agregaremos
-
+```mermaid
+graph TD
+    A[Program.cs] -->|1. Valida administradores| B{¿Hay admin activo?}
+    B -->|No| C[Asistente Inicial: Crear Primer Administrador]
+    B -->|Sí| D[FrmLogin: Credenciales]
+    C --> D
+    D -->|2. Valida credenciales| E[UsuarioManager + UsuarioDAL]
+    E -->|PBKDF2-HMAC-SHA256| F[(SQL Server: DB MiniSistemaFacturacion)]
+    E -->|3. Sesión válida| G[SesionActual en memoria]
+    G -->|4. Abre interfaz según rol| H[FrmMain]
+    H -->|Cerrar Sesión| D
 ```
+
+---
+
+## 3. Estructura de Archivos del Módulo
+
+```text
 MiniSistemaFacturacion/
 ├── Models/
-│   ├── Usuario.cs                    [NUEVO]
-│   └── RolUsuario.cs                 [NUEVO]
+│   ├── RolUsuario.cs                   [x] CREADO (Fase 2)
+│   └── Usuario.cs                      [x] CREADO (Fase 2)
 ├── DataAccess/
-│   └── UsuarioDAL.cs                 [NUEVO]
+│   └── UsuarioDAL.cs                   [x] CREADO (Fase 2)
 ├── BusinessLogic/
-│   ├── UsuarioManager.cs             [NUEVO]
-│   └── PasswordHasher.cs             [NUEVO]
+│   ├── PasswordHasher.cs               [x] CREADO (Fase 2)
+│   └── UsuarioManager.cs               [x] CREADO (Fase 2)
 ├── Configuration/
-│   └── SesionActual.cs               [NUEVO]
-├── Forms/
-│   ├── FrmLogin.cs                   [NUEVO]
-│   ├── FrmLogin.Designer.cs          [NUEVO]
-│   ├── FrmUsuarios.cs                [NUEVO]
-│   ├── FrmUsuarios.Designer.cs       [NUEVO]
-│   ├── FrmEditarUsuario.cs           [OPCIONAL]
-│   ├── FrmMain.cs                    [MODIFICAR]
-│   └── FrmMain.Designer.cs           [MODIFICAR]
+│   └── SesionActual.cs                 [x] CREADO (Fase 2)
 ├── Database/
-│   └── 04_Usuarios.sql               [NUEVO]
-├── Program.cs                        [MODIFICAR]
-└── MiniSistemaFacturacion.csproj     [MODIFICAR]
+│   └── 04_Usuarios.sql                 [x] CREADO Y APLICADO (Fase 1)
+├── Forms/
+│   ├── FrmLogin.cs                     [ ] PENDIENTE (Fase 3)
+│   ├── FrmLogin.Designer.cs            [ ] PENDIENTE (Fase 3)
+│   ├── FrmLogin.resx                   [ ] PENDIENTE (Fase 3)
+│   ├── FrmUsuarios.cs                  [ ] PENDIENTE (Fase 4)
+│   ├── FrmUsuarios.Designer.cs         [ ] PENDIENTE (Fase 4)
+│   ├── FrmUsuarios.resx                [ ] PENDIENTE (Fase 4)
+│   ├── FrmMain.cs                      [ ] PENDIENTE MODIFICACIÓN (Fase 5)
+│   └── FrmMain.Designer.cs             [ ] PENDIENTE MODIFICACIÓN (Fase 5)
+├── Program.cs                          [ ] PENDIENTE MODIFICACIÓN (Fase 3 y 5)
+├── App.config                          [x] ACTUALIZADO (Tasa 18%)
+└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2)
 ```
 
-Mantendremos intactos los módulos de clientes, productos, facturación, pagos y reportes, excepto donde sea necesario proteger operaciones sensibles.
-
-## 4. Plan de implementación por fases
-
-Fase 1 — Base de datos
-
-Prioridad alta
-
-Crear `04_Usuarios.sql` como migración independiente, sin modificar ni borrar las tablas existentes.
-
-La tabla `Usuarios` contendrá `ID_Usuario`, `NombreCompleto`, `NombreUsuario`, `PasswordHash`, `PasswordSalt`, `Rol`, `Estado`, `FechaCreacion` y `UltimoAcceso`.
-
-`NombreUsuario` tendrá una restricción `UNIQUE`, `Rol` admitirá únicamente `Administrador` o `Empleado` y `Estado` permitirá desactivar cuentas sin eliminarlas.
-
-Utilizar PBKDF2-HMAC-SHA256 con salt aleatorio por usuario, parámetros versionados y comparación de hashes en tiempo constante. No almacenar contraseñas en texto plano.
-
-Para crear el primer administrador, utilizar un asistente de configuración inicial disponible únicamente cuando no exista ningún usuario, con una contraseña elegida por quien instala el sistema. Evitar credenciales predeterminadas.
-
-Fase 2 — Lógica de autenticación
-
-Implementar `Usuario`, `RolUsuario`, `UsuarioDAL`, `UsuarioManager` y `PasswordHasher`.
-
-Métodos principales:
-
-```
-Autenticar(usuario, contraseña)
-CrearUsuario(datos, contraseña)
-ActualizarUsuario(datos)
-CambiarContraseña(id, contraseña)
-DesactivarUsuario(id)
-ListarUsuarios()
-```
-
-Validaciones: nombres únicos, contraseñas suficientemente largas, cuentas activas, intentos fallidos limitados y prohibición de desactivar al último administrador activo.
-
-Las consultas deben ser parametrizadas. No devolver hashes ni salts a los formularios administrativos.
-
-Fase 3 — Pantalla de inicio de sesión
-
-Crear `FrmLogin` siguiendo el estilo de Windows Forms del sistema actual.
-
-Elementos: campo de usuario, contraseña enmascarada, botón Iniciar sesión, opción Mostrar contraseña y mensajes de error claros.
-
-Modificar `Program.cs` para abrir `FrmMain` únicamente después de una autenticación válida. Al cerrar sesión, regresar al login sin mantener abiertos formularios privilegiados.
-
-No permitir que cerrar el login sin autenticarse abra el menú principal.
-
-Fase 4 — Administración de usuarios
-
-Crear `FrmUsuarios` con un `DataGridView` y las siguientes operaciones:
-
-- Buscar y listar usuarios.
-- Agregar usuarios.
-- Editar nombre y rol.
-- Activar o desactivar cuentas.
-- Restablecer contraseñas.
-
-Solo los administradores podrán abrir este formulario.
-
-No incluir eliminación física de usuarios ni mostrar contraseñas existentes.
-
-Fase 5 — Integración de permisos
-
-Modificar `FrmMain.cs` y `FrmMain.Designer.cs` para agregar:
-
-- Menú Administración → Usuarios.
-- Nombre y rol del usuario autenticado.
-- Opción Cerrar sesión.
-- Visibilidad de opciones según permisos.
-
-Proteger especialmente `borrarDatosToolStripMenuItem_Click` y `configuracionEmpresaToolStripMenuItem_Click`.
-
-Además, comprobar permisos antes de ejecutar operaciones privilegiadas, incluso si alguien intenta abrir directamente un formulario.
-
-Como el sistema se conecta a SQL Server mediante autenticación integrada, los permisos de aplicación no sustituyen los permisos de la base de datos. Para una instalación real habría que limitar también los privilegios de la cuenta de conexión.
-
-Fase 6 — Pruebas y regresión
-
-Compilar el proyecto y probar tanto el módulo nuevo como las funcionalidades anteriores.
-
-Probar autenticación, permisos, gestión de usuarios, facturación, inventario, pagos, reportes y conexión SQL Server.
-
-Verificar también que un error de autenticación no cierre inesperadamente la aplicación y que los datos existentes permanezcan intactos.
-
-## 5. Matriz de permisos
-
-Esta es la configuración que recomiendo inicialmente.
-
-| Módulo / Operación       | Administrador | Empleado |
-| -------------------------- | ------------- | -------- |
-| Consultar clientes         | Sí           | Sí      |
-| Crear y editar clientes    | Sí           | Sí      |
-| Gestionar productos        | Sí           | Sí      |
-| Crear facturas             | Sí           | Sí      |
-| Registrar pagos            | Sí           | Sí      |
-| Consultar reportes         | Sí           | Sí      |
-| Configuración de empresa  | Sí           | No       |
-| Borrar datos masivamente   | Sí           | No       |
-| Administrar usuarios       | Sí           | No       |
-| Cambiar contraseña propia | Sí           | Sí      |
-
-Para evitar duplicar comprobaciones, centralizaremos las autorizaciones en un servicio de permisos y no en condiciones dispersas por cada botón.
-
-## 6. Puntos técnicos que debemos corregir o vigilar
-
-Durante la inspección encontré algunos detalles que afectan directamente a la implementación.
-
-Primero: el proyecto tiene dos mecanismos relacionados con la cadena de conexión. `DbHelper` y `ConnectionStringManager` leen la configuración. No crearía una tercera forma de conectarse a SQL Server; `UsuarioDAL` debe utilizar `DbHelper.Instance`.
-
-Segundo: `App.config` incluye un proveedor de membership y roles de `System.Web.ClientServices`. Esto no significa que el proyecto ya tenga un sistema funcional de usuarios. La implementación propuesta será independiente, para evitar depender de un servicio de autenticación externo que no está configurado.
-
-Tercero: el archivo de proyecto contiene referencias explícitas a las clases y formularios. Debemos registrar los nuevos archivos y sus correspondientes recursos de diseñador. De lo contrario, pueden existir físicamente y aun así no compilarse.
-
-Cuarto: hay una discrepancia de configuración tributaria. `App.config` declara `PorcentajeImpuestoDefecto=15`, mientras que `Database/01_CreateTables.sql` utiliza 18.00 como valor predeterminado. No es parte del sistema de usuarios, pero conviene comprobar qué valor prevalece realmente durante la facturación antes de grabar el video.
-
-Quinto: la opción de borrado masivo del menú principal es especialmente sensible. Actualmente tiene confirmación visual, pero no comprobación de rol en el controlador revisado. Esto debe corregirse como parte de la integración.
-
-## 7. Pruebas de aceptación
-
-Estas son las pruebas que exigiría antes de considerar terminado el módulo.
-
-Checklist de validación
-
-0/12 aprobadas
-
-AUTH-01
-
-&#x20;Administrador inicia sesión con credenciales válidas
-
-AUTH-02
-
-&#x20;Contraseña incorrecta impide el acceso
-
-AUTH-03
-
-&#x20;Usuario desactivado no puede iniciar sesión
-
-AUTH-04
-
-&#x20;Empleado no puede administrar usuarios
-
-AUTH-05
-
-&#x20;Empleado no puede borrar datos masivamente
-
-USR-01
-
-&#x20;Administrador crea una cuenta nueva
-
-USR-02
-
-&#x20;No se admiten nombres de usuario duplicados
-
-USR-03
-
-&#x20;No se puede desactivar al último administrador
-
-USR-04
-
-&#x20;Cambio de contraseña invalida la anterior
-
-SES-01
-
-&#x20;Cerrar sesión impide reutilizar formularios privilegiados
-
-REG-01
-
-&#x20;Facturación e inventario siguen funcionando
-
-REG-02
-
-&#x20;Pagos y reportes mantienen su funcionamiento
-
-## 8. Orden exacto de ejecución para Antigravity
-
-Si vas a encargarle la implementación a Antigravity, este sería el prompt maestro. Está diseñado para que inspeccione todo el repositorio antes de modificarlo y evite introducir regresiones.
-
-Prompt maestro de implementación
-
-
-Actúa como ingeniero senior especializado en C#, Windows Forms, .NET Framework 4.7.2 y SQL Server.
-
-Repositorio: https://github.com/ByCesarDev/MiniSistemaFacturacion
-Objetivo: implementar un sistema completo de autenticación y administración de usuarios, preservando todas las funcionalidades existentes.
-
-FASE 0 - AUDITORÍA
-
-1. Inspecciona TODOS los archivos reales del repositorio, incluidos .csproj, formularios, designers, DAL, lógica, modelos, scripts SQL y configuración.
-2. Identifica dependencias, convenciones, puntos de entrada y riesgos de regresión.
-3. No asumas que los archivos descritos en README existen; verifica el árbol real.
-4. Establece una línea base de compilación y reporta errores preexistentes.
-
-FASE 1 - BASE DE DATOS
-
-1. Crear Database/04_Usuarios.sql, migración repetible y no destructiva.
-2. Tabla Usuarios con identificador, nombre completo, usuario único, hash, salt, parámetros de hash versionados, rol, estado, fechas de creación y último acceso.
-3. Roles Administrador y Empleado, con constraints e índices.
-4. No borrar ni alterar registros comerciales existentes.
-5. Implementar inicialización segura del primer administrador cuando no haya usuarios, sin contraseña fija.
-
-FASE 2 - BACKEND
-Crear Models/Usuario.cs, Models/RolUsuario.cs, DataAccess/UsuarioDAL.cs, BusinessLogic/UsuarioManager.cs, BusinessLogic/PasswordHasher.cs y Configuration/SesionActual.cs.
-Utilizar consultas SQL parametrizadas y DbHelper.Instance.
-Usar PBKDF2-HMAC-SHA256 con salt criptográficamente aleatorio, iteraciones configuradas y versionadas, y comparación en tiempo constante.
-No registrar contraseñas ni hashes en logs.
-Implementar autenticación, CRUD lógico de usuarios, cambio de contraseña, validaciones, bloqueo temporal por intentos fallidos y protección del último administrador.
-Mantener separación de responsabilidades.
-
-FASE 3 - INTERFAZ
-Crear FrmLogin y FrmUsuarios con sus archivos Designer y recursos necesarios.
-Mantener estilo visual compatible con Windows Forms del proyecto.
-FrmLogin: usuario, contraseña enmascarada, mostrar contraseña, ingresar y errores claros.
-FrmUsuarios: DataGridView, buscar, crear, editar, activar/desactivar, restablecer contraseña.
-No permitir acceso a FrmUsuarios sin permisos.
-
-FASE 4 - INTEGRACIÓN
-Modificar Program.cs para exigir autenticación antes de abrir FrmMain.
-Implementar sesión de usuario con cierre de sesión seguro.
-Modificar FrmMain y su Designer para añadir Administración > Usuarios, identidad del usuario y Cerrar sesión.
-Aplicar roles a navegación y operaciones sensibles.
-Proteger obligatoriamente el borrado masivo y la configuración empresarial.
-No confiar solo en ocultar botones: validar autorización antes de operaciones privilegiadas.
-
-FASE 5 - COMPATIBILIDAD
-Actualizar MiniSistemaFacturacion.csproj incluyendo todos los nuevos archivos y metadatos de WinForms.
-No migrar de .NET Framework 4.7.2.
-No cambiar SQL Server por otra base de datos.
-No refactorizar módulos existentes sin necesidad.
-No modificar la lógica fiscal o de facturación salvo correcciones indispensables y justificadas.
-Mantener compatibilidad con la estructura actual.
-
-FASE 6 - VALIDACIÓN
-Compilar la solución en el entorno Windows compatible.
-Ejecutar pruebas de login, contraseñas, usuarios desactivados, roles, último administrador y cierre de sesión.
-Ejecutar pruebas de regresión para clientes, productos, facturas, pagos y reportes.
-Verificar migración SQL en base de datos existente y base limpia.
-Documentar resultados reales y errores pendientes; no declarar pruebas aprobadas sin ejecutarlas.
-
-ENTREGABLES
-
-1. Código completo integrado.
-2. Script SQL de migración.
-3. Instrucciones de instalación y primer acceso.
-4. Lista exacta de archivos creados y modificados.
-5. Informe de pruebas con resultados comprobados.
-6. Resumen de decisiones técnicas.
-7. Commits separados por fase.
-
-Trabaja por fases y verifica la compilación antes de considerar terminada la implementación. No sobrescribas ni borres datos existentes.
-
-## 9. Criterios de finalización
-
-Consideraremos terminada la adaptación cuando se cumplan estas condiciones:
-
-- El sistema no abre `FrmMain` sin autenticación.
-- El administrador puede gestionar usuarios y permisos.
-- El empleado puede trabajar con los módulos autorizados sin acceder a funciones administrativas.
-- Las contraseñas están protegidas y no existe una cuenta administrativa con contraseña fija.
-- La migración SQL no destruye información existente.
-- Los formularios nuevos están correctamente incluidos en el proyecto.
-- La aplicación compila y las pruebas funcionales y de regresión se ejecutan satisfactoriamente.
-
-Alcance de la revisión: pude inspeccionar directamente los principales puntos de integración y los archivos estructurales del repositorio, pero no he ejecutado la solución en Windows ni auditado línea por línea todos sus archivos. Por eso el plan exige una auditoría inicial completa antes de editar y una compilación real al finalizar.
-
-Con este plan no necesitamos reconstruir MiniSistemaFacturacion. La implementación se concentra en una nueva funcionalidad, su integración y la seguridad de acceso, mientras que SCRUM, los diagramas y el informe quedan como entregables académicos separados.
+---
+
+## 4. Checkpoints de Implementación por Fases
+
+### 🟢 Checkpoint 1: Base de Datos y Configuración (Completado)
+- [x] **IMP-01:** Corregir discrepancia de tasa de impuesto por defecto a 18% en [App.config](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/App.config) y [Models/Factura.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Models/Factura.cs).
+- [x] **SQL-01:** Crear script independiente y repetible [Database/04_Usuarios.sql](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Database/04_Usuarios.sql).
+- [x] **SQL-02:** Tabla `Usuarios` con tipos, restricciones UNIQUE, CHECK de roles (`Administrador`, `Empleado`) y estados (`Activo`, `Inactivo`, `Bloqueado`).
+- [x] **SQL-03:** Índices de alto rendimiento `IX_Usuarios_NombreUsuario` e `IX_Usuarios_Rol_Estado`.
+- [x] **SQL-04:** Tabla `AuditoriaUsuarios` para trazabilidad de accesos y seguridad.
+- [x] **SQL-05:** Procedimiento `sp_ExisteAdministradorActivo`.
+- [x] **SQL-06:** Ejecución física y verificación en SQL Server local (`localhost\SQLEXPRESS`).
+- [x] **GIT-01:** Commit realizado: `145e554 - feat(fase-1): migracion sql de usuarios y correccion de tasa de impuesto a 18%`.
+
+---
+
+### 🟢 Checkpoint 2: Backend y Lógica de Autenticación (Completado)
+- [x] **MOD-01:** Crear [Models/RolUsuario.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Models/RolUsuario.cs) con validaciones de roles y estados.
+- [x] **MOD-02:** Crear [Models/Usuario.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Models/Usuario.cs) con reglas de validación y método `ClonarParaVista()` (sanitización de hash y salt).
+- [x] **SEC-01:** Implementar [BusinessLogic/PasswordHasher.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/BusinessLogic/PasswordHasher.cs):
+  - Algoritmo: PBKDF2-HMAC-SHA256 con salt criptográfico de 256 bits (`RNGCryptoServiceProvider`).
+  - 100,000 iteraciones.
+  - Comparación en tiempo constante (`CompararTiempoConstante`) contra ataques de temporización.
+- [x] **DAL-01:** Implementar [DataAccess/UsuarioDAL.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/DataAccess/UsuarioDAL.cs) usando consultas parametrizadas con [DbHelper.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/DataAccess/DbHelper.cs).
+- [x] **BLL-01:** Implementar [BusinessLogic/UsuarioManager.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/BusinessLogic/UsuarioManager.cs):
+  - Autenticación con bloqueo por 15 minutos tras 5 intentos fallidos consecutivos.
+  - CRUD con validación de nombres únicos y contraseñas seguras.
+  - **Protección de integridad:** Prohibición explícita de desactivar o cambiar el rol al último administrador activo.
+  - Asistente seguro para primer administrador (`CrearPrimerAdministrador`).
+  - Registro de auditoría de eventos.
+- [x] **CFG-01:** Implementar [Configuration/SesionActual.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Configuration/SesionActual.cs) para control de sesión en memoria y logout.
+- [x] **CSP-01:** Registrar los 6 nuevos archivos en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
+- [x] **VER-01:** Compilación con 0 errores y 0 advertencias. Pruebas unitarias de hashing y existencia de administradores ejecutadas con éxito.
+- [x] **GIT-02:** Commit realizado: `2f2824b - feat(fase-2): backend de autenticacion, pbkdf2, usuariomanager, dal y sesion`.
+
+---
+
+### 🟡 Checkpoint 3: Interfaz de Autenticación (Próximo paso)
+- [ ] **UI-LOGIN-01:** Crear formulario visual `FrmLogin` (Diseñador, código y recursos).
+- [ ] **UI-LOGIN-02:** Elementos de UI: usuario, contraseña enmascarada, checkbox "Mostrar contraseña", botón Ingresar, botón Salir.
+- [ ] **UI-LOGIN-03:** Detección de primer uso: Si no existe ningún administrador activo, activar automáticamente el modo asistente para crear el primer Administrador de forma segura sin credenciales fijas.
+- [ ] **UI-LOGIN-04:** Manejo de advertencias visuales de bloqueo temporal y conteo de intentos fallidos.
+- [ ] **UI-LOGIN-05:** Conectar [Program.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Program.cs) para interceptar el arranque con `FrmLogin` antes de permitir abrir `FrmMain`.
+- [ ] **CSP-02:** Registrar `FrmLogin` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
+- [ ] **GIT-03:** Commit de la Fase 3.
+
+---
+
+### ⚪ Checkpoint 4: Interfaz de Administración de Usuarios
+- [ ] **UI-USR-01:** Crear formulario `FrmUsuarios` accesible únicamente por Administradores.
+- [ ] **UI-USR-02:** `DataGridView` con lista de usuarios (sin exponer contraseñas ni hashes).
+- [ ] **UI-USR-03:** Formulario/panel lateral para:
+  - Crear nuevo usuario (Nombre, NombreUsuario, Rol, Contraseña inicial).
+  - Editar usuario existente (Nombre, Rol, Estado).
+  - Activar / Desactivar cuenta.
+  - Restablecer contraseña de un usuario.
+- [ ] **UI-USR-04:** Búsqueda y filtrado en tiempo real por nombre, usuario o rol.
+- [ ] **UI-USR-05:** Validaciones visuales y bloqueo de la acción si se intenta desactivar al último administrador activo.
+- [ ] **CSP-03:** Registrar `FrmUsuarios` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
+- [ ] **GIT-04:** Commit de la Fase 4.
+
+---
+
+### ⚪ Checkpoint 5: Integración de Permisos y Menús en FrmMain
+- [ ] **INT-01:** Agregar submenú `Administración` -> `Usuarios...` en `FrmMain`.
+- [ ] **INT-02:** Mostrar en la barra de estado o título de `FrmMain` el usuario logueado y su rol (ej: *"Usuario: admin (Administrador)"*).
+- [ ] **INT-03:** Agregar opción visible de **Cerrar Sesión** en `FrmMain` que limpie `SesionActual` y devuelva el flujo a `FrmLogin`.
+- [ ] **INT-04:** Aplicar matriz de permisos sobre controles:
+  - Ocultar / deshabilitar acceso a Administración de Usuarios para rol `Empleado`.
+  - Proteger `borrarDatosToolStripMenuItem_Click` (exclusivo Administrador).
+  - Proteger `configuracionEmpresaToolStripMenuItem_Click` (exclusivo Administrador).
+- [ ] **INT-05:** Validación de autorización en capa de código (incluso si se invoca el evento directamente, validar `SesionActual.EsAdministrador`).
+- [ ] **GIT-05:** Commit de la Fase 5.
+
+---
+
+### ⚪ Checkpoint 6: Validación, Pruebas de Aceptación y Regresión
+- [ ] **TEST-01:** Ejecutar batería de pruebas de aceptación (ver sección 6).
+- [ ] **REG-01:** Probar módulo de Clientes (crear, editar, buscar).
+- [ ] **REG-02:** Probar módulo de Productos (inventario, stock).
+- [ ] **REG-03:** Probar módulo de Facturación con impuesto 18% y generación de tickets PDF.
+- [ ] **REG-04:** Probar módulo de Pagos y Cuentas por Cobrar.
+- [ ] **REG-05:** Probar módulo de Reportes.
+- [ ] **DOC-01:** Documentación final en README/Informe técnico.
+- [ ] **GIT-06:** Commit de cierre y validación final.
+
+---
+
+## 5. Matriz de Permisos por Rol
+
+| Módulo / Operación | Administrador | Empleado | Mecanismo de Control |
+| :--- | :---: | :---: | :--- |
+| **Consultar clientes** | Sí | Sí | Libre acceso |
+| **Crear y editar clientes** | Sí | Sí | Libre acceso |
+| **Gestionar productos** | Sí | Sí | Libre acceso |
+| **Crear facturas (18% ITBIS)** | Sí | Sí | Libre acceso |
+| **Registrar pagos** | Sí | Sí | Libre acceso |
+| **Consultar reportes** | Sí | Sí | Libre acceso |
+| **Configuración de empresa** | Sí | **No** | Menú deshabilitado + `SesionActual.ExigirAdministrador()` |
+| **Borrar datos masivamente** | Sí | **No** | Menú oculto + Validación previa en handler |
+| **Administrar usuarios** | Sí | **No** | Menú exclusivo + Validación en constructor de `FrmUsuarios` |
+| **Cambiar contraseña propia** | Sí | Sí | Permitido con contraseña actual |
+
+---
+
+## 6. Checklist de Pruebas de Aceptación (Checklist de Validación)
+
+Progreso actual: **0 / 12 aprobadas en UI** *(Backend verificado)*
+
+- [ ] **AUTH-01:** Administrador inicia sesión con credenciales válidas.
+- [ ] **AUTH-02:** Contraseña incorrecta impide el acceso y descuenta intentos.
+- [ ] **AUTH-03:** Usuario desactivado o bloqueado no puede iniciar sesión.
+- [ ] **AUTH-04:** Empleado no puede abrir administración de usuarios.
+- [ ] **AUTH-05:** Empleado no puede borrar datos masivamente.
+- [ ] **USR-01:** Administrador crea una cuenta nueva satisfactoriamente.
+- [ ] **USR-02:** Sistema rechaza nombres de usuario duplicados.
+- [ ] **USR-03:** Sistema impide desactivar o degradar al último administrador activo.
+- [ ] **USR-04:** Cambio de contraseña invalida inmediatamente la anterior.
+- [ ] **SES-01:** Cerrar sesión regresa a pantalla de login y limpia memoria.
+- [ ] **REG-01:** Facturación, inventario e impuesto al 18% funcionan sin regresiones.
+- [ ] **REG-02:** Pagos, reportes y generación de PDF mantienen su funcionamiento íntegro.
+
+---
+
+## 7. Registro Histórico de Commits
+
+| Commit | Fase | Descripción |
+| :--- | :--- | :--- |
+| `145e554` | **Fase 1** | `feat(fase-1): migracion sql de usuarios y correccion de tasa de impuesto a 18%` |
+| `2f2824b` | **Fase 2** | `feat(fase-2): backend de autenticacion, pbkdf2, usuariomanager, dal y sesion` |
+| *Pendiente* | **Fase 3** | `feat(fase-3): pantalla de login frmlogin y control de arranque en program.cs` |
+| *Pendiente* | **Fase 4** | `feat(fase-4): interfaz de gestion de usuarios frmusuarios` |
+| *Pendiente* | **Fase 5** | `feat(fase-5): integracion de permisos y navegacion en frmmain` |
+| *Pendiente* | **Fase 6** | `test(fase-6): pruebas de aceptacion, regresion y documentacion final` |
