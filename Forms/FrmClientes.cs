@@ -33,6 +33,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             ConfigurarDataGridView();
             ConfigurarEventos();
+            AlinearGridConBotonEliminar();
             CargarClientes();
         }
 
@@ -40,6 +41,23 @@ namespace MiniSistemaFacturacion.Forms
         {
             // El formulario ya está configurado por el diseñador
             // Solo configuramos eventos adicionales
+        }
+
+        private void AlinearGridConBotonEliminar()
+        {
+            try
+            {
+                if (btnEliminar != null && dgvClientes != null && panelToolbar != null)
+                {
+                    int targetRight = panelToolbar.Left + btnEliminar.Right;
+                    int newWidth = targetRight - dgvClientes.Left;
+                    if (newWidth > 200)
+                    {
+                        dgvClientes.Width = newWidth;
+                    }
+                }
+            }
+            catch { }
         }
 
         private void ConfigurarDataGridView()
@@ -177,6 +195,9 @@ namespace MiniSistemaFacturacion.Forms
 
             // Evento de búsqueda
             txtBusqueda.TextChanged += TxtBusqueda_TextChanged;
+
+            // Mantener alineado el grid con el borde derecho del botón Eliminar al redimensionar
+            this.Resize += (s, e) => AlinearGridConBotonEliminar();
         }
 
         private void CargarClientes()

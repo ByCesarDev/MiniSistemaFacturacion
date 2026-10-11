@@ -52,7 +52,7 @@ namespace MiniSistemaFacturacion.Forms
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(1034, 68);
+            this.panelHeader.Size = new System.Drawing.Size(1260, 68);
             this.panelHeader.TabIndex = 0;
             // 
             // lblSubtitulo
@@ -88,7 +88,7 @@ namespace MiniSistemaFacturacion.Forms
             this.panelToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelToolbar.Location = new System.Drawing.Point(0, 68);
             this.panelToolbar.Name = "panelToolbar";
-            this.panelToolbar.Size = new System.Drawing.Size(1034, 52);
+            this.panelToolbar.Size = new System.Drawing.Size(1260, 52);
             this.panelToolbar.TabIndex = 1;
             // 
             // btnEliminar
@@ -100,7 +100,7 @@ namespace MiniSistemaFacturacion.Forms
             this.btnEliminar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEliminar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEliminar.ForeColor = System.Drawing.Color.White;
-            this.btnEliminar.Location = new System.Drawing.Point(922, 10);
+            this.btnEliminar.Location = new System.Drawing.Point(1148, 10);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(95, 32);
             this.btnEliminar.TabIndex = 4;
@@ -116,7 +116,7 @@ namespace MiniSistemaFacturacion.Forms
             this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditar.ForeColor = System.Drawing.Color.White;
-            this.btnEditar.Location = new System.Drawing.Point(820, 10);
+            this.btnEditar.Location = new System.Drawing.Point(1046, 10);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(95, 32);
             this.btnEditar.TabIndex = 3;
@@ -132,7 +132,7 @@ namespace MiniSistemaFacturacion.Forms
             this.btnNuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNuevo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNuevo.ForeColor = System.Drawing.Color.White;
-            this.btnNuevo.Location = new System.Drawing.Point(700, 10);
+            this.btnNuevo.Location = new System.Drawing.Point(925, 10);
             this.btnNuevo.Name = "btnNuevo";
             this.btnNuevo.Size = new System.Drawing.Size(114, 32);
             this.btnNuevo.TabIndex = 2;
@@ -175,7 +175,7 @@ namespace MiniSistemaFacturacion.Forms
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.RowHeadersVisible = false;
             this.dgvClientes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvClientes.Size = new System.Drawing.Size(1001, 460);
+            this.dgvClientes.Size = new System.Drawing.Size(1227, 490);
             this.dgvClientes.TabIndex = 2;
             // 
             // FrmClientes

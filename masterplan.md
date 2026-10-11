@@ -232,10 +232,12 @@ Progreso actual: **12 / 12 aprobadas (100% verificado contra SQL Server y ensamb
   - Ampliación de dimensiones a `1260 x 680 px` con `MinimumSize = 1080 x 550 px`.
   - Configuración explícita de `AutoGenerateColumns = false` y visualización holgada de las 10 columnas (ID, Nombre/Razón Social, Cédula, Dirección, Teléfono, Email, Tipo, RNC, Estado, Fecha Creación) con formato de fecha `dd/MM/yyyy`.
   - Caja de búsqueda ensanchada para comodidad de digitación.
+  - **Alineación total de la grilla:** Grilla de clientes ensanchada a `1227 px` para coincidir exactamente con el borde derecho del botón `Eliminar` (ambos a `17 px` del margen derecho), eliminando la brecha vacía y sincronizándose dinámicamente en `Resize`.
 - [x] **FrmUsuarios:**
   - Ampliación de dimensiones a `1220 x 660 px` con `MinimumSize = 1080 x 550 px`.
   - Corrección de exposición de columnas sensibles/técnicas (`PasswordHash`, `PasswordSalt`, `IntentosFallidos`, etc.) mediante asignación estricta de columnas visibles (`ID`, `Usuario`, `Nombre Completo`, `Rol`, `Estado`, `Último Acceso`).
   - Reubicación y ampliación del panel de detalle y botones de acción.
+  - **Ícono corporativo asignado:** Se integró el recurso `$this.Icon` en `FrmUsuarios.resx`, se vinculó en `FrmUsuarios.Designer.cs`, se aplicó el método centralizado `UITheme.AsignarIconoFormulario` y se configuró la copia de `Recurso_2logosisfac.ico` al directorio de salida en `MiniSistemaFacturacion.csproj`.
 - [x] **FrmBusquedaFacturas:**
   - Reorganización total de la barra de filtros en una única fila alineada con separaciones proporcionales.
   - Corrección del corte de texto en selectores de fecha (`DateTimePicker`) con `CustomFormat = "dd/MM/yyyy"`.

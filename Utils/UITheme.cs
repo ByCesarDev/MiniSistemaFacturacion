@@ -67,14 +67,56 @@ namespace MiniSistemaFacturacion.Utils
 
         #region Métodos de Creación y Estilización
 
+        private static Icon _appIconCached = null;
+
         /// <summary>
-        /// Aplica la configuración base a un formulario (fondo, fuente, doble buffer).
+        /// Asigna el ícono corporativo del sistema a cualquier formulario.
+        /// </summary>
+        public static void AsignarIconoFormulario(Form form)
+        {
+            if (form == null) return;
+            try
+            {
+                if (_appIconCached == null)
+                {
+                    string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string iconPath = System.IO.Path.Combine(baseDir, "Recurso_2logosisfac.ico");
+                    if (!System.IO.File.Exists(iconPath))
+                    {
+                        string startupPath = Application.StartupPath;
+                        iconPath = System.IO.Path.Combine(startupPath, "Recurso_2logosisfac.ico");
+                    }
+
+                    if (System.IO.File.Exists(iconPath))
+                    {
+                        _appIconCached = new Icon(iconPath);
+                    }
+                    else
+                    {
+                        _appIconCached = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                    }
+                }
+
+                if (_appIconCached != null)
+                {
+                    form.Icon = _appIconCached;
+                }
+            }
+            catch
+            {
+                // En caso de que el entorno no exponga el ícono
+            }
+        }
+
+        /// <summary>
+        /// Aplica la configuración base a un formulario (fondo, fuente, ícono corporativo).
         /// </summary>
         public static void AplicarTemaFormulario(Form form)
         {
             if (form == null) return;
             form.BackColor = FormBackground;
             form.Font = FontBodyRegular;
+            AsignarIconoFormulario(form);
         }
 
         /// <summary>

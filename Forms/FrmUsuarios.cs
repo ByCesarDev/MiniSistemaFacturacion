@@ -21,12 +21,14 @@ namespace MiniSistemaFacturacion.Forms
         public FrmUsuarios()
         {
             InitializeComponent();
+            UITheme.AsignarIconoFormulario(this);
             _usuarioManager = new UsuarioManager();
         }
 
         public FrmUsuarios(UsuarioManager usuarioManager)
         {
             InitializeComponent();
+            UITheme.AsignarIconoFormulario(this);
             _usuarioManager = usuarioManager ?? new UsuarioManager();
         }
 
