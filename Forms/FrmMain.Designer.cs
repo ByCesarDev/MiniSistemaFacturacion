@@ -71,7 +71,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1047, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1047, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -83,14 +83,14 @@
             this.facturacionToolStripMenuItem});
             this.clientesToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.clientesToolStripMenuItem.Text = "Modulos";
             // 
             // clientesToolStripMenuItem1
             // 
             this.clientesToolStripMenuItem1.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clientesToolStripMenuItem1.Name = "clientesToolStripMenuItem1";
-            this.clientesToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.clientesToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
             this.clientesToolStripMenuItem1.Text = "Clientes";
             this.clientesToolStripMenuItem1.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
             // 
@@ -98,7 +98,7 @@
             // 
             this.productosToolStripMenuItem1.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productosToolStripMenuItem1.Name = "productosToolStripMenuItem1";
-            this.productosToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.productosToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
             this.productosToolStripMenuItem1.Text = "Productos";
             this.productosToolStripMenuItem1.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
             // 
@@ -106,7 +106,7 @@
             // 
             this.facturacionToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.facturacionToolStripMenuItem.Name = "facturacionToolStripMenuItem";
-            this.facturacionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.facturacionToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.facturacionToolStripMenuItem.Text = "Facturacion";
             this.facturacionToolStripMenuItem.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
             // 
@@ -117,14 +117,14 @@
             this.cuentasPorCobrarToolStripMenuItem});
             this.productosToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.productosToolStripMenuItem.Name = "productosToolStripMenuItem";
-            this.productosToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
+            this.productosToolStripMenuItem.Size = new System.Drawing.Size(82, 20);
             this.productosToolStripMenuItem.Text = "Consultas";
             // 
             // buscarFacturaToolStripMenuItem
             // 
             this.buscarFacturaToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buscarFacturaToolStripMenuItem.Name = "buscarFacturaToolStripMenuItem";
-            this.buscarFacturaToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.buscarFacturaToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.buscarFacturaToolStripMenuItem.Text = "Buscar Factura";
             this.buscarFacturaToolStripMenuItem.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
             // 
@@ -132,7 +132,7 @@
             // 
             this.cuentasPorCobrarToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cuentasPorCobrarToolStripMenuItem.Name = "cuentasPorCobrarToolStripMenuItem";
-            this.cuentasPorCobrarToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.cuentasPorCobrarToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.cuentasPorCobrarToolStripMenuItem.Text = "Cuentas por cobrar";
             this.cuentasPorCobrarToolStripMenuItem.Click += new System.EventHandler(this.pictureBox5_Click);
             // 
@@ -143,14 +143,14 @@
             this.borrarDatosToolStripMenuItem});
             this.configuracionToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(126, 24);
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(107, 20);
             this.configuracionToolStripMenuItem.Text = "Configuración";
             // 
             // configuracionEmpresaToolStripMenuItem
             // 
             this.configuracionEmpresaToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.configuracionEmpresaToolStripMenuItem.Name = "configuracionEmpresaToolStripMenuItem";
-            this.configuracionEmpresaToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.configuracionEmpresaToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.configuracionEmpresaToolStripMenuItem.Text = "Configuración de Empresa";
             this.configuracionEmpresaToolStripMenuItem.Click += new System.EventHandler(this.configuracionEmpresaToolStripMenuItem_Click);
             // 
@@ -158,7 +158,7 @@
             // 
             this.borrarDatosToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.borrarDatosToolStripMenuItem.Name = "borrarDatosToolStripMenuItem";
-            this.borrarDatosToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.borrarDatosToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.borrarDatosToolStripMenuItem.Text = "Borrar Datos";
             this.borrarDatosToolStripMenuItem.Click += new System.EventHandler(this.borrarDatosToolStripMenuItem_Click);
             // 
@@ -166,7 +166,7 @@
             // 
             this.reportesToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.reportesToolStripMenuItem.Name = "reportesToolStripMenuItem";
-            this.reportesToolStripMenuItem.Size = new System.Drawing.Size(88, 24);
+            this.reportesToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.reportesToolStripMenuItem.Text = "Reportes";
             this.reportesToolStripMenuItem.Click += new System.EventHandler(this.reportesToolStripMenuItem_Click);
             // 
@@ -192,7 +192,7 @@
             this.label1.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(43, 121);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 19);
+            this.label1.Size = new System.Drawing.Size(58, 16);
             this.label1.TabIndex = 2;
             this.label1.Text = "Clientes";
             this.label1.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
@@ -220,7 +220,7 @@
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.label2.Location = new System.Drawing.Point(35, 232);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 19);
+            this.label2.Size = new System.Drawing.Size(71, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Productos";
             this.label2.Click += new System.EventHandler(this.productoToolStripMenuItem_Click);
@@ -233,7 +233,7 @@
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.label3.Location = new System.Drawing.Point(31, 340);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 19);
+            this.label3.Size = new System.Drawing.Size(82, 16);
             this.label3.TabIndex = 6;
             this.label3.Text = "Facturacion";
             this.label3.Click += new System.EventHandler(this.facturaciónToolStripMenuItem_Click);
@@ -261,7 +261,7 @@
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.label4.Location = new System.Drawing.Point(22, 457);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(122, 19);
+            this.label4.Size = new System.Drawing.Size(104, 16);
             this.label4.TabIndex = 8;
             this.label4.Text = "Buscar Factura";
             this.label4.Click += new System.EventHandler(this.buscarFacturasToolStripMenuItem_Click);
@@ -289,7 +289,7 @@
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.label5.Location = new System.Drawing.Point(10, 570);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(151, 19);
+            this.label5.Size = new System.Drawing.Size(130, 16);
             this.label5.TabIndex = 10;
             this.label5.Text = "Cuentas por cobrar";
             this.label5.Click += new System.EventHandler(this.pictureBox5_Click);
