@@ -1,19 +1,19 @@
 # 🛒 MiniSistemaFacturacion
 
-> **Software libre y gratuito de facturación, control de inventario y cuentas por cobrar para pequeños y medianos comercios.**  
+> **Software Source-Available para facturación, control de inventario y cuentas por cobrar en pequeños y medianos comercios.**  
 > Diseñado para ser rápido, confiable, fácil de usar y listo para trabajar en una sola computadora o en red local multi-caja.
 
 [![Release](https://img.shields.io/badge/Versión-v1.2.0-blue.svg?style=flat-square)](https://github.com/ByCesarDev/MiniSistemaFacturacion/releases)
 [![Plataforma](https://img.shields.io/badge/Plataforma-Windows_10_|_11-0078D6.svg?style=flat-square&logo=windows)](https://www.microsoft.com/windows)
 [![Framework](https://img.shields.io/badge/.NET_Framework-4.7.2-512BD4.svg?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
 [![Base de Datos](https://img.shields.io/badge/Base_de_Datos-SQL_Server_Express-CC292B.svg?style=flat-square&logo=microsoftsqlserver)](https://www.microsoft.com/sql-server)
-[![Licencia](https://img.shields.io/badge/Licencia-Software_Libre-brightgreen.svg?style=flat-square)](LICENSE)
+[![Licencia](https://img.shields.io/badge/Licencia-PolyForm_Internal_Use_1.0.0-orange.svg?style=flat-square)](LICENSE)
 
 ---
 
 ## 🌟 ¿Qué es MiniSistemaFacturacion?
 
-**MiniSistemaFacturacion** es un sistema de escritorio empresarial de código abierto creado para resolver el día a día de tiendas, colmados, farmacias, ferreterías, talleres y comercios independientes.
+**MiniSistemaFacturacion** es un sistema de escritorio empresarial bajo licencia *Source-Available* creado para resolver el día a día de tiendas, colmados, farmacias, ferreterías, talleres y comercios independientes.
 
 A diferencia de otros sistemas que requieren suscripciones mensuales costosas, configuraciones complejas o conexión permanente a internet, este software se instala directamente en tu equipo, guarda tus datos bajo tu control y funciona con total agilidad desde el primer minuto.
 
@@ -34,34 +34,40 @@ A diferencia de otros sistemas que requieren suscripciones mensuales costosas, c
 ## ✨ Características Principales
 
 ### 🧾 1. Punto de Venta y Facturación Inmediata
+
 * **Emisión en segundos:** Agrega productos con un clic o por código, calcula subtotales automáticamente y emite facturas al instante.
 * **Cálculo de impuestos:** Soporte automático para **18% ITBIS / IVA** y desglose fiscal transparente.
 * **Comprobantes fiscales (NCF):** Asignación correlativa de comprobantes (Consumidor Final, Crédito Fiscal, etc.).
 * **Tickets térmicos en PDF (80mm):** Generación automática de comprobantes listos para impresoras térmicas de punto de venta o estándar, con vista previa integrada para imprimir o exportar.
 
 ### 📦 2. Control de Inventario y Productos
+
 * Catálogo completo con código, descripción, precio y existencias.
 * **Alertas de stock mínimo:** Avisos visuales automáticos cuando un producto se está agotando.
 * Descuento automático de existencias con cada venta para mantener tu inventario siempre cuadrado.
 
 ### 💳 3. Cuentas por Cobrar y Gestión de Abonos
+
 * Venta a crédito y seguimiento detallado de saldos pendientes por cliente.
 * Registro de **abonos parciales** o pagos completos en efectivo, tarjeta o transferencia.
 * Historial de pagos por factura con cambio de estado automático (*Pendiente*, *Parcial*, *Pagada*).
 * Atajos rápidos: pulsa **Enter** o haz **doble clic** sobre cualquier deuda para abonar de inmediato.
 
 ### 👥 4. Directorio de Clientes
+
 * Registro de clientes con Cédula, RNC, dirección y teléfono.
 * Historial de compras y deudas por cliente.
 * Búsqueda instantánea con la tecla **F3** dentro del punto de venta.
 
 ### 📊 5. Dashboard y Reportes Comerciales
+
 * **Métricas del día:** Total facturado hoy, dinero por cobrar, volumen de ventas y balance de caja.
 * **Gráficos interactivos:** Productos más vendidos, evolución de ventas y estado de cartera de clientes.
 * Exportación y consulta histórica de facturas con reimpresión en cualquier momento.
 
 ### 🛡️ 6. Seguridad y Perfiles de Usuario
-* **Roles definidos:** 
+
+* **Roles definidos:**
   * **Administrador:** Control total, reportes, usuarios, configuración del negocio y base de datos.
   * **Cajero / Vendedor:** Acceso exclusivo a facturar, registrar pagos y consultar productos, sin acceso a configuraciones críticas.
 * Contraseñas protegidas mediante algoritmos de alta seguridad (PBKDF2) y cierre de sesión seguro.
@@ -88,14 +94,10 @@ El sistema está preparado para adaptarse al tamaño de tu negocio:
 
 ¡Olvídate de abrir herramientas complicadas o ejecutar código! El instalador se encarga de todo:
 
-1. **Descarga el instalador:**  
-   Ve a la sección de [Releases de GitHub](https://github.com/ByCesarDev/MiniSistemaFacturacion/releases) y descarga el archivo:  
-   👉 **`MiniSistemaFacturacion_Setup_v1.2.0.exe`**
-
-2. **Ejecuta el asistente de instalación:**  
-   Haz doble clic sobre el archivo descargado y sigue las instrucciones en pantalla.
-
+1. **Descarga el instalador:**Ve a la sección de [Releases de GitHub](https://github.com/ByCesarDev/MiniSistemaFacturacion/releases) y descarga el archivo:👉 **`MiniSistemaFacturacion_Setup_v1.2.0.exe`**
+2. **Ejecuta el asistente de instalación:**Haz doble clic sobre el archivo descargado y sigue las instrucciones en pantalla.
 3. **Elige el modo de tu equipo:**
+
    * Elige **Modo Servidor** si es la computadora principal de tu negocio.
    * Elige **Modo Terminal Cliente** si es una computadora secundaria que se conectará a la caja principal en red.
 
@@ -107,13 +109,10 @@ El sistema está preparado para adaptarse al tamaño de tu negocio:
 
 Una vez instalado, poner tu negocio en marcha toma menos de 5 minutos:
 
-1. **Crea tu primer Administrador:**  
-   Al abrir la aplicación por primera vez, el sistema detectará que es una instalación nueva y te mostrará el *Asistente Inicial*. Ingresa tu nombre, usuario y contraseña.
-2. **Configura los datos de tu negocio:**  
-   Inicia sesión como Administrador y haz clic en **Configuración**. Ingresa el Nombre Comercial, RNC/Cédula, Dirección, Teléfono y el mensaje de agradecimiento que saldrá en tus tickets impresos.
-3. **Agrega tus primeros productos y clientes:**  
-   Entra a **Productos** para registrar lo que vendes con su precio y stock. Entra a **Clientes** para agregar a tus compradores habituales.
-4. **¡Listo para facturar!**  
+1. **Crea tu primer Administrador:**Al abrir la aplicación por primera vez, el sistema detectará que es una instalación nueva y te mostrará el *Asistente Inicial*. Ingresa tu nombre, usuario y contraseña.
+2. **Configura los datos de tu negocio:**Inicia sesión como Administrador y haz clic en **Configuración**. Ingresa el Nombre Comercial, RNC/Cédula, Dirección, Teléfono y el mensaje de agradecimiento que saldrá en tus tickets impresos.
+3. **Agrega tus primeros productos y clientes:**Entra a **Productos** para registrar lo que vendes con su precio y stock. Entra a **Clientes** para agregar a tus compradores habituales.
+4. **¡Listo para facturar!**
    Entra a **Facturación**, selecciona los productos, elige si es al contado o a crédito, ¡y genera tu primer comprobante de venta!
 
 ---
@@ -122,13 +121,13 @@ Una vez instalado, poner tu negocio en marcha toma menos de 5 minutos:
 
 Diseñado para que los cajeros cobren a máxima velocidad:
 
-| Tecla / Acción | Dónde se usa | Qué hace |
-| :--- | :--- | :--- |
-| **`F3`** | Facturación | Abre la búsqueda rápida de clientes. |
-| **`Enter`** | Cuentas por Cobrar | Abre directamente la ventana para registrar un abono sobre la factura seleccionada. |
-| **Doble Clic** | Cuentas por Cobrar | Registra un abono inmediato a la factura elegida. |
-| **Doble Clic** | Buscar Facturas | Abre la vista previa e impresión del ticket PDF. |
-| **Doble Clic** | Clientes / Productos | Abre la edición del registro seleccionado. |
+| Tecla / Acción      | Dónde se usa        | Qué hace                                                                           |
+| :------------------- | :------------------- | :---------------------------------------------------------------------------------- |
+| **`F3`**     | Facturación         | Abre la búsqueda rápida de clientes.                                              |
+| **`Enter`**  | Cuentas por Cobrar   | Abre directamente la ventana para registrar un abono sobre la factura seleccionada. |
+| **Doble Clic** | Cuentas por Cobrar   | Registra un abono inmediato a la factura elegida.                                   |
+| **Doble Clic** | Buscar Facturas      | Abre la vista previa e impresión del ticket PDF.                                   |
+| **Doble Clic** | Clientes / Productos | Abre la edición del registro seleccionado.                                         |
 
 ---
 
@@ -147,6 +146,7 @@ Diseñado para que los cajeros cobren a máxima velocidad:
 ¿Eres programador y quieres estudiar el código, mejorarlo o colaborar con el proyecto? ¡Eres más que bienvenido!
 
 ### Tecnologías Utilizadas
+
 * **Lenguaje:** C# (.NET Framework 4.7.2 / Windows Forms)
 * **Base de Datos:** SQL Server (ADO.NET relacional optimizado)
 * **Generación de PDFs:** [QuestPDF](https://www.questpdf.com/) (diseño fluido de tickets térmicos)
@@ -155,6 +155,7 @@ Diseñado para que los cajeros cobren a máxima velocidad:
 * **Instalador:** [Inno Setup 6](https://jrsoftware.org/isinfo.php) con compilación continua en GitHub Actions
 
 ### Pasos para compilar el proyecto localmente
+
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/ByCesarDev/MiniSistemaFacturacion.git
@@ -177,13 +178,38 @@ Las contribuciones de la comunidad son las que hacen grande al software libre:
 
 ---
 
-## 📜 Licencia y Créditos
+## ⚖️ Licencia
 
-Este proyecto es software libre y de código abierto. Eres libre de usarlo en tu negocio, modificarlo, adaptarlo a tus necesidades y compartirlo.
+MiniSistemaFacturacion es un software **Source-Available**, distribuido bajo la **[PolyForm Internal Use License 1.0.0](LICENSE)**.
 
-* **Desarrollado y mantenido por:** **César Adrián Reyes Dinzey (ByCesarDev)**  
-* **Colaboradores del proyecto:** Julio García, Luis García, Marileidi.  
+El código fuente se encuentra disponible públicamente para facilitar su consulta, estudio y adaptación a necesidades particulares.
+
+### ✅ Usos permitidos
+* Descargar, instalar y ejecutar MiniSistemaFacturacion gratuitamente.
+* Utilizarlo para gestionar facturación, clientes y operaciones comerciales de un negocio.
+* Consultar y estudiar su código fuente.
+* Modificarlo para uso personal o para las operaciones internas de una empresa.
+* Utilizarlo en múltiples equipos o establecimientos de una misma organización, dentro de los límites de la licencia.
+
+### ❌ Usos no autorizados
+Sin una autorización o licencia independiente del titular de los derechos, no está permitido:
+* Vender o revender MiniSistemaFacturacion.
+* Redistribuir copias originales o modificadas del software a terceros.
+* Comercializar versiones derivadas bajo otra marca.
+* Ofrecer MiniSistemaFacturacion como servicio comercial alojado para terceros (SaaS).
+* Sublicenciar el software a otras personas o empresas.
+
+### 💼 Licencias comerciales
+Los desarrolladores, distribuidores y empresas que deseen incorporar, redistribuir o comercializar MiniSistemaFacturacion pueden solicitar una licencia comercial independiente.
+
+* **Titular de los derechos:** **ByCesarDev** (César Adrián Reyes Dinzey)
+* **Colaboradores del proyecto:** Julio García, Luis García, Marileidi.
 * **Institución:** Universidad Abierta para Adultos (UAPA) — *Ingeniería de Software*.
+
+### 📄 Aviso legal
+* MiniSistemaFacturacion **no es software Open Source** conforme a la definición de la Open Source Initiative (OSI).
+* El software se proporciona sin garantías, conforme a los términos establecidos en el archivo [LICENSE](LICENSE).
+* En caso de discrepancia entre este resumen y la licencia oficial, prevalecerá el texto del archivo [LICENSE](LICENSE).
 
 ---
 
