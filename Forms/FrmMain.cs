@@ -1,4 +1,4 @@
-﻿using MiniSistemaFacturacion.Forms;
+using MiniSistemaFacturacion.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveCharts;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Configuration;
+using MiniSistemaFacturacion.BusinessLogic;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -22,6 +24,7 @@ namespace MiniSistemaFacturacion.Forms
             {
                 InitializeComponent();
                 this.DoubleBuffered = true;
+                AplicarPermisosSesion();
 
                 // Guardamos una copia de la imagen que pusiste en el diseñador
                 // antes de que el código empiece a cambiar el fondo.
@@ -150,6 +153,13 @@ namespace MiniSistemaFacturacion.Forms
 
         private void configuracionEmpresaToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!SesionActual.EsAdministrador)
+            {
+                MessageBox.Show("Operación denegada: Solo los Administradores tienen autorización para modificar la configuración de la empresa.",
+                                "Permisos Insuficientes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             FrmConfiguracionEmpresa frm = new FrmConfiguracionEmpresa();
             frm.ShowDialog();
         }
@@ -160,8 +170,101 @@ namespace MiniSistemaFacturacion.Forms
             frm.ShowDialog();
         }
 
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SesionActual.EsAdministrador)
+            {
+                MessageBox.Show("Operación denegada: Solo los Administradores tienen autorización para gestionar usuarios.",
+                                "Permisos Insuficientes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var frm = new FrmUsuarios())
+            {
+                frm.ShowDialog(this);
+            }
+        }
+
+        private void cambiarPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SesionActual.EsAutenticado) return;
+
+            string passActual = Microsoft.VisualBasic.Interaction.InputBox(
+                "Ingrese su contraseña actual:", "Cambio de Contraseña", "");
+            if (string.IsNullOrEmpty(passActual)) return;
+
+            string passNueva = Microsoft.VisualBasic.Interaction.InputBox(
+                "Ingrese su nueva contraseña (mínimo 6 caracteres):", "Cambio de Contraseña", "");
+            if (string.IsNullOrEmpty(passNueva)) return;
+
+            string passConfirmar = Microsoft.VisualBasic.Interaction.InputBox(
+                "Confirme su nueva contraseña:", "Cambio de Contraseña", "");
+            if (passNueva != passConfirmar)
+            {
+                MessageBox.Show("Las contraseñas no coinciden.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                var mgr = new UsuarioManager();
+                mgr.CambiarPassword(SesionActual.UsuarioLogueado.ID_Usuario, passNueva, passActual, esAdminRestableciendo: false);
+                MessageBox.Show("Su contraseña ha sido modificada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al Cambiar Contraseña", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                "¿Está seguro de que desea cerrar la sesión actual y volver a la pantalla de acceso?",
+                "Cerrar Sesión",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                SesionActual.CerrarSesion(volverALogin: true);
+                this.Close();
+            }
+        }
+
+        private void AplicarPermisosSesion()
+        {
+            if (SesionActual.EsAutenticado)
+            {
+                this.Text = $"Mini-Sistema de Facturación — Usuario: {SesionActual.NombreCompleto} ({SesionActual.Rol})";
+                lblStatusUsuario.Text = $"👤 Usuario: {SesionActual.NombreUsuario} ({SesionActual.NombreCompleto}) | Rol: {SesionActual.Rol}";
+                sesionToolStripMenuItem.Text = $"👤 {SesionActual.NombreUsuario} ({SesionActual.Rol})";
+
+                bool esAdmin = SesionActual.EsAdministrador;
+                administracionToolStripMenuItem.Visible = esAdmin;
+                configuracionEmpresaToolStripMenuItem.Visible = esAdmin;
+                borrarDatosToolStripMenuItem.Visible = esAdmin;
+                borrarDatosToolStripMenuItem.Enabled = esAdmin;
+            }
+            else
+            {
+                this.Text = "Mini-Sistema de Facturación";
+                lblStatusUsuario.Text = "No autenticado";
+                administracionToolStripMenuItem.Visible = false;
+                configuracionEmpresaToolStripMenuItem.Visible = false;
+                borrarDatosToolStripMenuItem.Visible = false;
+            }
+        }
+
         private void borrarDatosToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!SesionActual.EsAdministrador)
+            {
+                MessageBox.Show("Operación denegada: Solo los Administradores tienen autorización para borrar datos.",
+                                "Permisos Insuficientes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
                 var result = MessageBox.Show(

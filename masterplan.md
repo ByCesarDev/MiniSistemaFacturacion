@@ -60,8 +60,8 @@ MiniSistemaFacturacion/
 │   ├── FrmUsuarios.cs                  [x] CREADO (Fase 4)
 │   ├── FrmUsuarios.Designer.cs         [x] CREADO (Fase 4)
 │   ├── FrmUsuarios.resx                [x] CREADO (Fase 4)
-│   ├── FrmMain.cs                      [ ] PENDIENTE MODIFICACIÓN (Fase 5)
-│   └── FrmMain.Designer.cs             [ ] PENDIENTE MODIFICACIÓN (Fase 5)
+│   ├── FrmMain.cs                      [x] MODIFICADO (Fase 5)
+│   └── FrmMain.Designer.cs             [x] MODIFICADO (Fase 5)
 ├── Program.cs                          [x] ACTUALIZADO (Fase 3)
 ├── App.config                          [x] ACTUALIZADO (Tasa 18%)
 └── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2, 3 y 4)
@@ -126,24 +126,24 @@ MiniSistemaFacturacion/
 - [x] **UI-USR-04:** Búsqueda y filtrado en tiempo real por nombre, usuario o rol.
 - [x] **UI-USR-05:** Validaciones visuales y bloqueo de la acción si se intenta desactivar al último administrador activo.
 - [x] **CSP-03:** Registrar `FrmUsuarios` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
-- [x] **GIT-04:** Commit de la Fase 4.
+- [x] **GIT-04:** Commit de la Fase 4 (`413a6ae`).
 
 ---
 
-### 🟡 Checkpoint 5: Integración de Permisos y Menús en FrmMain (Próximo paso)
-
----
-
-### ⚪ Checkpoint 5: Integración de Permisos y Menús en FrmMain
-- [ ] **INT-01:** Agregar submenú `Administración` -> `Usuarios...` en `FrmMain`.
-- [ ] **INT-02:** Mostrar en la barra de estado o título de `FrmMain` el usuario logueado y su rol (ej: *"Usuario: admin (Administrador)"*).
-- [ ] **INT-03:** Agregar opción visible de **Cerrar Sesión** en `FrmMain` que limpie `SesionActual` y devuelva el flujo a `FrmLogin`.
-- [ ] **INT-04:** Aplicar matriz de permisos sobre controles:
+### 🟢 Checkpoint 5: Integración de Permisos y Menús en FrmMain (Completado)
+- [x] **INT-01:** Agregar submenú `Administración` -> `Usuarios...` en `FrmMain`.
+- [x] **INT-02:** Mostrar en la barra de estado y título de `FrmMain` el usuario logueado y su rol (ej: *"Usuario: admin (Administrador)"*).
+- [x] **INT-03:** Agregar opción visible de **Cerrar Sesión** en `FrmMain` que limpie `SesionActual` y devuelva el flujo a `FrmLogin`.
+- [x] **INT-04:** Aplicar matriz de permisos sobre controles:
   - Ocultar / deshabilitar acceso a Administración de Usuarios para rol `Empleado`.
   - Proteger `borrarDatosToolStripMenuItem_Click` (exclusivo Administrador).
   - Proteger `configuracionEmpresaToolStripMenuItem_Click` (exclusivo Administrador).
-- [ ] **INT-05:** Validación de autorización en capa de código (incluso si se invoca el evento directamente, validar `SesionActual.EsAdministrador`).
-- [ ] **GIT-05:** Commit de la Fase 5.
+- [x] **INT-05:** Validación de autorización en capa de código (incluso si se invoca el evento directamente, validar `SesionActual.EsAdministrador`).
+- [x] **GIT-05:** Commit de la Fase 5.
+
+---
+
+### 🟡 Checkpoint 6: Validación, Pruebas de Aceptación y Regresión (Próximo paso)
 
 ---
 
