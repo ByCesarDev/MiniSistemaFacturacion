@@ -36,3 +36,14 @@ jobs:
         path: |
           bin/Release/
           !bin/Release/*.pdb
+
+    - name: Compile Inno Setup Installer
+      run: |
+        choco install innosetup --no-progress
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer/setup.iss
+
+    - name: Upload Installer Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MiniSistemaFacturacion-Setup-v1.2.0
+        path: bin/Installer/*.exe

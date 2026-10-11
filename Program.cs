@@ -12,13 +12,31 @@ namespace MiniSistemaFacturacion
         /// Punto de entrada principal para la aplicación con control de conectividad, migraciones y autenticación.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             try
             {
+                // Soporte para ejecución en modo configuración (--config, --setup)
+                if (args != null && args.Length > 0)
+                {
+                    foreach (string arg in args)
+                    {
+                        if (arg.Equals("--config", StringComparison.OrdinalIgnoreCase) ||
+                            arg.Equals("--setup", StringComparison.OrdinalIgnoreCase) ||
+                            arg.Equals("-c", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (var frmConfig = new FrmConfigurarConexion())
+                            {
+                                frmConfig.ShowDialog();
+                            }
+                            return;
+                        }
+                    }
+                }
+
                 // 0. Barrera de Infraestructura: Verificar conectividad y esquema de base de datos
                 if (!AsegurarConexionYEsquemaValido())
                 {
