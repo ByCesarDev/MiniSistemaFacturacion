@@ -51,12 +51,17 @@ namespace MiniSistemaFacturacion.DataAccess
             var builder = new SqlConnectionStringBuilder(_connectionString);
             _databaseName = builder.InitialCatalog;
             _serverName = builder.DataSource;
+
+            if (!ConnectionStringManager.EsIdentificadorSqlValido(_databaseName))
+            {
+                throw new ArgumentException($"El nombre de base de datos '{_databaseName}' contiene caracteres inválidos.");
+            }
         }
 
         #region Verificación de Estado
 
         /// <summary>
-        /// Evalúa el estado del servidor, base de datos y migraciones pendientes sin aplicar cambios.
+        /// Evalúa el estado del servidor, base de datos, integridad estructural y migraciones pendientes sin aplicar cambios.
         /// </summary>
         public DatabaseHealthStatus EvaluarEstado()
         {
@@ -64,7 +69,7 @@ namespace MiniSistemaFacturacion.DataAccess
 
             try
             {
-                // 1. Probar conectividad al servidor SQL (vía master)
+                // 1. Probar conectividad al servidor SQL (vía master con timeout controlado)
                 var serverBuilder = new SqlConnectionStringBuilder(_connectionString)
                 {
                     InitialCatalog = "master",
@@ -94,7 +99,7 @@ namespace MiniSistemaFacturacion.DataAccess
                     return status;
                 }
 
-                // 3. Si existe la base de datos, comprobar versiones aplicadas
+                // 3. Si existe la base de datos, comprobar versiones aplicadas en __SchemaVersions
                 using (var connDb = new SqlConnection(_connectionString))
                 {
                     connDb.Open();
@@ -126,6 +131,35 @@ namespace MiniSistemaFacturacion.DataAccess
                     status.TotalMigracionesPendientes = pendientes.Count;
                     status.MigracionesPendientes = pendientes.Select(p => p.Id).ToList();
                     status.EsquemaAlDia = (pendientes.Count == 0);
+
+                    // 4. Verificación de Integridad Estructural Real (no confiar ciegamente en __SchemaVersions)
+                    if (status.EsquemaAlDia)
+                    {
+                        string sqlChequeo = @"
+                            SELECT 
+                                (SELECT COUNT(*) FROM sys.tables WHERE name IN ('Clientes', 'Productos', 'ConfiguracionEmpresa', 'SecuenciasNCF', 'Facturas', 'DetallesFactura', 'Pagos', 'Usuarios', 'AuditoriaUsuarios')) AS TotalTablas,
+                                (SELECT COUNT(*) FROM sys.columns WHERE object_id = OBJECT_ID('Usuarios') AND name IN ('PasswordHash', 'PasswordSalt', 'HashIterations', 'HashAlgorithm')) AS TotalColsUsuarios,
+                                (SELECT COUNT(*) FROM sys.procedures WHERE name = 'sp_ExisteAdministradorActivo') AS TotalProcedimientos;";
+
+                        using (var cmdCheck = new SqlCommand(sqlChequeo, connDb))
+                        using (var reader = cmdCheck.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int tablas = Convert.ToInt32(reader["TotalTablas"]);
+                                int cols = Convert.ToInt32(reader["TotalColsUsuarios"]);
+                                int procs = Convert.ToInt32(reader["TotalProcedimientos"]);
+
+                                if (tablas < 9 || cols < 4 || procs < 1)
+                                {
+                                    status.EsquemaAlDia = false;
+                                    status.MensajeError = $"Discrepancia de integridad estructural detectada (Tablas: {tablas}/9, Columnas seguridad: {cols}/4, Procedimientos: {procs}/1). Se requiere reparar o aplicar las migraciones.";
+                                    status.TotalMigracionesPendientes = todas.Count;
+                                    status.MigracionesPendientes = todas.Select(t => t.Id).ToList();
+                                }
+                            }
+                        }
+                    }
                 }
 
                 return status;
@@ -142,16 +176,21 @@ namespace MiniSistemaFacturacion.DataAccess
         #region Ejecución de Migraciones
 
         /// <summary>
-        /// Crea la base de datos si no existe y aplica todas las migraciones pendientes con lock exclusivo y respaldo.
+        /// Crea la base de datos si no existe y aplica todas las migraciones pendientes.
+        /// Exige bloqueo exclusivo previo a nivel de sesión y respaldo preventivo obligatorio verificado.
+        /// Si el respaldo falla en una base existente con datos, LA MIGRACIÓN SE CANCELA INMEDIATAMENTE.
         /// </summary>
-        /// <param name="crearBackupPrevio">True si se debe intentar realizar un respaldo antes de modificar una base existente.</param>
+        /// <param name="crearBackupPrevio">True para realizar respaldo obligatorio antes de modificar tablas existentes.</param>
         public MigrationResult AplicarMigraciones(bool crearBackupPrevio = true)
         {
             var result = new MigrationResult();
 
             try
             {
-                // 1. Asegurar la existencia de la base de datos física
+                // 1. Validar nombre y escapar identificador de base de datos de forma segura
+                string dbEscapada = ConnectionStringManager.EscaparIdentificadorSql(_databaseName);
+
+                // 2. Asegurar la existencia física de la base de datos en master
                 var serverBuilder = new SqlConnectionStringBuilder(_connectionString)
                 {
                     InitialCatalog = "master",
@@ -172,114 +211,130 @@ namespace MiniSistemaFacturacion.DataAccess
 
                     if (!existeBd)
                     {
-                        using (var cmdCreate = new SqlCommand($"CREATE DATABASE [{_databaseName}]", connMaster))
+                        using (var cmdCreate = new SqlCommand($"CREATE DATABASE {dbEscapada}", connMaster))
                         {
                             cmdCreate.ExecuteNonQuery();
                         }
                         result.BaseDatosNueva = true;
-                        result.DetalleMigraciones.Add($"Base de datos [{_databaseName}] creada exitosamente.");
+                        result.DetalleMigraciones.Add($"Base de datos {_databaseName} creada exitosamente.");
                     }
                 }
 
-                // 2. Conectarse a la base de datos destino y aplicar migraciones
+                // 3. Conectarse a la base de datos destino y ejecutar proceso bajo bloqueo distribuido
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
 
-                    // 2.1 Respaldo preventivo si la base es existente y contiene tablas
-                    if (!result.BaseDatosNueva && crearBackupPrevio)
+                    // 3.1 Adquirir bloqueo exclusivo distribuido a nivel de SESIÓN antes de cualquier evaluación
+                    if (!AdquirirBloqueoSesion(conn, 30000))
                     {
-                        string rutaBackup;
-                        if (IntentarCrearBackupPreventivo(conn, out rutaBackup))
-                        {
-                            result.RutaBackup = rutaBackup;
-                            result.DetalleMigraciones.Add($"Respaldo preventivo generado en: {rutaBackup}");
-                        }
-                    }
-
-                    // 2.2 Asegurar tabla __SchemaVersions
-                    AsegurarTablaVersiones(conn);
-
-                    // 2.3 Obtener migraciones ya aplicadas
-                    var aplicadas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                    using (var cmdVersiones = new SqlCommand("SELECT NombreScript FROM [dbo].[__SchemaVersions] WHERE Exito = 1", conn))
-                    using (var reader = cmdVersiones.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            aplicadas.Add(reader.GetString(0));
-                        }
-                    }
-
-                    var pendientes = GetMigracionesDisponibles()
-                        .Where(m => !aplicadas.Contains(m.Id))
-                        .OrderBy(m => m.Orden)
-                        .ToList();
-
-                    if (pendientes.Count == 0)
-                    {
-                        result.Exito = true;
-                        result.Mensaje = "La base de datos ya se encuentra en la versión más reciente.";
+                        result.Exito = false;
+                        result.Mensaje = "No se pudo adquirir el bloqueo de migración: otra instancia podría estar actualizando la base de datos en este momento.";
                         return result;
                     }
 
-                    // 2.4 Ejecución secuencial bajo transacción y bloqueo distribuido
-                    foreach (var migracion in pendientes)
+                    try
                     {
-                        using (var trans = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                        // 3.2 Asegurar tabla __SchemaVersions dentro del bloqueo
+                        AsegurarTablaVersiones(conn);
+
+                        // 3.3 Re-consultar migraciones aplicadas bajo el bloqueo exclusivo
+                        var aplicadas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        using (var cmdVersiones = new SqlCommand("SELECT NombreScript FROM [dbo].[__SchemaVersions] WHERE Exito = 1", conn))
+                        using (var reader = cmdVersiones.ExecuteReader())
                         {
-                            try
+                            while (reader.Read())
                             {
-                                // Adquirir bloqueo exclusivo distribuido (sp_getapplock)
-                                if (!AdquirirBloqueo(conn, trans))
-                                {
-                                    trans.Rollback();
-                                    result.Exito = false;
-                                    result.Mensaje = "No se pudo adquirir el bloqueo de migración: otra instancia podría estar actualizando la base de datos.";
-                                    return result;
-                                }
-
-                                // Ejecutar cada lote SQL de la migración
-                                foreach (var loteSql in migracion.LotesSql)
-                                {
-                                    using (var cmd = new SqlCommand(loteSql, conn, trans))
-                                    {
-                                        cmd.CommandTimeout = 120;
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                }
-
-                                // Registrar migración completada en __SchemaVersions
-                                using (var cmdReg = new SqlCommand(@"
-                                    INSERT INTO [dbo].[__SchemaVersions] 
-                                    ([Version], [NombreScript], [FechaAplicacion], [Exito], [Descripcion])
-                                    VALUES (@ver, @nombre, GETDATE(), 1, @desc)", conn, trans))
-                                {
-                                    cmdReg.Parameters.AddWithValue("@ver", migracion.Version);
-                                    cmdReg.Parameters.AddWithValue("@nombre", migracion.Id);
-                                    cmdReg.Parameters.AddWithValue("@desc", migracion.Descripcion ?? (object)DBNull.Value);
-                                    cmdReg.ExecuteNonQuery();
-                                }
-
-                                trans.Commit();
-                                result.MigracionesAplicadas++;
-                                result.DetalleMigraciones.Add($"Migración {migracion.Id} ({migracion.Version}) aplicada con éxito.");
-                            }
-                            catch (Exception exMigracion)
-                            {
-                                try { trans.Rollback(); } catch { }
-
-                                result.Exito = false;
-                                result.Mensaje = $"Error al aplicar migración {migracion.Id}: {exMigracion.Message}";
-                                result.DetalleMigraciones.Add($"FALLO en {migracion.Id}: {exMigracion.Message}");
-                                return result;
+                                aplicadas.Add(reader.GetString(0));
                             }
                         }
-                    }
 
-                    result.Exito = true;
-                    result.Mensaje = $"Se aplicaron {result.MigracionesAplicadas} migraciones correctamente.";
-                    return result;
+                        var pendientes = GetMigracionesDisponibles()
+                            .Where(m => !aplicadas.Contains(m.Id))
+                            .OrderBy(m => m.Orden)
+                            .ToList();
+
+                        if (pendientes.Count == 0)
+                        {
+                            result.Exito = true;
+                            result.Mensaje = "La base de datos ya se encuentra en la versión más reciente.";
+                            return result;
+                        }
+
+                        // 3.4 Respaldo Preventivo OBLIGATORIO si la base es existente y contiene tablas
+                        if (!result.BaseDatosNueva && crearBackupPrevio)
+                        {
+                            string rutaBackup;
+                            string errorBackup;
+                            if (!CrearBackupPreventivoObligatorio(conn, out rutaBackup, out errorBackup))
+                            {
+                                result.Exito = false;
+                                result.Mensaje = $"No se pudo completar el respaldo preventivo obligatorio de la base de datos existente:\n{errorBackup}\n\nLa migración ha sido CANCELADA para proteger la información.";
+                                result.DetalleMigraciones.Add($"CANCELADO: Fallo en respaldo preventivo ({errorBackup}).");
+                                return result;
+                            }
+
+                            if (!string.IsNullOrEmpty(rutaBackup))
+                            {
+                                result.RutaBackup = rutaBackup;
+                                result.DetalleMigraciones.Add($"Respaldo preventivo verificado en: {rutaBackup}");
+                            }
+                        }
+
+                        // 3.5 Ejecución secuencial transaccional de cada migración pendiente
+                        foreach (var migracion in pendientes)
+                        {
+                            using (var trans = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                            {
+                                try
+                                {
+                                    // Ejecutar cada lote SQL de la migración
+                                    foreach (var loteSql in migracion.LotesSql)
+                                    {
+                                        using (var cmd = new SqlCommand(loteSql, conn, trans))
+                                        {
+                                            cmd.CommandTimeout = 120;
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+
+                                    // Registrar migración completada en __SchemaVersions
+                                    using (var cmdReg = new SqlCommand(@"
+                                        INSERT INTO [dbo].[__SchemaVersions] 
+                                        ([Version], [NombreScript], [FechaAplicacion], [Exito], [Descripcion])
+                                        VALUES (@ver, @nombre, GETDATE(), 1, @desc)", conn, trans))
+                                    {
+                                        cmdReg.Parameters.AddWithValue("@ver", migracion.Version);
+                                        cmdReg.Parameters.AddWithValue("@nombre", migracion.Id);
+                                        cmdReg.Parameters.AddWithValue("@desc", migracion.Descripcion ?? (object)DBNull.Value);
+                                        cmdReg.ExecuteNonQuery();
+                                    }
+
+                                    trans.Commit();
+                                    result.MigracionesAplicadas++;
+                                    result.DetalleMigraciones.Add($"Migración {migracion.Id} ({migracion.Version}) aplicada con éxito.");
+                                }
+                                catch (Exception exMigracion)
+                                {
+                                    try { trans.Rollback(); } catch { }
+
+                                    result.Exito = false;
+                                    result.Mensaje = $"Error al aplicar migración {migracion.Id}: {exMigracion.Message}";
+                                    result.DetalleMigraciones.Add($"FALLO en {migracion.Id}: {exMigracion.Message}");
+                                    return result;
+                                }
+                            }
+                        }
+
+                        result.Exito = true;
+                        result.Mensaje = $"Se aplicaron {result.MigracionesAplicadas} migraciones correctamente.";
+                        return result;
+                    }
+                    finally
+                    {
+                        // 3.6 Liberar siempre el bloqueo de migración de sesión al finalizar
+                        LiberarBloqueoSesion(conn);
+                    }
                 }
             }
             catch (Exception ex)
@@ -317,15 +372,15 @@ namespace MiniSistemaFacturacion.DataAccess
             }
         }
 
-        private bool AdquirirBloqueo(SqlConnection conn, SqlTransaction trans)
+        private bool AdquirirBloqueoSesion(SqlConnection conn, int timeoutMs = 30000)
         {
-            using (var cmd = new SqlCommand("sp_getapplock", conn, trans))
+            using (var cmd = new SqlCommand("sp_getapplock", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Resource", "MiniSistemaFacturacion_MigrationLock");
                 cmd.Parameters.AddWithValue("@LockMode", "Exclusive");
-                cmd.Parameters.AddWithValue("@LockOwner", "Transaction");
-                cmd.Parameters.AddWithValue("@LockTimeout", 15000);
+                cmd.Parameters.AddWithValue("@LockOwner", "Session");
+                cmd.Parameters.AddWithValue("@LockTimeout", timeoutMs);
 
                 var returnParam = cmd.Parameters.Add("@Result", SqlDbType.Int);
                 returnParam.Direction = ParameterDirection.ReturnValue;
@@ -336,19 +391,61 @@ namespace MiniSistemaFacturacion.DataAccess
             }
         }
 
-        private bool IntentarCrearBackupPreventivo(SqlConnection conn, out string rutaBackup)
+        private void LiberarBloqueoSesion(SqlConnection conn)
         {
-            rutaBackup = null;
             try
             {
-                // Verificar si hay tablas de usuario
+                using (var cmd = new SqlCommand("sp_releaseapplock", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Resource", "MiniSistemaFacturacion_MigrationLock");
+                    cmd.Parameters.AddWithValue("@LockOwner", "Session");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Crea una copia de seguridad obligatoria y verifica su integridad con RESTORE VERIFYONLY.
+        /// Si la base no tiene tablas con datos, no es necesario respaldar.
+        /// Si la base tiene tablas pero el respaldo falla, devuelve false con el error para abortar la migración.
+        /// </summary>
+        private bool CrearBackupPreventivoObligatorio(SqlConnection conn, out string rutaBackup, out string errorMensaje)
+        {
+            rutaBackup = null;
+            errorMensaje = null;
+
+            try
+            {
+                // 1. Verificar si hay tablas de usuario en la base de datos
                 using (var cmdCount = new SqlCommand("SELECT COUNT(*) FROM sys.tables WHERE name <> '__SchemaVersions'", conn))
                 {
                     int tablas = Convert.ToInt32(cmdCount.ExecuteScalar());
-                    if (tablas == 0) return false; // Nada que respaldar
+                    if (tablas == 0) return true; // Base vacía, no requiere respaldo previo
                 }
 
-                string dirBackups = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backups");
+                // 2. Obtener la ruta predeterminada de backup configurada en SQL Server (donde el servicio tiene permisos garantizados)
+                string dirBackups = null;
+                try
+                {
+                    using (var cmdPath = new SqlCommand("SELECT CAST(SERVERPROPERTY('InstanceDefaultBackupPath') AS NVARCHAR(512))", conn))
+                    {
+                        object p = cmdPath.ExecuteScalar();
+                        if (p != null && p != DBNull.Value)
+                        {
+                            dirBackups = p.ToString();
+                        }
+                    }
+                }
+                catch { }
+
+                // Fallback a ProgramData si el servidor no reportó ruta predeterminada
+                if (string.IsNullOrWhiteSpace(dirBackups) || !Directory.Exists(dirBackups))
+                {
+                    dirBackups = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "MiniSistemaFacturacion", "Backups");
+                }
+
                 if (!Directory.Exists(dirBackups))
                 {
                     Directory.CreateDirectory(dirBackups);
@@ -357,20 +454,30 @@ namespace MiniSistemaFacturacion.DataAccess
                 string nombreArchivo = $"{_databaseName}_PreMigration_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
                 rutaBackup = Path.Combine(dirBackups, nombreArchivo);
 
-                string sqlBackup = $"BACKUP DATABASE [{_databaseName}] TO DISK = @rutaBackup WITH FORMAT, INIT, NAME = 'Respaldo Pre-Migracion'";
+                string dbEscapada = ConnectionStringManager.EscaparIdentificadorSql(_databaseName);
+                string sqlBackup = $"BACKUP DATABASE {dbEscapada} TO DISK = @rutaBackup WITH FORMAT, INIT, NAME = 'Respaldo Pre-Migracion';";
+
                 using (var cmdBackup = new SqlCommand(sqlBackup, conn))
                 {
-                    cmdBackup.CommandTimeout = 180;
+                    cmdBackup.CommandTimeout = 300;
                     cmdBackup.Parameters.AddWithValue("@rutaBackup", rutaBackup);
                     cmdBackup.ExecuteNonQuery();
                 }
 
-                return File.Exists(rutaBackup);
+                // 3. Verificación de integridad con RESTORE VERIFYONLY
+                string sqlVerify = "RESTORE VERIFYONLY FROM DISK = @rutaBackup;";
+                using (var cmdVerify = new SqlCommand(sqlVerify, conn))
+                {
+                    cmdVerify.CommandTimeout = 120;
+                    cmdVerify.Parameters.AddWithValue("@rutaBackup", rutaBackup);
+                    cmdVerify.ExecuteNonQuery();
+                }
+
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                // Si la instancia no tiene permisos de escritura en la carpeta solicitada o es un usuario restringido,
-                // no interrumpimos la migración pero dejamos rutaBackup en null.
+                errorMensaje = ex.Message;
                 rutaBackup = null;
                 return false;
             }

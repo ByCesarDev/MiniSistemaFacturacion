@@ -1,12 +1,17 @@
 using System;
 using System.Configuration;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MiniSistemaFacturacion.DataAccess
 {
     /// <summary>
-    /// Clase para gestionar las cadenas de conexión de la aplicación
-    /// Created by: Cesar Reyes
-    /// Date: 2026-04-07
+    /// Clase para gestionar las cadenas de conexión de la aplicación con persistencia en ProgramData y DPAPI.
+    /// Soporta instalaciones bajo Program Files y perfiles de usuario estándar en Windows.
+    /// Edited by: Cesar Reyes
+    /// Date: 2026-10-11
     /// </summary>
     public static class ConnectionStringManager
     {
@@ -14,22 +19,104 @@ namespace MiniSistemaFacturacion.DataAccess
 
         private const string DEFAULT_CONNECTION_NAME = "MiniSistemaFacturacionDB";
         private const string DEFAULT_CONNECTION_STRING = @"Server=localhost\SQLEXPRESS;Database=MiniSistemaFacturacion;Integrated Security=True;Connect Timeout=30;";
+        private static readonly byte[] Entropy = Encoding.UTF8.GetBytes("MiniSistemaFacturacion_DPAPI_Entropy_2026");
 
         #endregion
 
-        #region Connection String Methods
+        #region Storage Locations & ProgramData
 
         /// <summary>
-        /// Obtiene la cadena de conexión desde el archivo de configuración
+        /// Obtiene la ruta física del archivo de configuración persistente en CommonApplicationData (ProgramData).
+        /// </summary>
+        public static string GetProgramDataConfigPath()
+        {
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "MiniSistemaFacturacion");
+            return Path.Combine(folder, "database.config");
+        }
+
+        private static string ObtenerCadenaDesdeProgramData()
+        {
+            try
+            {
+                string filePath = GetProgramDataConfigPath();
+                if (!File.Exists(filePath)) return null;
+
+                byte[] bytes = File.ReadAllBytes(filePath);
+                if (bytes == null || bytes.Length == 0) return null;
+
+                // Intentar descifrar con DPAPI máquina
+                try
+                {
+                    byte[] descifrado = ProtectedData.Unprotect(bytes, Entropy, DataProtectionScope.LocalMachine);
+                    return Encoding.UTF8.GetString(descifrado);
+                }
+                catch
+                {
+                    // Fallback para texto plano si no estaba protegido
+                    return Encoding.UTF8.GetString(bytes);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static bool GuardarEnProgramData(string connectionString, bool protectWithDpapi, out string error)
+        {
+            error = null;
+            try
+            {
+                string filePath = GetProgramDataConfigPath();
+                string dir = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                byte[] data;
+                if (protectWithDpapi)
+                {
+                    byte[] plain = Encoding.UTF8.GetBytes(connectionString);
+                    data = ProtectedData.Protect(plain, Entropy, DataProtectionScope.LocalMachine);
+                }
+                else
+                {
+                    data = Encoding.UTF8.GetBytes(connectionString);
+                }
+
+                File.WriteAllBytes(filePath, data);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = $"Error al escribir en almacenamiento persistente ({ex.Message})";
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Connection String Retrieval
+
+        /// <summary>
+        /// Obtiene la cadena de conexión priorizando el almacenamiento en ProgramData protegido con DPAPI
+        /// y utilizando App.config como respaldo.
         /// </summary>
         /// <returns>Cadena de conexión configurada</returns>
         public static string GetConnectionString()
         {
             try
             {
-                // Intentar obtener desde App.config
+                // 1. Intentar obtener desde almacenamiento persistente en ProgramData (protegido con DPAPI)
+                string programDataConfig = ObtenerCadenaDesdeProgramData();
+                if (!string.IsNullOrEmpty(programDataConfig) && IsValidConnectionString(programDataConfig))
+                {
+                    return programDataConfig;
+                }
+
+                // 2. Intentar obtener desde App.config
                 ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTION_NAME];
-                
                 if (settings != null && !string.IsNullOrEmpty(settings.ConnectionString))
                 {
                     return settings.ConnectionString;
@@ -37,8 +124,11 @@ namespace MiniSistemaFacturacion.DataAccess
             }
             catch (ConfigurationErrorsException ex)
             {
-                // Log error si hay problema con el archivo de configuración
                 System.Diagnostics.Debug.WriteLine($"Error de configuración: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al obtener cadena de conexión: {ex.Message}");
             }
 
             // Retornar cadena por defecto si no se encuentra en configuración
@@ -48,14 +138,11 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <summary>
         /// Obtiene una cadena de conexión específica por nombre
         /// </summary>
-        /// <param name="connectionName">Nombre de la conexión</param>
-        /// <returns>Cadena de conexión específica</returns>
         public static string GetConnectionString(string connectionName)
         {
             try
             {
                 ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[connectionName];
-                
                 if (settings != null && !string.IsNullOrEmpty(settings.ConnectionString))
                 {
                     return settings.ConnectionString;
@@ -76,13 +163,6 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <summary>
         /// Construye una cadena de conexión para SQL Server
         /// </summary>
-        /// <param name="server">Nombre del servidor</param>
-        /// <param name="database">Nombre de la base de datos</param>
-        /// <param name="useIntegratedSecurity">Usar seguridad integrada</param>
-        /// <param name="username">Usuario (si no usa seguridad integrada)</param>
-        /// <param name="password">Contraseña (si no usa seguridad integrada)</param>
-        /// <param name="connectTimeout">Timeout de conexión (segundos)</param>
-        /// <returns>Cadena de conexión construida</returns>
         public static string BuildConnectionString(string server, string database, 
             bool useIntegratedSecurity = true, string username = "", string password = "", int connectTimeout = 30)
         {
@@ -92,8 +172,7 @@ namespace MiniSistemaFacturacion.DataAccess
             if (string.IsNullOrEmpty(database))
                 throw new ArgumentException("El nombre de la base de datos es requerido");
 
-            System.Data.SqlClient.SqlConnectionStringBuilder builder = 
-                new System.Data.SqlClient.SqlConnectionStringBuilder();
+            var builder = new System.Data.SqlClient.SqlConnectionStringBuilder();
 
             builder["Server"] = server;
             builder["Database"] = database;
@@ -113,7 +192,6 @@ namespace MiniSistemaFacturacion.DataAccess
                 builder["Password"] = password;
             }
 
-            // Configuraciones adicionales recomendadas
             builder["Application Name"] = "MiniSistemaFacturacion";
             builder["MultipleActiveResultSets"] = true;
             builder["TrustServerCertificate"] = true;
@@ -124,12 +202,6 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <summary>
         /// Construye una cadena de conexión para SQL Server Express
         /// </summary>
-        /// <param name="instanceName">Nombre de la instancia (default: SQLEXPRESS)</param>
-        /// <param name="database">Nombre de la base de datos</param>
-        /// <param name="useIntegratedSecurity">Usar seguridad integrada</param>
-        /// <param name="username">Usuario (opcional)</param>
-        /// <param name="password">Contraseña (opcional)</param>
-        /// <returns>Cadena de conexión para SQL Server Express</returns>
         public static string BuildExpressConnectionString(string instanceName = "SQLEXPRESS", 
             string database = "MiniSistemaFacturacion", bool useIntegratedSecurity = true, 
             string username = "", string password = "")
@@ -145,8 +217,6 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <summary>
         /// Valida si una cadena de conexión es válida
         /// </summary>
-        /// <param name="connectionString">Cadena de conexión a validar</param>
-        /// <returns>True si la cadena es válida</returns>
         public static bool IsValidConnectionString(string connectionString)
         {
             try
@@ -156,14 +226,12 @@ namespace MiniSistemaFacturacion.DataAccess
 
                 var builder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
                 
-                // Validar componentes esenciales
                 if (string.IsNullOrEmpty(builder["Server"]?.ToString()) || 
                     string.IsNullOrEmpty(builder["Database"]?.ToString()))
                 {
                     return false;
                 }
 
-                // Si no usa seguridad integrada, validar usuario y contraseña
                 if (!Convert.ToBoolean(builder["Integrated Security"] ?? false))
                 {
                     if (string.IsNullOrEmpty(builder["User ID"]?.ToString()))
@@ -181,8 +249,6 @@ namespace MiniSistemaFacturacion.DataAccess
         /// <summary>
         /// Extrae información de una cadena de conexión
         /// </summary>
-        /// <param name="connectionString">Cadena de conexión</param>
-        /// <returns>Objeto con información extraída</returns>
         public static ConnectionInfo ExtractConnectionInfo(string connectionString)
         {
             try
@@ -211,12 +277,9 @@ namespace MiniSistemaFacturacion.DataAccess
         #region Persistence & Security (DPAPI)
 
         /// <summary>
-        /// Guarda la cadena de conexión en App.config y opcionalmente protege la sección con DPAPI.
+        /// Guarda la cadena de conexión priorizando el almacenamiento en ProgramData protegido con DPAPI
+        /// (apto para ejecuciones bajo Program Files con usuarios estándar) e intentando sincronizar App.config.
         /// </summary>
-        /// <param name="connectionString">Cadena de conexión completa</param>
-        /// <param name="protectWithDpapi">True para cifrar con DataProtectionConfigurationProvider</param>
-        /// <param name="errorMessage">Mensaje de error en caso de fallo</param>
-        /// <returns>True si se guardó correctamente</returns>
         public static bool SaveConnectionString(string connectionString, bool protectWithDpapi, out string errorMessage)
         {
             errorMessage = null;
@@ -228,39 +291,55 @@ namespace MiniSistemaFacturacion.DataAccess
                     return false;
                 }
 
-                System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                ConnectionStringsSection section = config.ConnectionStrings;
-
-                if (section.ConnectionStrings[DEFAULT_CONNECTION_NAME] != null)
+                // 1. Guardar en almacenamiento seguro ProgramData (independiente de permisos de Program Files)
+                string errorProgramData;
+                if (!GuardarEnProgramData(connectionString, protectWithDpapi, out errorProgramData))
                 {
-                    section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ConnectionString = connectionString;
-                    section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ProviderName = "System.Data.SqlClient";
-                }
-                else
-                {
-                    section.ConnectionStrings.Add(new ConnectionStringSettings(DEFAULT_CONNECTION_NAME, connectionString, "System.Data.SqlClient"));
+                    errorMessage = errorProgramData;
+                    return false;
                 }
 
-                // Aplicar o remover protección DPAPI según se indique
-                if (protectWithDpapi)
+                // 2. Intentar sincronizar App.config si el usuario tiene privilegios de escritura
+                try
                 {
-                    if (!section.SectionInformation.IsProtected)
+                    System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                    ConnectionStringsSection section = config.ConnectionStrings;
+
+                    if (section.ConnectionStrings[DEFAULT_CONNECTION_NAME] != null)
                     {
-                        section.SectionInformation.ProtectSection("DataProtectionConfigurationProvider");
+                        section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ConnectionString = connectionString;
+                        section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ProviderName = "System.Data.SqlClient";
                     }
-                }
-                else
-                {
-                    if (section.SectionInformation.IsProtected)
+                    else
                     {
-                        section.SectionInformation.UnprotectSection();
+                        section.ConnectionStrings.Add(new ConnectionStringSettings(DEFAULT_CONNECTION_NAME, connectionString, "System.Data.SqlClient"));
                     }
+
+                    if (protectWithDpapi)
+                    {
+                        if (!section.SectionInformation.IsProtected)
+                        {
+                            section.SectionInformation.ProtectSection("DataProtectionConfigurationProvider");
+                        }
+                    }
+                    else
+                    {
+                        if (section.SectionInformation.IsProtected)
+                        {
+                            section.SectionInformation.UnprotectSection();
+                        }
+                    }
+
+                    config.Save(System.Configuration.ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection("connectionStrings");
+                }
+                catch
+                {
+                    // Si falla escribir en App.config (por ejemplo bajo C:\Program Files sin elevación de UAC),
+                    // no detenemos la operación porque ProgramData ya persistió los datos de forma autoritativa.
                 }
 
-                config.Save(System.Configuration.ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("connectionStrings");
-
-                // Actualizar la instancia de DbHelper activa
+                // 3. Actualizar la instancia de DbHelper activa
                 DbHelper.Instance.ReloadConnectionString(connectionString);
 
                 return true;
@@ -271,6 +350,38 @@ namespace MiniSistemaFacturacion.DataAccess
                 return false;
             }
         }
+
+        #endregion
+
+        #region SQL Identifier Validation & Escaping
+
+        /// <summary>
+        /// Valida si un nombre de base de datos u objeto cumple con las reglas de identificadores de SQL Server
+        /// previniendo inyección en instrucciones DDL.
+        /// </summary>
+        public static bool EsIdentificadorSqlValido(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre) || nombre.Length > 128)
+                return false;
+
+            // Alfanuméricos, guiones bajos, @, #, $ estándar en identificadores de SQL Server
+            return Regex.IsMatch(nombre, @"^[a-zA-Z0-9_@#$]+$");
+        }
+
+        /// <summary>
+        /// Escapa y delimita de forma segura un identificador de base de datos SQL Server.
+        /// </summary>
+        public static string EscaparIdentificadorSql(string nombre)
+        {
+            if (!EsIdentificadorSqlValido(nombre))
+                throw new ArgumentException($"El identificador '{nombre}' contiene caracteres no permitidos o longitud inválida.");
+
+            return "[" + nombre.Replace("]", "]]") + "]";
+        }
+
+        #endregion
+
+        #region Diagnostic & Testing Methods
 
         /// <summary>
         /// Sanitiza una cadena de conexión para ocultar contraseñas sensibles en logs o interfaces.
@@ -406,10 +517,6 @@ namespace MiniSistemaFacturacion.DataAccess
         public string ApplicationName { get; set; }
         public bool MultipleActiveResultSets { get; set; }
 
-        /// <summary>
-        /// Obtiene una representación segura de la información (sin contraseñas)
-        /// </summary>
-        /// <returns>Información de conexión segura</returns>
         public override string ToString()
         {
             return $"Server: {Server}, Database: {Database}, " +

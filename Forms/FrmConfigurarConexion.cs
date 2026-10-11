@@ -16,7 +16,31 @@ namespace MiniSistemaFacturacion.Forms
         {
             InitializeComponent();
             UITheme.AsignarIconoFormulario(this);
+            btnGuardar.Enabled = false;
+            btnInicializarBD.Enabled = false;
             CargarConfiguracionActual();
+            SuscribirEventosCambioParametros();
+        }
+
+        private void SuscribirEventosCambioParametros()
+        {
+            txtServidor.TextChanged += OnParametrosModificados;
+            txtBaseDatos.TextChanged += OnParametrosModificados;
+            txtUsuario.TextChanged += OnParametrosModificados;
+            txtPassword.TextChanged += OnParametrosModificados;
+            rbWindowsAuth.CheckedChanged += OnParametrosModificados;
+            rbSqlAuth.CheckedChanged += OnParametrosModificados;
+        }
+
+        private void OnParametrosModificados(object sender, EventArgs e)
+        {
+            _cadenaProbadaValida = null;
+            btnGuardar.Enabled = false;
+            btnInicializarBD.Enabled = false;
+            lblEstadoIcono.Text = "⚠️";
+            lblEstadoMensaje.Text = "Parámetros modificados. Debe probar la conexión antes de guardar o inicializar.";
+            pnlEstado.BackColor = Color.FromArgb(254, 243, 199);
+            lblEstadoMensaje.ForeColor = Color.FromArgb(146, 64, 14);
         }
 
         private void CargarConfiguracionActual()
@@ -268,11 +292,25 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
-                string cadena = _cadenaProbadaValida ?? ConstruirCadenaActual();
+                if (string.IsNullOrEmpty(_cadenaProbadaValida))
+                {
+                    MessageBox.Show("Debe probar la conexión exitosamente antes de guardar la configuración.",
+                                    "Conexión No Verificada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string cadenaActual = ConstruirCadenaActual();
+                if (_cadenaProbadaValida != cadenaActual)
+                {
+                    MessageBox.Show("Los parámetros de conexión han cambiado después de la prueba. Debe probar la conexión nuevamente antes de guardar.",
+                                    "Conexión No Verificada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 bool protegerDpapi = chkProtegerDPAPI.Checked && rbSqlAuth.Checked;
 
                 string errorGuardado;
-                if (!ConnectionStringManager.SaveConnectionString(cadena, protegerDpapi, out errorGuardado))
+                if (!ConnectionStringManager.SaveConnectionString(_cadenaProbadaValida, protegerDpapi, out errorGuardado))
                 {
                     MessageBox.Show($"No se pudo guardar la configuración:\n{errorGuardado}",
                                     "Error al Guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
