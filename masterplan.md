@@ -57,14 +57,14 @@ MiniSistemaFacturacion/
 │   ├── FrmLogin.cs                     [x] CREADO (Fase 3)
 │   ├── FrmLogin.Designer.cs            [x] CREADO (Fase 3)
 │   ├── FrmLogin.resx                   [x] CREADO (Fase 3)
-│   ├── FrmUsuarios.cs                  [ ] PENDIENTE (Fase 4)
-│   ├── FrmUsuarios.Designer.cs         [ ] PENDIENTE (Fase 4)
-│   ├── FrmUsuarios.resx                [ ] PENDIENTE (Fase 4)
+│   ├── FrmUsuarios.cs                  [x] CREADO (Fase 4)
+│   ├── FrmUsuarios.Designer.cs         [x] CREADO (Fase 4)
+│   ├── FrmUsuarios.resx                [x] CREADO (Fase 4)
 │   ├── FrmMain.cs                      [ ] PENDIENTE MODIFICACIÓN (Fase 5)
 │   └── FrmMain.Designer.cs             [ ] PENDIENTE MODIFICACIÓN (Fase 5)
 ├── Program.cs                          [x] ACTUALIZADO (Fase 3)
 ├── App.config                          [x] ACTUALIZADO (Tasa 18%)
-└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2 y 3)
+└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2, 3 y 4)
 ```
 
 ---
@@ -111,22 +111,26 @@ MiniSistemaFacturacion/
 - [x] **UI-LOGIN-04:** Manejo de advertencias visuales de bloqueo temporal y conteo de intentos fallidos.
 - [x] **UI-LOGIN-05:** Conectar [Program.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Program.cs) para interceptar el arranque con `FrmLogin` antes de permitir abrir `FrmMain`.
 - [x] **CSP-02:** Registrar `FrmLogin` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
-- [x] **GIT-03:** Commit de la Fase 3.
+- [x] **GIT-03:** Commit de la Fase 3 (`746c39f`).
 
 ---
 
-### 🟡 Checkpoint 4: Interfaz de Administración de Usuarios (Próximo paso)
-- [ ] **UI-USR-01:** Crear formulario `FrmUsuarios` accesible únicamente por Administradores.
-- [ ] **UI-USR-02:** `DataGridView` con lista de usuarios (sin exponer contraseñas ni hashes).
-- [ ] **UI-USR-03:** Formulario/panel lateral para:
+### 🟢 Checkpoint 4: Interfaz de Administración de Usuarios (Completado)
+- [x] **UI-USR-01:** Crear formulario [FrmUsuarios.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmUsuarios.cs) accesible únicamente por Administradores.
+- [x] **UI-USR-02:** `DataGridView` con lista de usuarios (sin exponer contraseñas ni hashes).
+- [x] **UI-USR-03:** Formulario/panel lateral para:
   - Crear nuevo usuario (Nombre, NombreUsuario, Rol, Contraseña inicial).
   - Editar usuario existente (Nombre, Rol, Estado).
   - Activar / Desactivar cuenta.
   - Restablecer contraseña de un usuario.
-- [ ] **UI-USR-04:** Búsqueda y filtrado en tiempo real por nombre, usuario o rol.
-- [ ] **UI-USR-05:** Validaciones visuales y bloqueo de la acción si se intenta desactivar al último administrador activo.
-- [ ] **CSP-03:** Registrar `FrmUsuarios` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
-- [ ] **GIT-04:** Commit de la Fase 4.
+- [x] **UI-USR-04:** Búsqueda y filtrado en tiempo real por nombre, usuario o rol.
+- [x] **UI-USR-05:** Validaciones visuales y bloqueo de la acción si se intenta desactivar al último administrador activo.
+- [x] **CSP-03:** Registrar `FrmUsuarios` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
+- [x] **GIT-04:** Commit de la Fase 4.
+
+---
+
+### 🟡 Checkpoint 5: Integración de Permisos y Menús en FrmMain (Próximo paso)
 
 ---
 
