@@ -243,12 +243,18 @@ Progreso actual: **12 / 12 aprobadas (100% verificado contra SQL Server y ensamb
   - Corrección del corte de texto en selectores de fecha (`DateTimePicker`) con `CustomFormat = "dd/MM/yyyy"`.
   - Reubicación de los botones de búsqueda y limpieza alineados a la derecha de los filtros.
   - Eliminación del espacio vacío en blanco en el `DataGridView` mediante `AutoSizeColumnsMode = Fill` y `FillWeight`s optimizados.
-- [x] **FrmMain (Rediseño Ejecutivo):**
+- [x] **FrmMain (Rediseño Ejecutivo y Limpieza de Duplicados):**
   - Reemplazo del diseño legacy por un Dashboard Ejecutivo con Slate Navy `#253959`.
-  - Encabezado superior con título del sistema, indicador del usuario activo y botón plano para cerrar sesión.
-  - Menú horizontal limpio en Segoe UI.
+  - Encabezado superior con título del sistema, indicador del usuario activo, botón plano estilizado `[ 🔑 Cambiar Clave ]` y botón rojo `[ Cerrar Sesión ]`.
+  - **Eliminación de menú duplicado:** Se eliminó el submenú duplicado `sesionToolStripMenuItem` del menú horizontal, evitando redundancia visual y dejando la barra de menú exclusivamente para módulos de negocio.
   - Cuadrícula de 8 tarjetas interactivas accesibles (`Clientes`, `Productos`, `Facturación`, `Buscar Facturas`, `Cuentas por Cobrar`, `Reportes`, `Usuarios [Admin]`, `Configuración [Admin]`) con efectos visuales al pasar el cursor y navegación directa.
   - Barra de estado profesional con usuario autenticado, tasa fiscal del 18% ITBIS y estado del servidor de base de datos.
+- [x] **FrmCambiarPassword (Nuevo Módulo Diseñado):**
+  - Reemplazo total de los antiguos diálogos `InputBox` secuenciales de Visual Basic por un formulario modal con diseño Slate Navy `#253959`.
+  - Soporte para dos modos de operación:
+    - **Modo Personal (desde FrmMain):** Solicita contraseña actual, nueva contraseña (mínimo 6 caracteres), confirmación y opción para mostrar/ocultar contraseñas.
+    - **Modo Administrativo (desde FrmUsuarios):** Permite a los administradores restablecer la contraseña de cualquier usuario sin requerir la contraseña anterior.
+  - Validaciones de longitud, coincidencia y hashing seguro con PBKDF2-HMAC-SHA256.
 
 
 

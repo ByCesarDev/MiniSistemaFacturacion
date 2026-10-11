@@ -31,6 +31,7 @@ namespace MiniSistemaFacturacion.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.panelHeader = new System.Windows.Forms.Panel();
             this.btnHeaderCerrarSesion = new System.Windows.Forms.Button();
+            this.btnHeaderCambiarPassword = new System.Windows.Forms.Button();
             this.lblHeaderUsuario = new System.Windows.Forms.Label();
             this.lblHeaderSubtitulo = new System.Windows.Forms.Label();
             this.lblHeaderTitulo = new System.Windows.Forms.Label();
@@ -48,9 +49,6 @@ namespace MiniSistemaFacturacion.Forms
             this.reportesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cambiarPasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatusUsuario = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatusSpring = new System.Windows.Forms.ToolStripStatusLabel();
@@ -132,6 +130,7 @@ namespace MiniSistemaFacturacion.Forms
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(57)))), ((int)(((byte)(89)))));
             this.panelHeader.Controls.Add(this.btnHeaderCerrarSesion);
+            this.panelHeader.Controls.Add(this.btnHeaderCambiarPassword);
             this.panelHeader.Controls.Add(this.lblHeaderUsuario);
             this.panelHeader.Controls.Add(this.lblHeaderSubtitulo);
             this.panelHeader.Controls.Add(this.lblHeaderTitulo);
@@ -157,14 +156,30 @@ namespace MiniSistemaFacturacion.Forms
             this.btnHeaderCerrarSesion.Text = "Cerrar Sesión";
             this.btnHeaderCerrarSesion.UseVisualStyleBackColor = false;
             // 
+            // btnHeaderCambiarPassword
+            // 
+            this.btnHeaderCambiarPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHeaderCambiarPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(74)))), ((int)(((byte)(112)))));
+            this.btnHeaderCambiarPassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHeaderCambiarPassword.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(100)))), ((int)(((byte)(145)))));
+            this.btnHeaderCambiarPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHeaderCambiarPassword.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHeaderCambiarPassword.ForeColor = System.Drawing.Color.White;
+            this.btnHeaderCambiarPassword.Location = new System.Drawing.Point(760, 20);
+            this.btnHeaderCambiarPassword.Name = "btnHeaderCambiarPassword";
+            this.btnHeaderCambiarPassword.Size = new System.Drawing.Size(150, 32);
+            this.btnHeaderCambiarPassword.TabIndex = 4;
+            this.btnHeaderCambiarPassword.Text = "🔑 Cambiar Clave";
+            this.btnHeaderCambiarPassword.UseVisualStyleBackColor = false;
+            // 
             // lblHeaderUsuario
             // 
             this.lblHeaderUsuario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblHeaderUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeaderUsuario.ForeColor = System.Drawing.Color.White;
-            this.lblHeaderUsuario.Location = new System.Drawing.Point(620, 25);
+            this.lblHeaderUsuario.Location = new System.Drawing.Point(450, 25);
             this.lblHeaderUsuario.Name = "lblHeaderUsuario";
-            this.lblHeaderUsuario.Size = new System.Drawing.Size(285, 22);
+            this.lblHeaderUsuario.Size = new System.Drawing.Size(295, 22);
             this.lblHeaderUsuario.TabIndex = 2;
             this.lblHeaderUsuario.Text = "Usuario: Cargando...";
             this.lblHeaderUsuario.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -202,8 +217,7 @@ namespace MiniSistemaFacturacion.Forms
             this.productosToolStripMenuItem,
             this.configuracionToolStripMenuItem,
             this.reportesToolStripMenuItem,
-            this.administracionToolStripMenuItem,
-            this.sesionToolStripMenuItem});
+            this.administracionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 72);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 4, 0, 4);
@@ -314,35 +328,7 @@ namespace MiniSistemaFacturacion.Forms
             this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.usuariosToolStripMenuItem.Text = "Usuarios";
             this.usuariosToolStripMenuItem.Click += new System.EventHandler(this.usuariosToolStripMenuItem_Click);
-            // 
-            // sesionToolStripMenuItem
-            // 
-            this.sesionToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.sesionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cambiarPasswordToolStripMenuItem,
-            this.cerrarSesionToolStripMenuItem});
-            this.sesionToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sesionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(57)))), ((int)(((byte)(89)))));
-            this.sesionToolStripMenuItem.Name = "sesionToolStripMenuItem";
-            this.sesionToolStripMenuItem.Size = new System.Drawing.Size(61, 21);
-            this.sesionToolStripMenuItem.Text = "Sesión";
-            // 
-            // cambiarPasswordToolStripMenuItem
-            // 
-            this.cambiarPasswordToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cambiarPasswordToolStripMenuItem.Name = "cambiarPasswordToolStripMenuItem";
-            this.cambiarPasswordToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.cambiarPasswordToolStripMenuItem.Text = "Cambiar Mi Contraseña...";
-            this.cambiarPasswordToolStripMenuItem.Click += new System.EventHandler(this.cambiarPasswordToolStripMenuItem_Click);
-            // 
-            // cerrarSesionToolStripMenuItem
-            // 
-            this.cerrarSesionToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            this.cerrarSesionToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.cerrarSesionToolStripMenuItem.Text = "Cerrar Sesión";
-            this.cerrarSesionToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem_Click);
-            // 
+
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
@@ -1045,6 +1031,7 @@ namespace MiniSistemaFacturacion.Forms
         private System.Windows.Forms.Label lblHeaderTitulo;
         private System.Windows.Forms.Label lblHeaderSubtitulo;
         private System.Windows.Forms.Label lblHeaderUsuario;
+        private System.Windows.Forms.Button btnHeaderCambiarPassword;
         private System.Windows.Forms.Button btnHeaderCerrarSesion;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem;
@@ -1060,9 +1047,6 @@ namespace MiniSistemaFacturacion.Forms
         private System.Windows.Forms.ToolStripMenuItem reportesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem administracionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuariosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sesionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cambiarPasswordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusUsuario;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusSpring;

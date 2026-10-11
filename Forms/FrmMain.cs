@@ -55,6 +55,11 @@ namespace MiniSistemaFacturacion.Forms
             {
                 btnHeaderCerrarSesion.Click += (s, e) => cerrarSesionToolStripMenuItem_Click(s, e);
             }
+
+            if (btnHeaderCambiarPassword != null)
+            {
+                btnHeaderCambiarPassword.Click += (s, e) => AbrirCambiarPassword();
+            }
         }
 
         private void VincularCard(Panel card, EventHandler onClick)
@@ -266,36 +271,19 @@ namespace MiniSistemaFacturacion.Forms
             }
         }
 
-        private void cambiarPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AbrirCambiarPassword()
         {
             if (!SesionActual.EsAutenticado) return;
 
-            string passActual = Microsoft.VisualBasic.Interaction.InputBox(
-                "Ingrese su contraseña actual:", "Cambio de Contraseña", "");
-            if (string.IsNullOrEmpty(passActual)) return;
-
-            string passNueva = Microsoft.VisualBasic.Interaction.InputBox(
-                "Ingrese su nueva contraseña (mínimo 6 caracteres):", "Cambio de Contraseña", "");
-            if (string.IsNullOrEmpty(passNueva)) return;
-
-            string passConfirmar = Microsoft.VisualBasic.Interaction.InputBox(
-                "Confirme su nueva contraseña:", "Cambio de Contraseña", "");
-            if (passNueva != passConfirmar)
+            using (var frm = new FrmCambiarPassword())
             {
-                MessageBox.Show("Las contraseñas no coinciden.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                frm.ShowDialog(this);
             }
+        }
 
-            try
-            {
-                var mgr = new UsuarioManager();
-                mgr.CambiarPassword(SesionActual.UsuarioLogueado.ID_Usuario, passNueva, passActual, esAdminRestableciendo: false);
-                MessageBox.Show("Su contraseña ha sido modificada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error al Cambiar Contraseña", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        private void cambiarPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirCambiarPassword();
         }
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -322,8 +310,11 @@ namespace MiniSistemaFacturacion.Forms
                 {
                     lblHeaderUsuario.Text = $"👤 {SesionActual.NombreUsuario} ({SesionActual.Rol})";
                 }
+                if (btnHeaderCambiarPassword != null)
+                {
+                    btnHeaderCambiarPassword.Visible = true;
+                }
                 lblStatusUsuario.Text = $"👤 Sesión: {SesionActual.NombreUsuario} ({SesionActual.NombreCompleto}) | Rol: {SesionActual.Rol}";
-                sesionToolStripMenuItem.Text = $"👤 {SesionActual.NombreUsuario} ({SesionActual.Rol})";
 
                 bool esAdmin = SesionActual.EsAdministrador;
                 administracionToolStripMenuItem.Visible = esAdmin;
@@ -338,6 +329,7 @@ namespace MiniSistemaFacturacion.Forms
             {
                 this.Text = "Mini-Sistema de Facturación";
                 if (lblHeaderUsuario != null) lblHeaderUsuario.Text = "No autenticado";
+                if (btnHeaderCambiarPassword != null) btnHeaderCambiarPassword.Visible = false;
                 lblStatusUsuario.Text = "No autenticado";
                 administracionToolStripMenuItem.Visible = false;
                 configuracionEmpresaToolStripMenuItem.Visible = false;

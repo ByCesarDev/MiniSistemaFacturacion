@@ -218,6 +218,8 @@ namespace MiniSistemaFacturacion.Utils
             btn.UseVisualStyleBackColor = false;
         }
 
+        public static void EstilizarBotonCancelar(Button btn) => EstilizarBotonSecundario(btn);
+
         /// <summary>
         /// Estiliza un botón para herramientas / filtros (Buscar, Refrescar).
         /// </summary>

@@ -349,21 +349,9 @@ namespace MiniSistemaFacturacion.Forms
         {
             if (_usuarioSeleccionado == null) return;
 
-            string prompt = $"Ingrese la nueva contraseña para el usuario '{_usuarioSeleccionado.NombreUsuario}' (mínimo 6 caracteres):";
-            string nuevaClave = Interaction.InputBox(prompt, "Restablecer Contraseña", "");
-
-            if (string.IsNullOrEmpty(nuevaClave))
-                return; // Usuario canceló
-
-            try
+            using (var frm = new FrmCambiarPassword(_usuarioSeleccionado))
             {
-                _usuarioManager.CambiarPassword(_usuarioSeleccionado.ID_Usuario, nuevaClave, esAdminRestableciendo: true);
-                MessageBox.Show($"La contraseña del usuario '{_usuarioSeleccionado.NombreUsuario}' ha sido restablecida exitosamente.",
-                                "Contraseña Actualizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error al Restablecer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                frm.ShowDialog(this);
             }
         }
 
