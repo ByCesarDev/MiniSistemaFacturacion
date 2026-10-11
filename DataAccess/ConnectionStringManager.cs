@@ -71,21 +71,43 @@ namespace MiniSistemaFacturacion.DataAccess
                 var directoryInfo = new DirectoryInfo(dirPath);
                 var directorySecurity = directoryInfo.GetAccessControl();
 
+                var systemSid = new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null);
+                var adminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
                 var usersSid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
-                var rule = new FileSystemAccessRule(
-                    usersSid,
-                    FileSystemRights.Modify,
+
+                // Proteger herencia preservando las reglas de sistema
+                directorySecurity.SetAccessRuleProtection(true, true);
+
+                // SYSTEM y Administradores: Control Total para gestionar y mantener
+                directorySecurity.ResetAccessRule(new FileSystemAccessRule(
+                    systemSid,
+                    FileSystemRights.FullControl,
                     InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
                     PropagationFlags.None,
-                    AccessControlType.Allow);
+                    AccessControlType.Allow));
 
-                directorySecurity.AddAccessRule(rule);
+                directorySecurity.ResetAccessRule(new FileSystemAccessRule(
+                    adminSid,
+                    FileSystemRights.FullControl,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                    PropagationFlags.None,
+                    AccessControlType.Allow));
+
+                // Usuarios Estándar: Solo lectura (pueden leer para conectar la app, no alterar ni sustituir configuración)
+                directorySecurity.PurgeAccessRules(usersSid);
+                directorySecurity.AddAccessRule(new FileSystemAccessRule(
+                    usersSid,
+                    FileSystemRights.ReadAndExecute,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                    PropagationFlags.None,
+                    AccessControlType.Allow));
+
                 directoryInfo.SetAccessControl(directorySecurity);
             }
             catch
             {
                 // Si el proceso actual no posee permisos administrativos para modificar ACLs,
-                // continuamos sin fallar para permitir la escritura estándar.
+                // no bloqueamos el flujo para permitir la operación.
             }
         }
 
@@ -102,16 +124,10 @@ namespace MiniSistemaFacturacion.DataAccess
                 }
                 AsegurarPermisosDirectorio(dir);
 
-                byte[] data;
-                if (protectWithDpapi)
-                {
-                    byte[] plain = Encoding.UTF8.GetBytes(connectionString);
-                    data = ProtectedData.Protect(plain, Entropy, DataProtectionScope.LocalMachine);
-                }
-                else
-                {
-                    data = Encoding.UTF8.GetBytes(connectionString);
-                }
+                // Cifrado mandatorio con DPAPI a nivel de máquina y entropía dedicada.
+                // Previene inspección o manipulación no autorizada sin importar el modo de autenticación.
+                byte[] plain = Encoding.UTF8.GetBytes(connectionString);
+                byte[] data = ProtectedData.Protect(plain, Entropy, DataProtectionScope.LocalMachine);
 
                 File.WriteAllBytes(filePath, data);
                 return true;
