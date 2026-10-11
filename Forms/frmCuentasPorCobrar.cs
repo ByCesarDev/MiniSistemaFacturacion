@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using MiniSistemaFacturacion.BusinessLogic;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -22,6 +23,8 @@ namespace MiniSistemaFacturacion.Forms
 
         private void frmCuentasPorCobrar_Load(object sender, EventArgs e)
         {
+            UITheme.AplicarTemaFormulario(this);
+            UITheme.EstilizarDataGridView(dgvPendientes);
             CargarFacturas();
         }
 
@@ -37,19 +40,63 @@ namespace MiniSistemaFacturacion.Forms
 
                 if (!string.IsNullOrWhiteSpace(filtro))
                 {
-                    
                     sql += $" AND (c.Nombre LIKE '%{filtro}%' OR f.NumeroFactura LIKE '%{filtro}%')";
                 }
 
                 dgvPendientes.DataSource = DbHelper.Instance.ExecuteQuery(sql);
+
+                // Configurar apariencia de columnas
+                if (dgvPendientes.Columns.Contains("ID_Factura"))
+                    dgvPendientes.Columns["ID_Factura"].Visible = false;
+
+                if (dgvPendientes.Columns.Contains("NumeroFactura"))
+                {
+                    dgvPendientes.Columns["NumeroFactura"].HeaderText = "N° Factura";
+                    dgvPendientes.Columns["NumeroFactura"].Width = 120;
+                }
+
+                if (dgvPendientes.Columns.Contains("Cliente"))
+                {
+                    dgvPendientes.Columns["Cliente"].HeaderText = "Cliente";
+                    dgvPendientes.Columns["Cliente"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
+
+                if (dgvPendientes.Columns.Contains("Fecha"))
+                {
+                    dgvPendientes.Columns["Fecha"].HeaderText = "Fecha";
+                    dgvPendientes.Columns["Fecha"].DefaultCellStyle.Format = "dd/MM/yyyy";
+                    dgvPendientes.Columns["Fecha"].Width = 100;
+                }
+
+                if (dgvPendientes.Columns.Contains("TotalNeto"))
+                {
+                    dgvPendientes.Columns["TotalNeto"].HeaderText = "Total Neto";
+                    dgvPendientes.Columns["TotalNeto"].DefaultCellStyle.Format = "N2";
+                    dgvPendientes.Columns["TotalNeto"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dgvPendientes.Columns["TotalNeto"].Width = 120;
+                }
+
+                if (dgvPendientes.Columns.Contains("SaldoPendiente"))
+                {
+                    dgvPendientes.Columns["SaldoPendiente"].HeaderText = "Saldo Pendiente";
+                    dgvPendientes.Columns["SaldoPendiente"].DefaultCellStyle.Format = "N2";
+                    dgvPendientes.Columns["SaldoPendiente"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dgvPendientes.Columns["SaldoPendiente"].DefaultCellStyle.Font = UITheme.FontBodyBold;
+                    dgvPendientes.Columns["SaldoPendiente"].DefaultCellStyle.ForeColor = Color.FromArgb(180, 50, 0);
+                    dgvPendientes.Columns["SaldoPendiente"].Width = 130;
+                }
+
+                if (dgvPendientes.Columns.Contains("Estado"))
+                {
+                    dgvPendientes.Columns["Estado"].HeaderText = "Estado";
+                    dgvPendientes.Columns["Estado"].Width = 90;
+                }
             }
             catch (Exception ex)
             {
-               
                 Console.WriteLine("Error en búsqueda: " + ex.Message);
             }
         }
-
 
         private void btnRegistrarPago_Click_1(object sender, EventArgs e)
         {
@@ -71,15 +118,18 @@ namespace MiniSistemaFacturacion.Forms
             }
             else
             {
-                MessageBox.Show("Seleccione una factura de la lista.");
+                MessageBox.Show("Por favor, seleccione una factura de la lista para registrar el abono o pago.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-
         }
 
         private void txtBusqueda_TextChanged(object sender, EventArgs e)
         {
             CargarFacturas(txtBusqueda.Text.Trim());
         }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
-}
+}

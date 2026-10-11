@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Utils;
 using EmpresaConfig = MiniSistemaFacturacion.Configuration.EmpresaConfig;
 
 namespace MiniSistemaFacturacion.Forms
@@ -26,6 +27,14 @@ namespace MiniSistemaFacturacion.Forms
 
         private void FrmConfiguracionEmpresa_Load(object sender, EventArgs e)
         {
+            UITheme.AplicarTemaFormulario(this);
+            UITheme.EstilizarGroupBox(groupBoxDatosEmpresa);
+            UITheme.EstilizarGroupBox(groupBoxConfiguracionFiscal);
+            UITheme.EstilizarBotonPrimario(btnGuardar);
+            UITheme.EstilizarBotonHerramienta(btnExaminarRuta);
+            UITheme.EstilizarBotonHerramienta(btnRestablecer);
+            UITheme.EstilizarBotonSecundario(btnCancelar);
+
             CargarConfiguracionActual();
         }
 

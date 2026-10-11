@@ -1,7 +1,7 @@
 # Master Plan — Sistema de Usuarios y Seguridad para MiniSistemaFacturacion
 
-> **Estado general del proyecto:** En progreso (Fases 1 y 2 completadas)  
-> **Objetivo:** Evolucionar el proyecto de *Programación III* a los estándares funcionales y de seguridad de *Ingeniería de Software II*, sin reescribir módulos existentes ni cambiar de tecnología base.
+> **Estado general del proyecto:** Fases 1 a 7 completadas (100% Funcional, Seguro y con Interfaz Modernizada)  
+> **Objetivo:** Evolucionar el proyecto de *Programación III* a los estándares funcionales y de seguridad de *Ingeniería de Software II*, modernizando integralmente toda la interfaz de usuario con un diseño corporativo Slate Navy sin reescribir módulos existentes ni romper contratos.
 
 ---
 
@@ -53,18 +53,23 @@ MiniSistemaFacturacion/
 │   └── SesionActual.cs                 [x] CREADO (Fase 2)
 ├── Database/
 │   └── 04_Usuarios.sql                 [x] CREADO Y APLICADO (Fase 1)
+├── Utils/
+│   ├── DesignModeHelper.cs             [x] EXISTENTE
+│   └── UITheme.cs                      [x] CREADO (Fase 7 - Sistema de Diseño Corporativo Slate Navy)
 ├── Forms/
-│   ├── FrmLogin.cs                     [x] CREADO (Fase 3)
-│   ├── FrmLogin.Designer.cs            [x] CREADO (Fase 3)
-│   ├── FrmLogin.resx                   [x] CREADO (Fase 3)
-│   ├── FrmUsuarios.cs                  [x] CREADO (Fase 4)
-│   ├── FrmUsuarios.Designer.cs         [x] CREADO (Fase 4)
-│   ├── FrmUsuarios.resx                [x] CREADO (Fase 4)
-│   ├── FrmMain.cs                      [x] MODIFICADO (Fase 5)
-│   └── FrmMain.Designer.cs             [x] MODIFICADO (Fase 5)
+│   ├── FrmLogin.cs / .Designer.cs      [x] CREADO (Fase 3) / MODERNIZADO (Fase 7)
+│   ├── FrmUsuarios.cs / .Designer.cs   [x] CREADO (Fase 4) / MODERNIZADO (Fase 7)
+│   ├── FrmMain.cs / .Designer.cs       [x] MODIFICADO (Fase 5 y 7)
+│   ├── FrmClientes suite (5 forms)     [x] MODERNIZADO (Fase 7)
+│   ├── FrmProductos suite (2 forms)    [x] MODERNIZADO (Fase 7)
+│   ├── Facturación suite (2 forms)     [x] MODERNIZADO (Fase 7)
+│   ├── Cuentas por Cobrar & Pagos      [x] MODERNIZADO (Fase 7)
+│   ├── FrmConfiguracionEmpresa         [x] MODERNIZADO (Fase 7)
+│   ├── FrmReportes                     [x] MODERNIZADO (Fase 7)
+│   └── FrmVistaPreviaPdf               [x] MODERNIZADO (Fase 7)
 ├── Program.cs                          [x] ACTUALIZADO (Fase 3)
 ├── App.config                          [x] ACTUALIZADO (Tasa 18%)
-└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2, 3 y 4)
+└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2, 3, 4 y 7)
 ```
 
 ---
@@ -149,7 +154,24 @@ MiniSistemaFacturacion/
 - [x] **REG-04:** Probar ciclo de sesión en memoria y control de reinicio / relogin.
 - [x] **REG-05:** Auditoría en base de datos verificada.
 - [x] **DOC-01:** Documentación y checkpoints actualizados en [masterplan.md](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/masterplan.md).
-- [x] **GIT-06:** Commit de cierre y validación final.
+- [x] **GIT-06:** Commit de cierre y validación final (`149f1db`).
+
+---
+
+### 🟢 Checkpoint 7: Rediseño y Modernización Integral de Interfaces (UI/UX Slate Navy) (Completado)
+- [x] **UI-THEME-01:** Creación del sistema de diseño unificado [Utils/UITheme.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Utils/UITheme.cs) con paleta Slate Navy (`#253959`), tipografía `Segoe UI`, botones planos redondeados, sombras sutiles y estilos de grilla consistentes.
+- [x] **UI-CLI-01:** Rediseño completo de la suite de Clientes: [FrmClientes](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmClientes.Designer.cs), [FrmAgregarCliente](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmAgregarCliente.Designer.cs), [FrmEditarCliente](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmEditarCliente.Designer.cs), [FrmBusquedaClientes](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmBusquedaClientes.Designer.cs) y [FrmSelectorClientes](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmSelectorClientes.cs).
+- [x] **UI-PROD-01:** Rediseño del Catálogo de Productos y Búsqueda: [FrmProductos](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmProductos.Designer.cs) y [FrmBusquedaProductos](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmBusquedaProductos.Designer.cs).
+- [x] **UI-FACT-01:** Rediseño del Módulo de Facturación y Cobros:
+  - [frmFacturacion](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/frmFacturacion.Designer.cs): Header visual, tarjeta de cliente y comprobante, grilla moderna, panel de totales y atajos.
+  - [FrmBusquedaFacturas](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmBusquedaFacturas.cs): Filtros limpios, tabla estilizada y visor rápido.
+  - [frmCuentasPorCobrar](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/frmCuentasPorCobrar.Designer.cs): Grilla moderna de saldos y alertas.
+  - [frmRegistrarPago](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/frmRegistrarPago.Designer.cs): Diálogo modal centrado con tarjeta de saldo y botones modernos.
+- [x] **UI-CFG-01:** Rediseño de Configuración de Empresa [FrmConfiguracionEmpresa](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmConfiguracionEmpresa.Designer.cs): Pestañas organizadas por datos corporativos y parámetros fiscales.
+- [x] **UI-REP-01:** Rediseño del Dashboard de Reportes [FrmReportes](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmReportes.Designer.cs): Tarjetas de métricas para inventario y cuentas por cobrar, y tabla de deudores.
+- [x] **UI-PDF-01:** Rediseño del Visor de Facturas PDF [FrmVistaPreviaPdf](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmVistaPreviaPdf.cs): Barra superior limpia, lienzo centrado e integración con WebView2.
+- [x] **UI-SEC-01:** Integración armoniosa con el sistema de autenticación: [FrmLogin](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmLogin.Designer.cs), [FrmUsuarios](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmUsuarios.Designer.cs) y [FrmMain](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmMain.Designer.cs).
+- [x] **UI-BLD-01:** Verificación de compilación: 0 advertencias, 0 errores, integración con el compilador limpia y arranque verificado.
 
 ---
 
@@ -198,4 +220,8 @@ Progreso actual: **12 / 12 aprobadas (100% verificado contra SQL Server y ensamb
 | `746c39f` | **Fase 3** | `feat(fase-3): pantalla de login frmlogin, asistente inicial y control en program.cs` |
 | `413a6ae` | **Fase 4** | `feat(fase-4): formulario frmusuarios con datagridview, crud y reseteo de claves` |
 | `ba3a438` | **Fase 5** | `feat(fase-5): integracion de permisos, menu de administracion, logout y statusstrip en frmmain` |
-| `master` | **Fase 6** | `test(fase-6): bateria de pruebas de aceptacion superada y masterplan completado` |
+| `d8c8472` | **Fase 6** | `test(fase-6): bateria de pruebas de aceptacion superada 12/12 y masterplan completado` |
+| `01c8367` | **Fase 7** | `feat(ui): modernizacion integral de interfaces con UITheme Slate Navy` |
+
+
+

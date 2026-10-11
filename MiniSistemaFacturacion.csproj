@@ -232,6 +232,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utils\DesignModeHelper.cs" />
+    <Compile Include="Utils\UITheme.cs" />
     <!-- NEW CLIENT FORMS -->
     <Compile Include="Forms\FrmAgregarCliente.cs">
       <SubType>Form</SubType>

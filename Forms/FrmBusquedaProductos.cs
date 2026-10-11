@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -46,6 +47,7 @@ namespace MiniSistemaFacturacion.Forms
 
         private void ConfigurarDataGridView()
         {
+            UITheme.EstilizarDataGridView(dgvProductos);
             // Limpiar columnas existentes
             dgvProductos.AutoGenerateColumns = false;
             dgvProductos.Columns.Clear();

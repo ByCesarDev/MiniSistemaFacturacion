@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -31,13 +32,9 @@ namespace MiniSistemaFacturacion.Forms
 
         private void ConfigurarGrid()
         {
+            UITheme.EstilizarDataGridView(dgvProductos);
             dgvProductos.AutoGenerateColumns = true;
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProductos.MultiSelect = false;
-            dgvProductos.ReadOnly = true;
-            dgvProductos.AllowUserToAddRows = false;
-            dgvProductos.AllowUserToDeleteRows = false;
         }
 
         private void FormatearGrid()
@@ -74,9 +71,6 @@ namespace MiniSistemaFacturacion.Forms
                 if (dgvProductos.Columns["PrecioUnitario"] != null)
                     dgvProductos.Columns["PrecioUnitario"].DefaultCellStyle.Format = "N2";
             }
-
-            dgvProductos.DefaultCellStyle.Font = new Font("Arial", 9F, FontStyle.Regular);
-            dgvProductos.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 9F, FontStyle.Bold);
 
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;

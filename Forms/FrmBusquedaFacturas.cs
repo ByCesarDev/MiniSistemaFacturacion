@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.BusinessLogic;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -44,6 +45,13 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                UITheme.AplicarTemaFormulario(this);
+                UITheme.EstilizarGroupBox(grpFiltros);
+                UITheme.EstilizarBotonPrimario(btnBuscar);
+                UITheme.EstilizarBotonHerramienta(btnLimpiar);
+                UITheme.EstilizarBotonHerramienta(btnBuscarCliente);
+                UITheme.EstilizarBotonSecundario(btnCerrar);
+
                 // Configurar DataGridView
                 ConfigurarDataGridView();
                 
@@ -134,6 +142,7 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                UITheme.EstilizarDataGridView(dgvFacturas);
                 // Configurar columnas
                 dgvFacturas.AutoGenerateColumns = false;
                 dgvFacturas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -348,6 +357,9 @@ namespace MiniSistemaFacturacion.Forms
         #region Designer Generated Code
 
         private System.ComponentModel.IContainer components = null;
+        private Panel panelHeader;
+        private Label lblTituloHeader;
+        private Label lblSubtituloHeader;
         private GroupBox grpFiltros;
         private Label lblNumeroFactura;
         private TextBox txtNumeroFactura;
@@ -376,6 +388,9 @@ namespace MiniSistemaFacturacion.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBusquedaFacturas));
+            this.panelHeader = new System.Windows.Forms.Panel();
+            this.lblTituloHeader = new System.Windows.Forms.Label();
+            this.lblSubtituloHeader = new System.Windows.Forms.Label();
             this.grpFiltros = new System.Windows.Forms.GroupBox();
             this.lblNumeroFactura = new System.Windows.Forms.Label();
             this.txtNumeroFactura = new System.Windows.Forms.TextBox();
@@ -391,9 +406,43 @@ namespace MiniSistemaFacturacion.Forms
             this.dgvFacturas = new System.Windows.Forms.DataGridView();
             this.lblResultados = new System.Windows.Forms.Label();
             this.btnCerrar = new System.Windows.Forms.Button();
+            this.panelHeader.SuspendLayout();
             this.grpFiltros.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFacturas)).BeginInit();
             this.SuspendLayout();
+            // 
+            // panelHeader
+            // 
+            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(57)))), ((int)(((byte)(89)))));
+            this.panelHeader.Controls.Add(this.lblSubtituloHeader);
+            this.panelHeader.Controls.Add(this.lblTituloHeader);
+            this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelHeader.Name = "panelHeader";
+            this.panelHeader.Size = new System.Drawing.Size(1184, 68);
+            this.panelHeader.TabIndex = 0;
+            // 
+            // lblSubtituloHeader
+            // 
+            this.lblSubtituloHeader.AutoSize = true;
+            this.lblSubtituloHeader.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtituloHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(215)))), ((int)(((byte)(235)))));
+            this.lblSubtituloHeader.Location = new System.Drawing.Point(18, 38);
+            this.lblSubtituloHeader.Name = "lblSubtituloHeader";
+            this.lblSubtituloHeader.Size = new System.Drawing.Size(434, 15);
+            this.lblSubtituloHeader.TabIndex = 1;
+            this.lblSubtituloHeader.Text = "Consulta histórica de ventas, filtrado por cliente, rango de fechas y detalle";
+            // 
+            // lblTituloHeader
+            // 
+            this.lblTituloHeader.AutoSize = true;
+            this.lblTituloHeader.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloHeader.ForeColor = System.Drawing.Color.White;
+            this.lblTituloHeader.Location = new System.Drawing.Point(16, 11);
+            this.lblTituloHeader.Name = "lblTituloHeader";
+            this.lblTituloHeader.Size = new System.Drawing.Size(273, 25);
+            this.lblTituloHeader.TabIndex = 0;
+            this.lblTituloHeader.Text = "Búsqueda y Consulta de Facturas";
             // 
             // grpFiltros
             // 
@@ -410,12 +459,14 @@ namespace MiniSistemaFacturacion.Forms
             this.grpFiltros.Controls.Add(this.dtpFechaHasta);
             this.grpFiltros.Controls.Add(this.btnBuscar);
             this.grpFiltros.Controls.Add(this.btnLimpiar);
-            this.grpFiltros.Location = new System.Drawing.Point(12, 12);
+            this.grpFiltros.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpFiltros.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.grpFiltros.Location = new System.Drawing.Point(12, 78);
             this.grpFiltros.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpFiltros.Name = "grpFiltros";
             this.grpFiltros.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grpFiltros.Size = new System.Drawing.Size(1160, 100);
-            this.grpFiltros.TabIndex = 0;
+            this.grpFiltros.Size = new System.Drawing.Size(1160, 105);
+            this.grpFiltros.TabIndex = 1;
             this.grpFiltros.TabStop = false;
             this.grpFiltros.Text = "Filtros de Búsqueda";
             this.grpFiltros.Enter += new System.EventHandler(this.grpFiltros_Enter);
@@ -532,48 +583,51 @@ namespace MiniSistemaFacturacion.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvFacturas.ColumnHeadersHeight = 29;
-            this.dgvFacturas.Location = new System.Drawing.Point(12, 121);
+            this.dgvFacturas.Location = new System.Drawing.Point(12, 192);
             this.dgvFacturas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvFacturas.Name = "dgvFacturas";
             this.dgvFacturas.RowHeadersWidth = 51;
-            this.dgvFacturas.Size = new System.Drawing.Size(1160, 400);
-            this.dgvFacturas.TabIndex = 1;
+            this.dgvFacturas.Size = new System.Drawing.Size(1160, 340);
+            this.dgvFacturas.TabIndex = 2;
             this.dgvFacturas.DoubleClick += new System.EventHandler(this.dgvFacturas_DoubleClick);
             // 
             // lblResultados
             // 
-            this.lblResultados.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResultados.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblResultados.AutoSize = true;
-            this.lblResultados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResultados.Location = new System.Drawing.Point(12, 530);
+            this.lblResultados.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblResultados.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.lblResultados.Location = new System.Drawing.Point(12, 555);
             this.lblResultados.Name = "lblResultados";
-            this.lblResultados.Size = new System.Drawing.Size(205, 18);
-            this.lblResultados.TabIndex = 2;
+            this.lblResultados.Size = new System.Drawing.Size(142, 15);
+            this.lblResultados.TabIndex = 3;
             this.lblResultados.Text = "Listo para buscar facturas";
             // 
             // btnCerrar
             // 
             this.btnCerrar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCerrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCerrar.Location = new System.Drawing.Point(1069, 550);
+            this.btnCerrar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCerrar.Location = new System.Drawing.Point(1052, 547);
             this.btnCerrar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCerrar.Name = "btnCerrar";
-            this.btnCerrar.Size = new System.Drawing.Size(100, 30);
-            this.btnCerrar.TabIndex = 3;
+            this.btnCerrar.Size = new System.Drawing.Size(120, 32);
+            this.btnCerrar.TabIndex = 4;
             this.btnCerrar.Text = "Cerrar";
             this.btnCerrar.UseVisualStyleBackColor = true;
             this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
             // FrmBusquedaFacturas
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1184, 592);
             this.Controls.Add(this.btnCerrar);
             this.Controls.Add(this.lblResultados);
             this.Controls.Add(this.dgvFacturas);
             this.Controls.Add(this.grpFiltros);
+            this.Controls.Add(this.panelHeader);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(1199, 630);
@@ -581,6 +635,8 @@ namespace MiniSistemaFacturacion.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Buscar Facturas";
             this.Load += new System.EventHandler(this.FrmBusquedaFacturas_Load);
+            this.panelHeader.ResumeLayout(false);
+            this.panelHeader.PerformLayout();
             this.grpFiltros.ResumeLayout(false);
             this.grpFiltros.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFacturas)).EndInit();

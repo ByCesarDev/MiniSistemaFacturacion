@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.BusinessLogic;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -20,13 +21,15 @@ namespace MiniSistemaFacturacion.Forms
         public frmRegistrarPago(int idFactura, string numFactura, decimal saldo)
         {
             InitializeComponent();
+            UITheme.AplicarTemaFormulario(this);
+            UITheme.EstilizarBotonExito(btnGuardar);
+            UITheme.EstilizarBotonSecundario(btnCancelar);
+
             _idFactura = idFactura;
             _saldoPendiente = saldo;
 
-            
             lblInfoFactura.Text = $"Factura: {numFactura} | Saldo Actual: ${saldo:N2}";
 
-            
             cmbFormaPago.Items.AddRange(new string[] { "Efectivo", "Tarjeta Credito", "Tarjeta Debito", "Cheque", "Transferencia" });
             cmbFormaPago.SelectedIndex = 0;
             txtReferencia.Enabled = false;

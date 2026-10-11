@@ -15,6 +15,7 @@ using Microsoft.Web.WebView2.Core;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.Services;
 using MiniSistemaFacturacion.BusinessLogic;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -67,6 +68,12 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                UITheme.AplicarTemaFormulario(this);
+                UITheme.EstilizarBotonPrimario(btnGuardar);
+                UITheme.EstilizarBotonHerramienta(btnEmail);
+                UITheme.EstilizarBotonHerramienta(btnEditar);
+                UITheme.EstilizarBotonSecundario(btnCancelar);
+
                 this.Text = $"Vista Previa - Factura {_factura.NumeroFactura}";
                 
                 // Inicializar WebView2
@@ -495,7 +502,10 @@ namespace MiniSistemaFacturacion.Forms
 
         #region Designer Generated Code
 
-        private WebView2 webViewPdf;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webViewPdf;
+        private Panel panelHeader;
+        private Label lblTituloHeader;
+        private Label lblSubtituloHeader;
         private Label lblInfo;
         private Button btnGuardar;
         private Button btnEmail;
@@ -504,14 +514,51 @@ namespace MiniSistemaFacturacion.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmVistaPreviaPdf));
+            this.panelHeader = new System.Windows.Forms.Panel();
+            this.lblTituloHeader = new System.Windows.Forms.Label();
+            this.lblSubtituloHeader = new System.Windows.Forms.Label();
             this.webViewPdf = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.lblInfo = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnEmail = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
+            this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPdf)).BeginInit();
             this.SuspendLayout();
+            // 
+            // panelHeader
+            // 
+            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(57)))), ((int)(((byte)(89)))));
+            this.panelHeader.Controls.Add(this.lblSubtituloHeader);
+            this.panelHeader.Controls.Add(this.lblTituloHeader);
+            this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelHeader.Name = "panelHeader";
+            this.panelHeader.Size = new System.Drawing.Size(1045, 60);
+            this.panelHeader.TabIndex = 0;
+            // 
+            // lblSubtituloHeader
+            // 
+            this.lblSubtituloHeader.AutoSize = true;
+            this.lblSubtituloHeader.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtituloHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(215)))), ((int)(((byte)(235)))));
+            this.lblSubtituloHeader.Location = new System.Drawing.Point(18, 33);
+            this.lblSubtituloHeader.Name = "lblSubtituloHeader";
+            this.lblSubtituloHeader.Size = new System.Drawing.Size(350, 15);
+            this.lblSubtituloHeader.TabIndex = 1;
+            this.lblSubtituloHeader.Text = "Formato ticket térmico estándar 80mm - Facturación y comprobantes";
+            // 
+            // lblTituloHeader
+            // 
+            this.lblTituloHeader.AutoSize = true;
+            this.lblTituloHeader.Font = new System.Drawing.Font("Segoe UI", 12.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloHeader.ForeColor = System.Drawing.Color.White;
+            this.lblTituloHeader.Location = new System.Drawing.Point(16, 9);
+            this.lblTituloHeader.Name = "lblTituloHeader";
+            this.lblTituloHeader.Size = new System.Drawing.Size(225, 23);
+            this.lblTituloHeader.TabIndex = 0;
+            this.lblTituloHeader.Text = "Vista Previa del Documento";
             // 
             // webViewPdf
             // 
@@ -521,12 +568,12 @@ namespace MiniSistemaFacturacion.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.webViewPdf.CreationProperties = null;
             this.webViewPdf.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webViewPdf.Location = new System.Drawing.Point(16, 15);
+            this.webViewPdf.Location = new System.Drawing.Point(16, 70);
             this.webViewPdf.Margin = new System.Windows.Forms.Padding(4);
             this.webViewPdf.MinimumSize = new System.Drawing.Size(400, 300);
             this.webViewPdf.Name = "webViewPdf";
-            this.webViewPdf.Size = new System.Drawing.Size(1013, 553);
-            this.webViewPdf.TabIndex = 0;
+            this.webViewPdf.Size = new System.Drawing.Size(1013, 500);
+            this.webViewPdf.TabIndex = 1;
             this.webViewPdf.ZoomFactor = 1D;
             // 
             // lblInfo
@@ -596,8 +643,9 @@ namespace MiniSistemaFacturacion.Forms
             // 
             // FrmVistaPreviaPdf
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1045, 667);
             this.Controls.Add(this.btnEditar);
             this.Controls.Add(this.btnCancelar);
@@ -605,6 +653,8 @@ namespace MiniSistemaFacturacion.Forms
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.webViewPdf);
+            this.Controls.Add(this.panelHeader);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1061, 703);
@@ -612,6 +662,8 @@ namespace MiniSistemaFacturacion.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Vista Previa PDF";
             this.Load += new System.EventHandler(this.FrmVistaPreviaPdf_Load);
+            this.panelHeader.ResumeLayout(false);
+            this.panelHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPdf)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

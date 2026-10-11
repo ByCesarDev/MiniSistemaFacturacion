@@ -11,6 +11,7 @@ using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.BusinessLogic;
 using MiniSistemaFacturacion.DataAccess;
 using MiniSistemaFacturacion.Services;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -71,6 +72,13 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                UITheme.AplicarTemaFormulario(this);
+                UITheme.EstilizarGroupBox(grpDatosFactura);
+                UITheme.EstilizarGroupBox(grpItem);
+                UITheme.EstilizarGroupBox(grpDetalle);
+                UITheme.EstilizarGroupBox(grpCondiciones);
+                UITheme.EstilizarGroupBox(grpTotales);
+
                 ConfigurarGridFactura();
                 CargarTiposComprobante();
                 CargarFormasPago();
@@ -91,6 +99,7 @@ namespace MiniSistemaFacturacion.Forms
 
         private void ConfigurarGridFactura()
         {
+            UITheme.EstilizarDataGridView(dgvDetalle);
             dgvDetalle.AutoGenerateColumns = false;
             dgvDetalle.Columns.Clear();
             
@@ -108,16 +117,19 @@ namespace MiniSistemaFacturacion.Forms
             colCantidad.Name = "Cantidad";
             colCantidad.HeaderText = "Cantidad";
             colCantidad.DataPropertyName = "Cantidad";
-            colCantidad.Width = 80;
+            colCantidad.Width = 90;
+            colCantidad.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             colCantidad.ReadOnly = false;
             dgvDetalle.Columns.Add(colCantidad);
 
             // Columna Precio Unitario
             var colPrecio = new DataGridViewTextBoxColumn();
             colPrecio.Name = "PrecioUnitarioVenta";
-            colPrecio.HeaderText = "Precio Unitario";
+            colPrecio.HeaderText = "Precio Unit.";
             colPrecio.DataPropertyName = "PrecioUnitarioVenta";
-            colPrecio.Width = 100;
+            colPrecio.Width = 120;
+            colPrecio.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            colPrecio.DefaultCellStyle.Format = "N2";
             colPrecio.ReadOnly = true;
             dgvDetalle.Columns.Add(colPrecio);
 
@@ -126,7 +138,9 @@ namespace MiniSistemaFacturacion.Forms
             colSubtotal.Name = "Subtotal";
             colSubtotal.HeaderText = "Subtotal";
             colSubtotal.DataPropertyName = "Subtotal";
-            colSubtotal.Width = 100;
+            colSubtotal.Width = 120;
+            colSubtotal.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            colSubtotal.DefaultCellStyle.Format = "N2";
             colSubtotal.ReadOnly = true;
             dgvDetalle.Columns.Add(colSubtotal);
         }

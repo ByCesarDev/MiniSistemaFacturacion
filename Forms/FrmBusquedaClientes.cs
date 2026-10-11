@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Models;
 using MiniSistemaFacturacion.DataAccess;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -167,13 +168,8 @@ namespace MiniSistemaFacturacion.Forms
             try
             {
                 // Configurar columnas
+                UITheme.EstilizarDataGridView(dgvClientes);
                 dgvClientes.AutoGenerateColumns = false;
-                dgvClientes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dgvClientes.MultiSelect = false;
-                dgvClientes.ReadOnly = true;
-                dgvClientes.AllowUserToAddRows = false;
-                dgvClientes.AllowUserToDeleteRows = false;
-                dgvClientes.RowHeadersVisible = false;
 
                 // Agregar columnas
                 dgvClientes.Columns.Clear();

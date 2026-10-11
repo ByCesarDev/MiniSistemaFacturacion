@@ -8,19 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveCharts;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
     public partial class FrmReportes : Form
     {
-        // Componentes del Dashboard (definidos en Designer)
-        // private Panel chartFacturasPeriodo;
-        // private Panel chartProductosMasVendidos;
-        // private Panel panelInventario;
-        // private Panel panelCuentasPorCobrar;
-        // private DataGridView dgvClientesDeuda;
-        // private TableLayoutPanel dashboardLayout;
-
         public FrmReportes()
         {
             InitializeComponent();
@@ -31,7 +24,9 @@ namespace MiniSistemaFacturacion.Forms
 
         private void FrmReportes_Load(object sender, EventArgs e)
         {
-            // Configuración adicional si es necesaria
+            UITheme.AplicarTemaFormulario(this);
+            UITheme.EstilizarDataGridView(dgvClientesDeuda);
+            UITheme.EstilizarBotonSecundario(btnCerrar);
         }
 
         #region Dashboard Methods

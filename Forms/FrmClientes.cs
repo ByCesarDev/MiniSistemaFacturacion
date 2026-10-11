@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.DataAccess;
 using MiniSistemaFacturacion.Models;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -44,12 +45,8 @@ namespace MiniSistemaFacturacion.Forms
 
         private void ConfigurarDataGridView()
         {
-            // Configurar columnas
+            UITheme.EstilizarDataGridView(dgvClientes);
             dgvClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvClientes.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
-            dgvClientes.RowHeadersVisible = false;
-            dgvClientes.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
-            dgvClientes.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvClientes.Columns.Clear();
 
             // Columna ID
