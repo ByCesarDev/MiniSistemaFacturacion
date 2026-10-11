@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.DataAccess;
@@ -11,14 +13,37 @@ namespace MiniSistemaFacturacion.Forms
     {
         private bool _passwordVisible = false;
         private string _cadenaProbadaValida = null;
+        private bool _parametroElevado = false;
 
-        public FrmConfigurarConexion()
+        public FrmConfigurarConexion(string servidor = null, string baseDatos = null, bool? windowsAuth = null, string usuario = null)
         {
             InitializeComponent();
             UITheme.AsignarIconoFormulario(this);
             btnGuardar.Enabled = false;
             btnInicializarBD.Enabled = false;
-            CargarConfiguracionActual();
+
+            if (!string.IsNullOrEmpty(servidor))
+            {
+                _parametroElevado = true;
+                txtServidor.Text = servidor;
+                txtBaseDatos.Text = string.IsNullOrEmpty(baseDatos) ? "MiniSistemaFacturacion" : baseDatos;
+                if (windowsAuth.HasValue && !windowsAuth.Value)
+                {
+                    rbSqlAuth.Checked = true;
+                    txtUsuario.Text = usuario ?? "";
+                }
+                else
+                {
+                    rbWindowsAuth.Checked = true;
+                }
+                ActualizarEstadoAutenticacion();
+            }
+            else
+            {
+                CargarConfiguracionActual();
+            }
+
+            ActualizarEstadoPermisos();
             SuscribirEventosCambioParametros();
         }
 
@@ -210,6 +235,14 @@ namespace MiniSistemaFacturacion.Forms
 
         private async void btnInicializarBD_Click(object sender, EventArgs e)
         {
+            if (!EsUsuarioAdministrador())
+            {
+                MessageBox.Show("La inicialización y aplicación de migraciones de la base de datos es una operación estrictamente administrativa.\n\n" +
+                                "Debe ejecutar el configurador como Administrador para aplicar cambios en el esquema.",
+                                "Permisos Insuficientes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             string servidor = txtServidor.Text.Trim();
             string bd = txtBaseDatos.Text.Trim();
 
@@ -292,6 +325,63 @@ namespace MiniSistemaFacturacion.Forms
         {
             try
             {
+                if (!EsUsuarioAdministrador())
+                {
+                    string servidor = txtServidor.Text.Trim();
+                    string bd = txtBaseDatos.Text.Trim();
+                    string auth = rbWindowsAuth.Checked ? "windows" : "sql";
+                    string usuario = txtUsuario.Text.Trim();
+
+                    var confirm = MessageBox.Show(
+                        "Para modificar la configuración de conexión de la empresa en este equipo, Windows requiere elevación de permisos administrativos.\n\n" +
+                        "Se abrirá una ventana de confirmación (UAC) conservando los parámetros que ha ingresado.\n\n" +
+                        "¿Desea continuar con la elevación administrativa?",
+                        "Elevación de Privilegios Requerida",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (confirm == DialogResult.Yes)
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = Application.ExecutablePath,
+                            Arguments = $"--config --server \"{servidor}\" --database \"{bd}\" --auth \"{auth}\" --user \"{usuario}\"",
+                            Verb = "runas",
+                            UseShellExecute = true
+                        };
+
+                        try
+                        {
+                            this.Hide();
+                            Process proc = Process.Start(psi);
+                            if (proc != null)
+                            {
+                                proc.WaitForExit();
+                                if (proc.ExitCode == 0)
+                                {
+                                    string nuevaCadena = ConnectionStringManager.GetConnectionString();
+                                    if (!string.IsNullOrEmpty(nuevaCadena) && ConnectionStringManager.IsValidConnectionString(nuevaCadena))
+                                    {
+                                        this.DialogResult = DialogResult.OK;
+                                        this.Close();
+                                        return;
+                                    }
+                                }
+                            }
+                            this.Show();
+                            return;
+                        }
+                        catch (System.ComponentModel.Win32Exception)
+                        {
+                            this.Show();
+                            MessageBox.Show("Operación cancelada por el usuario o elevación denegada. No se modificó la configuración.",
+                                            "Elevación Cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+                    }
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(_cadenaProbadaValida))
                 {
                     MessageBox.Show("Debe probar la conexión exitosamente antes de guardar la configuración.",
@@ -317,6 +407,7 @@ namespace MiniSistemaFacturacion.Forms
                     return;
                 }
 
+                Environment.ExitCode = 0;
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -324,6 +415,50 @@ namespace MiniSistemaFacturacion.Forms
             {
                 MessageBox.Show($"Error al guardar la configuración:\n{ex.Message}",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool EsUsuarioAdministrador()
+        {
+            try
+            {
+                using (var identity = WindowsIdentity.GetCurrent())
+                {
+                    var principal = new WindowsPrincipal(identity);
+                    return principal.IsInRole(WindowsBuiltInRole.Administrator);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void ActualizarEstadoPermisos()
+        {
+            if (!EsUsuarioAdministrador())
+            {
+                btnGuardar.Text = "🛡️ Guardar (Requiere Admin)";
+                lblEstadoIcono.Text = "ℹ️";
+                lblEstadoMensaje.Text = "Modo Consulta: Se requieren privilegios de Administrador para modificar la conexión a la base de datos.";
+                pnlEstado.BackColor = Color.FromArgb(241, 245, 249);
+                lblEstadoMensaje.ForeColor = Color.FromArgb(71, 85, 105);
+            }
+            else
+            {
+                btnGuardar.Text = "💾 Guardar y Conectar";
+                if (_parametroElevado)
+                {
+                    lblEstadoIcono.Text = "🛡️";
+                    lblEstadoMensaje.Text = "Sesión elevada como Administrador. Parámetros conservados. " +
+                                            (rbSqlAuth.Checked ? "Ingrese la contraseña SQL y pruebe la conexión antes de guardar." : "Pruebe la conexión antes de guardar.");
+                    pnlEstado.BackColor = Color.FromArgb(241, 245, 249);
+                    lblEstadoMensaje.ForeColor = Color.FromArgb(71, 85, 105);
+                    if (rbSqlAuth.Checked)
+                    {
+                        txtPassword.Focus();
+                    }
+                }
             }
         }
 

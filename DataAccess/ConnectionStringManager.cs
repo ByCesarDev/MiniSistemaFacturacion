@@ -52,10 +52,33 @@ namespace MiniSistemaFacturacion.DataAccess
                     byte[] descifrado = ProtectedData.Unprotect(bytes, Entropy, DataProtectionScope.LocalMachine);
                     return Encoding.UTF8.GetString(descifrado);
                 }
-                catch
+                catch (CryptographicException)
                 {
-                    // Fallback para texto plano si no estaba protegido
-                    return Encoding.UTF8.GetString(bytes);
+                    // DPAPI falló. No aceptar texto plano arbitrario a ciegas.
+                    // Comprobar estrictamente si se trata de una configuración legacy válida en texto plano para migrarla controladamente.
+                    string textoPlano = null;
+                    try
+                    {
+                        textoPlano = Encoding.UTF8.GetString(bytes);
+                    }
+                    catch { }
+
+                    if (!string.IsNullOrEmpty(textoPlano) && IsValidConnectionString(textoPlano))
+                    {
+                        // Migración controlada: Re-cifrar inmediatamente con DPAPI máquina y sellar el archivo
+                        try
+                        {
+                            byte[] cifradoMigrado = ProtectedData.Protect(Encoding.UTF8.GetBytes(textoPlano), Entropy, DataProtectionScope.LocalMachine);
+                            File.WriteAllBytes(filePath, cifradoMigrado);
+                        }
+                        catch { }
+
+                        return textoPlano;
+                    }
+
+                    // Si no es descifrable con DPAPI y no es una cadena válida conocida, rechazar terminantemente
+                    System.Diagnostics.Debug.WriteLine("Rechazo de configuración en ProgramData: fallo de integridad o cifrado.");
+                    return null;
                 }
             }
             catch

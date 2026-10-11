@@ -164,10 +164,102 @@ namespace MiniSistemaFacturacion.DataAccess
 
                 return status;
             }
+            catch (SqlException sqlEx)
+            {
+                status.ServidorAccesible = false;
+                status.MensajeError = DiagnosticarFalloSql(sqlEx, _serverName);
+                return status;
+            }
             catch (Exception ex)
             {
+                status.ServidorAccesible = false;
                 status.MensajeError = ex.Message;
                 return status;
+            }
+        }
+
+        private static string DiagnosticarFalloSql(SqlException sqlEx, string serverName)
+        {
+            string host = serverName ?? "localhost";
+            int port = 1433;
+            string instancia = "";
+            bool tieneInstancia = false;
+
+            if (host.Contains(","))
+            {
+                var partes = host.Split(',');
+                host = partes[0].Trim();
+                int.TryParse(partes[1].Trim(), out port);
+            }
+            else if (host.Contains(@"\"))
+            {
+                var partes = host.Split('\\');
+                host = partes[0].Trim();
+                instancia = partes[1].Trim();
+                tieneInstancia = true;
+            }
+
+            bool esLocal = string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase) ||
+                           string.Equals(host, "127.0.0.1", StringComparison.OrdinalIgnoreCase) ||
+                           string.Equals(host, ".", StringComparison.OrdinalIgnoreCase) ||
+                           string.Equals(host, "(local)", StringComparison.OrdinalIgnoreCase);
+
+            if (!esLocal)
+            {
+                bool tcpResponde = ProbarSocketTcp(host, port, 2500);
+
+                if (!tcpResponde)
+                {
+                    return $"No se pudo establecer comunicación TCP con '{host}:{port}'.\n\n" +
+                           "Diagnóstico de Red Local (LAN):\n" +
+                           "1. Verifique que el equipo servidor esté encendido y conectado a la misma red local.\n" +
+                           "2. Verifique que el protocolo TCP/IP esté HABILITADO en 'SQL Server Configuration Manager' en el servidor.\n" +
+                           "3. Verifique que el Firewall de Windows en el servidor permita tráfico entrante en el puerto TCP 1433 (Perfil Red Privada).\n" +
+                           (tieneInstancia ? $"4. Al utilizar instancia con nombre ({instancia}), compruebe que el servicio 'SQL Server Browser' (UDP 1434) esté iniciado en el servidor.\n" : "") +
+                           $"Detalle técnico ({sqlEx.Number}): {sqlEx.Message}";
+                }
+
+                if (sqlEx.Number == 18456)
+                {
+                    return $"Conexión TCP al servidor establecida con éxito en el puerto {port}, pero el inicio de sesión fue rechazado (Error 18456).\n\n" +
+                           "Diagnóstico de Credenciales:\n" +
+                           "1. Si utiliza Autenticación SQL, verifique que el usuario y la contraseña sean correctos.\n" +
+                           "2. Verifique que SQL Server en el servidor tenga configurado el 'Modo de Autenticación Mixto' (SQL Server y Windows).\n" +
+                           "3. Si utiliza Autenticación de Windows en red, compruebe que ambos equipos pertenezcan al mismo dominio o compartan cuentas válidas.\n" +
+                           $"Detalle técnico: {sqlEx.Message}";
+                }
+            }
+            else
+            {
+                if (sqlEx.Number == 26 || sqlEx.Number == 53 || sqlEx.Number == 40)
+                {
+                    return $"No se encontró la instancia local de SQL Server '{serverName}'.\n\n" +
+                           "Diagnóstico Local:\n" +
+                           "1. Verifique que el servicio 'SQL Server (SQLEXPRESS)' esté en ejecución (services.msc).\n" +
+                           "2. Verifique el nombre exacto de la instancia instalada.\n" +
+                           $"Detalle técnico: {sqlEx.Message}";
+                }
+            }
+
+            return $"Error al conectar con SQL Server ({sqlEx.Number}): {sqlEx.Message}";
+        }
+
+        private static bool ProbarSocketTcp(string host, int puerto, int timeoutMs)
+        {
+            try
+            {
+                using (var client = new System.Net.Sockets.TcpClient())
+                {
+                    var result = client.BeginConnect(host, puerto, null, null);
+                    bool success = result.AsyncWaitHandle.WaitOne(timeoutMs);
+                    if (!success) return false;
+                    client.EndConnect(result);
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 

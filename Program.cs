@@ -22,18 +22,66 @@ namespace MiniSistemaFacturacion
                 // Soporte para ejecución en modo configuración (--config, --setup)
                 if (args != null && args.Length > 0)
                 {
-                    foreach (string arg in args)
+                    bool modoConfig = false;
+                    bool modoInitConfig = false;
+                    string serverArg = null;
+                    string databaseArg = null;
+                    bool? authWindowsArg = null;
+                    string userArg = null;
+
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        if (arg.Equals("--config", StringComparison.OrdinalIgnoreCase) ||
-                            arg.Equals("--setup", StringComparison.OrdinalIgnoreCase) ||
-                            arg.Equals("-c", StringComparison.OrdinalIgnoreCase))
+                        string a = args[i];
+                        if (a.Equals("--config", StringComparison.OrdinalIgnoreCase) ||
+                            a.Equals("--setup", StringComparison.OrdinalIgnoreCase) ||
+                            a.Equals("-c", StringComparison.OrdinalIgnoreCase))
                         {
-                            using (var frmConfig = new FrmConfigurarConexion())
-                            {
-                                frmConfig.ShowDialog();
-                            }
-                            return;
+                            modoConfig = true;
                         }
+                        else if (a.Equals("--init-config", StringComparison.OrdinalIgnoreCase))
+                        {
+                            modoInitConfig = true;
+                        }
+                        else if (a.Equals("--server", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                        {
+                            serverArg = args[++i];
+                        }
+                        else if (a.Equals("--database", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                        {
+                            databaseArg = args[++i];
+                        }
+                        else if (a.Equals("--auth", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                        {
+                            string authVal = args[++i];
+                            authWindowsArg = authVal.Equals("windows", StringComparison.OrdinalIgnoreCase);
+                        }
+                        else if (a.Equals("--user", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                        {
+                            userArg = args[++i];
+                        }
+                    }
+
+                    if (modoInitConfig)
+                    {
+                        string srv = string.IsNullOrEmpty(serverArg) ? @"localhost\SQLEXPRESS" : serverArg;
+                        string db = string.IsNullOrEmpty(databaseArg) ? "MiniSistemaFacturacion" : databaseArg;
+                        bool integrated = !authWindowsArg.HasValue || authWindowsArg.Value;
+                        string usr = integrated ? "" : (userArg ?? "");
+
+                        string connStr = ConnectionStringManager.BuildConnectionString(srv, db, integrated, usr, "", 15);
+                        string err;
+                        bool saved = ConnectionStringManager.SaveConnectionString(connStr, !integrated, out err);
+                        Environment.Exit(saved ? 0 : 1);
+                        return;
+                    }
+
+                    if (modoConfig)
+                    {
+                        using (var frmConfig = new FrmConfigurarConexion(serverArg, databaseArg, authWindowsArg, userArg))
+                        {
+                            frmConfig.ShowDialog();
+                        }
+                        return;
                     }
                 }
 
@@ -104,6 +152,37 @@ namespace MiniSistemaFacturacion
                     {
                         var migrador = new DatabaseMigrationManager(connectionString);
                         var status = migrador.EvaluarEstado();
+
+                        if (status.ServidorAccesible && (!status.BaseDatosExiste || !status.EsquemaAlDia))
+                        {
+                            bool esAdmin = false;
+                            try
+                            {
+                                using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent())
+                                {
+                                    var principal = new System.Security.Principal.WindowsPrincipal(identity);
+                                    esAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                                }
+                            }
+                            catch { }
+
+                            if (!esAdmin)
+                            {
+                                string motivo = !status.BaseDatosExiste
+                                    ? "La base de datos del sistema aún no ha sido creada o inicializada en el servidor."
+                                    : "La base de datos requiere una actualización de esquema de versiones pendientes.";
+
+                                MessageBox.Show(
+                                    $"{motivo}\n\n" +
+                                    "Por seguridad e integridad contable, la inicialización y migración de esquemas deben " +
+                                    "ser aplicadas por el Administrador del sistema mediante el acceso directo 'Configurar Base de Datos'.\n\n" +
+                                    "La aplicación se cerrará.",
+                                    "Acción Administrativa Requerida",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                                return false;
+                            }
+                        }
 
                         if (!status.ServidorAccesible || !status.BaseDatosExiste || !status.EsquemaAlDia)
                         {
