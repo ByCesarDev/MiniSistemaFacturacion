@@ -205,20 +205,26 @@
     <Compile Include="Models\Factura.cs" />
     <Compile Include="Models\DetalleFactura.cs" />
     <Compile Include="Models\Pago.cs" />
+    <Compile Include="Models\RolUsuario.cs" />
+    <Compile Include="Models\Usuario.cs" />
     <!-- DATA ACCESS -->
     <Compile Include="DataAccess\DbHelper.cs" />
     <Compile Include="DataAccess\ConnectionStringManager.cs" />
     <Compile Include="DataAccess\ClienteDAL.cs" />
     <Compile Include="DataAccess\ProductoDAL.cs" />
+    <Compile Include="DataAccess\UsuarioDAL.cs" />
     <!-- SERVICES -->
     <Compile Include="Services\IPdfTicketService.cs" />
     <Compile Include="Services\PdfTicketService.cs" />
     <!-- CONFIGURATION -->
     <Compile Include="Configuration\EmpresaConfig.cs" />
+    <Compile Include="Configuration\SesionActual.cs" />
     <!-- BUSINESS -->
     <Compile Include="BusinessLogic\FacturacionManager.cs" />
     <Compile Include="BusinessLogic\PagoManager.cs" />
     <Compile Include="BusinessLogic\TransaccionHelper.cs" />
+    <Compile Include="BusinessLogic\PasswordHasher.cs" />
+    <Compile Include="BusinessLogic\UsuarioManager.cs" />
     <!-- UTILS -->
     <Compile Include="Utils\RNCValidator.cs" />
     <Compile Include="Utils\ValidadorCliente.cs" />
