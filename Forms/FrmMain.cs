@@ -24,17 +24,14 @@ namespace MiniSistemaFacturacion.Forms
             {
                 InitializeComponent();
                 this.DoubleBuffered = true;
+                ConfigurarDashboardCards();
                 AplicarPermisosSesion();
 
-                // Guardamos una copia de la imagen que pusiste en el diseñador
-                // antes de que el código empiece a cambiar el fondo.
+                // Guardamos una copia de la imagen si existiese
                 if (this.BackgroundImage != null)
                 {
                     _imagenOriginal = (Image)this.BackgroundImage.Clone();
                 }
-
-                // Dashboard movido a FrmReportes
-                // InicializarDashboard();
             }
             catch (Exception ex)
             {
@@ -43,11 +40,95 @@ namespace MiniSistemaFacturacion.Forms
             }
         }
 
+        private void ConfigurarDashboardCards()
+        {
+            VincularCard(cardClientes, (s, e) => clientesToolStripMenuItem_Click(s, e));
+            VincularCard(cardProductos, (s, e) => productoToolStripMenuItem_Click(s, e));
+            VincularCard(cardFacturacion, (s, e) => facturaciónToolStripMenuItem_Click(s, e));
+            VincularCard(cardBuscarFactura, (s, e) => buscarFacturasToolStripMenuItem_Click(s, e));
+            VincularCard(cardCobros, (s, e) => AbrirCuentasPorCobrar(s, e));
+            VincularCard(cardReportes, (s, e) => reportesToolStripMenuItem_Click(s, e));
+            VincularCard(cardUsuarios, (s, e) => usuariosToolStripMenuItem_Click(s, e));
+            VincularCard(cardConfiguracion, (s, e) => configuracionEmpresaToolStripMenuItem_Click(s, e));
+
+            if (btnHeaderCerrarSesion != null)
+            {
+                btnHeaderCerrarSesion.Click += (s, e) => cerrarSesionToolStripMenuItem_Click(s, e);
+            }
+        }
+
+        private void VincularCard(Panel card, EventHandler onClick)
+        {
+            if (card == null) return;
+
+            Color defaultBg = Color.White;
+            Color hoverBg = Color.FromArgb(245, 249, 255);
+
+            Action<Control> attachEvents = null;
+            attachEvents = (ctrl) =>
+            {
+                ctrl.Cursor = Cursors.Hand;
+                ctrl.Click += onClick;
+                ctrl.MouseEnter += (s, e) => { card.BackColor = hoverBg; };
+                ctrl.MouseLeave += (s, e) =>
+                {
+                    Point clientPos = card.PointToClient(Cursor.Position);
+                    if (!card.ClientRectangle.Contains(clientPos))
+                    {
+                        card.BackColor = defaultBg;
+                    }
+                };
+
+                foreach (Control child in ctrl.Controls)
+                {
+                    if (child.Name.StartsWith("pnlAccent"))
+                    {
+                        child.Cursor = Cursors.Hand;
+                        child.Click += onClick;
+                    }
+                    else
+                    {
+                        attachEvents(child);
+                    }
+                }
+            };
+
+            card.Cursor = Cursors.Hand;
+            card.Click += onClick;
+            card.MouseEnter += (s, e) => { card.BackColor = hoverBg; };
+            card.MouseLeave += (s, e) =>
+            {
+                Point clientPos = card.PointToClient(Cursor.Position);
+                if (!card.ClientRectangle.Contains(clientPos))
+                {
+                    card.BackColor = defaultBg;
+                }
+            };
+
+            foreach (Control child in card.Controls)
+            {
+                if (!child.Name.StartsWith("pnlAccent"))
+                {
+                    attachEvents(child);
+                }
+                else
+                {
+                    child.Cursor = Cursors.Hand;
+                    child.Click += onClick;
+                }
+            }
+        }
+
+        private void AbrirCuentasPorCobrar(object sender, EventArgs e)
+        {
+            frmCuentasPorCobrar frm = new frmCuentasPorCobrar();
+            frm.ShowDialog();
+        }
+
         private void FrmMain_Resize(object sender, EventArgs e)
         {
             try
             {
-                // Solo si hay una imagen asignada
                 if (this.BackgroundImage != null)
                 {
                     ActualizarFondoAdaptable();
@@ -237,7 +318,11 @@ namespace MiniSistemaFacturacion.Forms
             if (SesionActual.EsAutenticado)
             {
                 this.Text = $"Mini-Sistema de Facturación — Usuario: {SesionActual.NombreCompleto} ({SesionActual.Rol})";
-                lblStatusUsuario.Text = $"👤 Usuario: {SesionActual.NombreUsuario} ({SesionActual.NombreCompleto}) | Rol: {SesionActual.Rol}";
+                if (lblHeaderUsuario != null)
+                {
+                    lblHeaderUsuario.Text = $"👤 {SesionActual.NombreUsuario} ({SesionActual.Rol})";
+                }
+                lblStatusUsuario.Text = $"👤 Sesión: {SesionActual.NombreUsuario} ({SesionActual.NombreCompleto}) | Rol: {SesionActual.Rol}";
                 sesionToolStripMenuItem.Text = $"👤 {SesionActual.NombreUsuario} ({SesionActual.Rol})";
 
                 bool esAdmin = SesionActual.EsAdministrador;
@@ -245,14 +330,21 @@ namespace MiniSistemaFacturacion.Forms
                 configuracionEmpresaToolStripMenuItem.Visible = esAdmin;
                 borrarDatosToolStripMenuItem.Visible = esAdmin;
                 borrarDatosToolStripMenuItem.Enabled = esAdmin;
+
+                if (cardUsuarios != null) cardUsuarios.Visible = esAdmin;
+                if (cardConfiguracion != null) cardConfiguracion.Visible = esAdmin;
             }
             else
             {
                 this.Text = "Mini-Sistema de Facturación";
+                if (lblHeaderUsuario != null) lblHeaderUsuario.Text = "No autenticado";
                 lblStatusUsuario.Text = "No autenticado";
                 administracionToolStripMenuItem.Visible = false;
                 configuracionEmpresaToolStripMenuItem.Visible = false;
                 borrarDatosToolStripMenuItem.Visible = false;
+
+                if (cardUsuarios != null) cardUsuarios.Visible = false;
+                if (cardConfiguracion != null) cardConfiguracion.Visible = false;
             }
         }
 

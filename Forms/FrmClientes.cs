@@ -34,7 +34,6 @@ namespace MiniSistemaFacturacion.Forms
             ConfigurarDataGridView();
             ConfigurarEventos();
             CargarClientes();
-            dgvClientes.AutoResizeColumns();
         }
 
         private void ConfigurarFormulario()
@@ -46,6 +45,7 @@ namespace MiniSistemaFacturacion.Forms
         private void ConfigurarDataGridView()
         {
             UITheme.EstilizarDataGridView(dgvClientes);
+            dgvClientes.AutoGenerateColumns = false;
             dgvClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvClientes.Columns.Clear();
 
@@ -56,7 +56,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "ID",
                 DataPropertyName = "ID_Cliente",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 5
+                FillWeight = 6
             };
             dgvClientes.Columns.Add(colId);
 
@@ -67,7 +67,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Nombre/Razón Social",
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 30
+                FillWeight = 26
             };
             dgvClientes.Columns.Add(colNombre);
 
@@ -89,7 +89,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Dirección",
                 DataPropertyName = "Direccion",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 20
+                FillWeight = 25
             };
             dgvClientes.Columns.Add(colDireccion);
 
@@ -100,7 +100,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Teléfono",
                 DataPropertyName = "Telefono",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 15
+                FillWeight = 16
             };
             dgvClientes.Columns.Add(colTelefono);
 
@@ -111,7 +111,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Email",
                 DataPropertyName = "Email",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 25
+                FillWeight = 22
             };
             dgvClientes.Columns.Add(colEmail);
 
@@ -122,7 +122,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "Tipo",
                 DataPropertyName = "TipoCliente",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 10
+                FillWeight = 8
             };
             dgvClientes.Columns.Add(colTipoCliente);
 
@@ -133,7 +133,7 @@ namespace MiniSistemaFacturacion.Forms
                 HeaderText = "RNC",
                 DataPropertyName = "RNC",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 15
+                FillWeight = 12
             };
             dgvClientes.Columns.Add(colRNC);
 
@@ -147,6 +147,18 @@ namespace MiniSistemaFacturacion.Forms
                 FillWeight = 10
             };
             dgvClientes.Columns.Add(colEstado);
+
+            // Columna Fecha Creación
+            DataGridViewTextBoxColumn colFecha = new DataGridViewTextBoxColumn
+            {
+                Name = "FechaCreacion",
+                HeaderText = "Fecha Creación",
+                DataPropertyName = "FechaCreacion",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                FillWeight = 14
+            };
+            colFecha.DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgvClientes.Columns.Add(colFecha);
         }
 
         private void ConfigurarEventos()

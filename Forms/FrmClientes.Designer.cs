@@ -183,13 +183,13 @@ namespace MiniSistemaFacturacion.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(1034, 611);
+            this.ClientSize = new System.Drawing.Size(1260, 680);
             this.Controls.Add(this.dgvClientes);
             this.Controls.Add(this.panelToolbar);
             this.Controls.Add(this.panelHeader);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(860, 480);
+            this.MinimumSize = new System.Drawing.Size(1080, 550);
             this.Name = "FrmClientes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gestión de Clientes";

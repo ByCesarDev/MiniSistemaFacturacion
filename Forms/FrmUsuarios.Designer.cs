@@ -69,7 +69,7 @@ namespace MiniSistemaFacturacion.Forms
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(984, 70);
+            this.panelHeader.Size = new System.Drawing.Size(1220, 70);
             this.panelHeader.TabIndex = 0;
             // 
             // lblSubtitulo
@@ -107,7 +107,7 @@ namespace MiniSistemaFacturacion.Forms
             this.panelFiltros.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelFiltros.Location = new System.Drawing.Point(0, 70);
             this.panelFiltros.Name = "panelFiltros";
-            this.panelFiltros.Size = new System.Drawing.Size(984, 50);
+            this.panelFiltros.Size = new System.Drawing.Size(1220, 50);
             this.panelFiltros.TabIndex = 1;
             // 
             // btnRefrescar
@@ -202,6 +202,7 @@ namespace MiniSistemaFacturacion.Forms
             this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvUsuarios.AutoGenerateColumns = false;
             this.dgvUsuarios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvUsuarios.BackgroundColor = System.Drawing.Color.White;
             this.dgvUsuarios.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -214,13 +215,13 @@ namespace MiniSistemaFacturacion.Forms
             this.colEstado,
             this.colUltimoAcceso,
             this.colIntentos});
-            this.dgvUsuarios.Location = new System.Drawing.Point(12, 130);
+            this.dgvUsuarios.Location = new System.Drawing.Point(12, 126);
             this.dgvUsuarios.MultiSelect = false;
             this.dgvUsuarios.Name = "dgvUsuarios";
             this.dgvUsuarios.ReadOnly = true;
-            this.dgvUsuarios.RowHeadersWidth = 30;
+            this.dgvUsuarios.RowHeadersVisible = false;
             this.dgvUsuarios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUsuarios.Size = new System.Drawing.Size(610, 445);
+            this.dgvUsuarios.Size = new System.Drawing.Size(800, 520);
             this.dgvUsuarios.TabIndex = 2;
             this.dgvUsuarios.SelectionChanged += new System.EventHandler(this.dgvUsuarios_SelectionChanged);
             // 
@@ -305,9 +306,9 @@ namespace MiniSistemaFacturacion.Forms
             this.grpDetalle.Controls.Add(this.lblNombreCompleto);
             this.grpDetalle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpDetalle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.grpDetalle.Location = new System.Drawing.Point(635, 126);
+            this.grpDetalle.Location = new System.Drawing.Point(825, 126);
             this.grpDetalle.Name = "grpDetalle";
-            this.grpDetalle.Size = new System.Drawing.Size(337, 449);
+            this.grpDetalle.Size = new System.Drawing.Size(380, 520);
             this.grpDetalle.TabIndex = 3;
             this.grpDetalle.TabStop = false;
             this.grpDetalle.Text = "Detalle del Usuario";
@@ -532,13 +533,13 @@ namespace MiniSistemaFacturacion.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(984, 586);
+            this.ClientSize = new System.Drawing.Size(1220, 660);
             this.Controls.Add(this.grpDetalle);
             this.Controls.Add(this.dgvUsuarios);
             this.Controls.Add(this.panelFiltros);
             this.Controls.Add(this.panelHeader);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MinimumSize = new System.Drawing.Size(900, 550);
+            this.MinimumSize = new System.Drawing.Size(1080, 580);
             this.Name = "FrmUsuarios";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Administración de Usuarios";

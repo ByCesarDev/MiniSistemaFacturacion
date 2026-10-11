@@ -142,6 +142,9 @@ namespace MiniSistemaFacturacion.Utils
             btn.UseVisualStyleBackColor = false;
         }
 
+        public static void EstilizarBotonSuccess(Button btn) => EstilizarBotonExito(btn);
+        public static void AplicarTemaDGV(DataGridView dgv) => EstilizarDataGridView(dgv);
+
         /// <summary>
         /// Estiliza un botón como Peligro / Eliminar (Rojo moderno).
         /// </summary>
@@ -226,6 +229,42 @@ namespace MiniSistemaFacturacion.Utils
             dgv.AlternatingRowsDefaultCellStyle.ForeColor = TextMain;
             dgv.AlternatingRowsDefaultCellStyle.SelectionBackColor = GridSelectionBg;
             dgv.AlternatingRowsDefaultCellStyle.SelectionForeColor = GridSelectionFore;
+        }
+
+        /// <summary>
+        /// Estiliza un botón como Advertencia / Alerta (Amarillo / Dorado).
+        /// </summary>
+        public static void EstilizarBotonWarning(Button btn)
+        {
+            if (btn == null) return;
+            btn.BackColor = WarningYellow;
+            btn.ForeColor = WarningText;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderColor = WarningBorder;
+            btn.FlatAppearance.BorderSize = 1;
+            btn.Font = FontButton;
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
+        }
+
+        /// <summary>
+        /// Estiliza un TextBox con tipografía Segoe UI.
+        /// </summary>
+        public static void EstilizarTextBox(TextBox txt)
+        {
+            if (txt == null) return;
+            txt.Font = FontBodyRegular;
+            txt.ForeColor = TextMain;
+        }
+
+        /// <summary>
+        /// Estiliza un ComboBox con tipografía Segoe UI.
+        /// </summary>
+        public static void EstilizarComboBox(ComboBox cmb)
+        {
+            if (cmb == null) return;
+            cmb.Font = FontBodyRegular;
+            cmb.ForeColor = TextMain;
         }
 
         /// <summary>

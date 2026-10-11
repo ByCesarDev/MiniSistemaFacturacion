@@ -7,6 +7,7 @@ using Microsoft.VisualBasic;
 using MiniSistemaFacturacion.BusinessLogic;
 using MiniSistemaFacturacion.Configuration;
 using MiniSistemaFacturacion.Models;
+using MiniSistemaFacturacion.Utils;
 
 namespace MiniSistemaFacturacion.Forms
 {
@@ -51,7 +52,27 @@ namespace MiniSistemaFacturacion.Forms
             cmbEstado.Items.AddRange(EstadoUsuario.EstadosValidos);
             cmbEstado.SelectedIndex = 0; // Activo por defecto
 
+            UITheme.AplicarTemaFormulario(this);
+            UITheme.AplicarTemaDGV(dgvUsuarios);
             dgvUsuarios.AutoGenerateColumns = false;
+
+            UITheme.EstilizarBotonPrimario(btnGuardar);
+            UITheme.EstilizarBotonSuccess(btnNuevo);
+            UITheme.EstilizarBotonSecundario(btnCancelar);
+            UITheme.EstilizarBotonPeligro(btnActivarDesactivar);
+            UITheme.EstilizarBotonWarning(btnRestablecerPassword);
+            UITheme.EstilizarBotonHerramienta(btnRefrescar);
+
+            UITheme.EstilizarTextBox(txtBuscar);
+            UITheme.EstilizarTextBox(txtNombreCompleto);
+            UITheme.EstilizarTextBox(txtNombreUsuario);
+            UITheme.EstilizarTextBox(txtPassword);
+
+            UITheme.EstilizarComboBox(cmbFiltroRol);
+            UITheme.EstilizarComboBox(cmbFiltroEstado);
+            UITheme.EstilizarComboBox(cmbRol);
+            UITheme.EstilizarComboBox(cmbEstado);
+            UITheme.EstilizarGroupBox(grpDetalle);
 
             CargarUsuarios();
         }
@@ -93,6 +114,7 @@ namespace MiniSistemaFacturacion.Forms
                 return coincideTexto && coincideRol && coincideEstado;
             }).ToList();
 
+            dgvUsuarios.AutoGenerateColumns = false;
             dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = filtrados;
 

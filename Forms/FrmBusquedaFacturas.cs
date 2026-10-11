@@ -52,6 +52,15 @@ namespace MiniSistemaFacturacion.Forms
                 UITheme.EstilizarBotonHerramienta(btnBuscarCliente);
                 UITheme.EstilizarBotonSecundario(btnCerrar);
 
+                UITheme.EstilizarTextBox(txtNumeroFactura);
+                UITheme.EstilizarTextBox(txtCliente);
+                
+                // Formato de fechas
+                dtpFechaDesde.Format = DateTimePickerFormat.Custom;
+                dtpFechaDesde.CustomFormat = "dd/MM/yyyy";
+                dtpFechaHasta.Format = DateTimePickerFormat.Custom;
+                dtpFechaHasta.CustomFormat = "dd/MM/yyyy";
+
                 // Configurar DataGridView
                 ConfigurarDataGridView();
                 
@@ -151,6 +160,7 @@ namespace MiniSistemaFacturacion.Forms
                 dgvFacturas.AllowUserToAddRows = false;
                 dgvFacturas.AllowUserToDeleteRows = false;
                 dgvFacturas.RowHeadersVisible = false;
+                dgvFacturas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
                 // Agregar columnas
                 dgvFacturas.Columns.Clear();
@@ -166,9 +176,10 @@ namespace MiniSistemaFacturacion.Forms
                 // Columna Número Factura
                 DataGridViewTextBoxColumn colNumero = new DataGridViewTextBoxColumn();
                 colNumero.Name = "NumeroFactura";
-                colNumero.HeaderText = "Número Factura";
+                colNumero.HeaderText = "N° Factura";
                 colNumero.DataPropertyName = "NumeroFactura";
-                colNumero.Width = 120;
+                colNumero.FillWeight = 15;
+                colNumero.MinimumWidth = 100;
                 dgvFacturas.Columns.Add(colNumero);
 
                 // Columna Fecha
@@ -176,16 +187,18 @@ namespace MiniSistemaFacturacion.Forms
                 colFecha.Name = "Fecha";
                 colFecha.HeaderText = "Fecha";
                 colFecha.DataPropertyName = "Fecha";
-                colFecha.Width = 100;
+                colFecha.FillWeight = 11;
+                colFecha.MinimumWidth = 85;
                 colFecha.DefaultCellStyle.Format = "dd/MM/yyyy";
                 dgvFacturas.Columns.Add(colFecha);
 
-                // Columna Cliente (desde la consulta SQL)
+                // Columna Cliente
                 DataGridViewTextBoxColumn colCliente = new DataGridViewTextBoxColumn();
                 colCliente.Name = "ClienteNombre";
-                colCliente.HeaderText = "Cliente";
+                colCliente.HeaderText = "Cliente / Razón Social";
                 colCliente.DataPropertyName = "ClienteNombre";
-                colCliente.Width = 200;
+                colCliente.FillWeight = 30;
+                colCliente.MinimumWidth = 160;
                 dgvFacturas.Columns.Add(colCliente);
 
                 // Columna Total Neto
@@ -193,7 +206,8 @@ namespace MiniSistemaFacturacion.Forms
                 colTotal.Name = "TotalNeto";
                 colTotal.HeaderText = "Total";
                 colTotal.DataPropertyName = "TotalNeto";
-                colTotal.Width = 100;
+                colTotal.FillWeight = 13;
+                colTotal.MinimumWidth = 90;
                 colTotal.DefaultCellStyle.Format = "C2";
                 colTotal.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 dgvFacturas.Columns.Add(colTotal);
@@ -203,22 +217,27 @@ namespace MiniSistemaFacturacion.Forms
                 colEstado.Name = "Estado";
                 colEstado.HeaderText = "Estado";
                 colEstado.DataPropertyName = "Estado";
-                colEstado.Width = 80;
+                colEstado.FillWeight = 11;
+                colEstado.MinimumWidth = 80;
+                colEstado.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 dgvFacturas.Columns.Add(colEstado);
 
+                // Columna Tipo Comprobante
                 DataGridViewTextBoxColumn colTipoComprobante = new DataGridViewTextBoxColumn();
                 colTipoComprobante.Name = "TipoComprobante";
-                colTipoComprobante.HeaderText = "Tipo Comp.";
+                colTipoComprobante.HeaderText = "Tipo Comprobante";
                 colTipoComprobante.DataPropertyName = "TipoComprobanteDescripcion";
-                colTipoComprobante.Width = 90;
+                colTipoComprobante.FillWeight = 17;
+                colTipoComprobante.MinimumWidth = 110;
                 dgvFacturas.Columns.Add(colTipoComprobante);
 
-                // Columna NCF (si existe en el modelo)
+                // Columna NCF
                 DataGridViewTextBoxColumn colNCF = new DataGridViewTextBoxColumn();
                 colNCF.Name = "NCF";
                 colNCF.HeaderText = "NCF";
                 colNCF.DataPropertyName = "NCF";
-                colNCF.Width = 150;
+                colNCF.FillWeight = 15;
+                colNCF.MinimumWidth = 100;
                 dgvFacturas.Columns.Add(colNCF);
             }
             catch (Exception ex)
@@ -465,7 +484,7 @@ namespace MiniSistemaFacturacion.Forms
             this.grpFiltros.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpFiltros.Name = "grpFiltros";
             this.grpFiltros.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grpFiltros.Size = new System.Drawing.Size(1160, 105);
+            this.grpFiltros.Size = new System.Drawing.Size(1160, 66);
             this.grpFiltros.TabIndex = 1;
             this.grpFiltros.TabStop = false;
             this.grpFiltros.Text = "Filtros de Búsqueda";
@@ -474,106 +493,113 @@ namespace MiniSistemaFacturacion.Forms
             // lblNumeroFactura
             // 
             this.lblNumeroFactura.AutoSize = true;
-            this.lblNumeroFactura.Location = new System.Drawing.Point(15, 30);
+            this.lblNumeroFactura.Location = new System.Drawing.Point(14, 27);
             this.lblNumeroFactura.Name = "lblNumeroFactura";
-            this.lblNumeroFactura.Size = new System.Drawing.Size(106, 16);
+            this.lblNumeroFactura.Size = new System.Drawing.Size(73, 15);
             this.lblNumeroFactura.TabIndex = 0;
-            this.lblNumeroFactura.Text = "Número Factura:";
+            this.lblNumeroFactura.Text = "N° Factura:";
             // 
             // txtNumeroFactura
             // 
-            this.txtNumeroFactura.Location = new System.Drawing.Point(129, 27);
+            this.txtNumeroFactura.Location = new System.Drawing.Point(90, 24);
             this.txtNumeroFactura.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtNumeroFactura.Name = "txtNumeroFactura";
-            this.txtNumeroFactura.Size = new System.Drawing.Size(151, 22);
+            this.txtNumeroFactura.Size = new System.Drawing.Size(115, 23);
             this.txtNumeroFactura.TabIndex = 1;
             this.txtNumeroFactura.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNumeroFactura_KeyPress);
             // 
             // lblCliente
             // 
             this.lblCliente.AutoSize = true;
-            this.lblCliente.Location = new System.Drawing.Point(300, 30);
+            this.lblCliente.Location = new System.Drawing.Point(218, 27);
             this.lblCliente.Name = "lblCliente";
-            this.lblCliente.Size = new System.Drawing.Size(51, 16);
+            this.lblCliente.Size = new System.Drawing.Size(49, 15);
             this.lblCliente.TabIndex = 2;
             this.lblCliente.Text = "Cliente:";
             // 
             // txtCliente
             // 
-            this.txtCliente.Location = new System.Drawing.Point(356, 27);
+            this.txtCliente.Location = new System.Drawing.Point(270, 24);
             this.txtCliente.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtCliente.Name = "txtCliente";
             this.txtCliente.ReadOnly = true;
-            this.txtCliente.Size = new System.Drawing.Size(200, 22);
+            this.txtCliente.Size = new System.Drawing.Size(200, 23);
             this.txtCliente.TabIndex = 3;
             this.txtCliente.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCliente_KeyPress);
             // 
             // btnBuscarCliente
             // 
-            this.btnBuscarCliente.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscarCliente.Location = new System.Drawing.Point(563, 27);
+            this.btnBuscarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscarCliente.Location = new System.Drawing.Point(474, 23);
             this.btnBuscarCliente.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnBuscarCliente.Name = "btnBuscarCliente";
-            this.btnBuscarCliente.Size = new System.Drawing.Size(29, 22);
+            this.btnBuscarCliente.Size = new System.Drawing.Size(34, 25);
             this.btnBuscarCliente.TabIndex = 4;
-            this.btnBuscarCliente.Text = "🔍 Search";
+            this.btnBuscarCliente.Text = "🔍";
             this.btnBuscarCliente.UseVisualStyleBackColor = true;
             this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);
             // 
             // lblFechaDesde
             // 
-            this.lblFechaDesde.Location = new System.Drawing.Point(600, 30);
+            this.lblFechaDesde.AutoSize = true;
+            this.lblFechaDesde.Location = new System.Drawing.Point(524, 27);
             this.lblFechaDesde.Name = "lblFechaDesde";
-            this.lblFechaDesde.Size = new System.Drawing.Size(96, 16);
+            this.lblFechaDesde.Size = new System.Drawing.Size(44, 15);
             this.lblFechaDesde.TabIndex = 5;
-            this.lblFechaDesde.Text = "Fecha Desde:";
+            this.lblFechaDesde.Text = "Desde:";
             // 
             // dtpFechaDesde
             // 
-            this.dtpFechaDesde.Location = new System.Drawing.Point(697, 27);
+            this.dtpFechaDesde.CustomFormat = "dd/MM/yyyy";
+            this.dtpFechaDesde.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFechaDesde.Location = new System.Drawing.Point(571, 24);
             this.dtpFechaDesde.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpFechaDesde.Name = "dtpFechaDesde";
-            this.dtpFechaDesde.Size = new System.Drawing.Size(151, 22);
+            this.dtpFechaDesde.Size = new System.Drawing.Size(115, 23);
             this.dtpFechaDesde.TabIndex = 6;
             // 
             // lblFechaHasta
             // 
             this.lblFechaHasta.AutoSize = true;
-            this.lblFechaHasta.Location = new System.Drawing.Point(917, 30);
+            this.lblFechaHasta.Location = new System.Drawing.Point(700, 27);
             this.lblFechaHasta.Name = "lblFechaHasta";
-            this.lblFechaHasta.Size = new System.Drawing.Size(87, 16);
+            this.lblFechaHasta.Size = new System.Drawing.Size(41, 15);
             this.lblFechaHasta.TabIndex = 7;
-            this.lblFechaHasta.Text = "Fecha Hasta:";
+            this.lblFechaHasta.Text = "Hasta:";
             // 
             // dtpFechaHasta
             // 
-            this.dtpFechaHasta.Location = new System.Drawing.Point(1008, 27);
+            this.dtpFechaHasta.CustomFormat = "dd/MM/yyyy";
+            this.dtpFechaHasta.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFechaHasta.Location = new System.Drawing.Point(744, 24);
             this.dtpFechaHasta.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpFechaHasta.Name = "dtpFechaHasta";
-            this.dtpFechaHasta.Size = new System.Drawing.Size(151, 22);
+            this.dtpFechaHasta.Size = new System.Drawing.Size(115, 23);
             this.dtpFechaHasta.TabIndex = 8;
             // 
             // btnBuscar
             // 
-            this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscar.Location = new System.Drawing.Point(15, 60);
+            this.btnBuscar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBuscar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscar.Location = new System.Drawing.Point(885, 20);
             this.btnBuscar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(100, 30);
+            this.btnBuscar.Size = new System.Drawing.Size(125, 32);
             this.btnBuscar.TabIndex = 9;
-            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.Text = "🔍 Buscar";
             this.btnBuscar.UseVisualStyleBackColor = true;
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpiar.Location = new System.Drawing.Point(125, 60);
+            this.btnLimpiar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLimpiar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.Location = new System.Drawing.Point(1020, 20);
             this.btnLimpiar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(100, 30);
+            this.btnLimpiar.Size = new System.Drawing.Size(125, 32);
             this.btnLimpiar.TabIndex = 10;
-            this.btnLimpiar.Text = "Limpiar";
+            this.btnLimpiar.Text = "🔄 Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
@@ -583,11 +609,11 @@ namespace MiniSistemaFacturacion.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvFacturas.ColumnHeadersHeight = 29;
-            this.dgvFacturas.Location = new System.Drawing.Point(12, 192);
+            this.dgvFacturas.Location = new System.Drawing.Point(12, 155);
             this.dgvFacturas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvFacturas.Name = "dgvFacturas";
-            this.dgvFacturas.RowHeadersWidth = 51;
-            this.dgvFacturas.Size = new System.Drawing.Size(1160, 340);
+            this.dgvFacturas.RowHeadersVisible = false;
+            this.dgvFacturas.Size = new System.Drawing.Size(1160, 378);
             this.dgvFacturas.TabIndex = 2;
             this.dgvFacturas.DoubleClick += new System.EventHandler(this.dgvFacturas_DoubleClick);
             // 

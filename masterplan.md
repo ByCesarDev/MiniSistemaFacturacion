@@ -222,6 +222,32 @@ Progreso actual: **12 / 12 aprobadas (100% verificado contra SQL Server y ensamb
 | `ba3a438` | **Fase 5** | `feat(fase-5): integracion de permisos, menu de administracion, logout y statusstrip en frmmain` |
 | `d8c8472` | **Fase 6** | `test(fase-6): bateria de pruebas de aceptacion superada 12/12 y masterplan completado` |
 | `01c8367` | **Fase 7** | `feat(ui): modernizacion integral de interfaces con UITheme Slate Navy` |
+| `HEAD` | **Fase 7.1** | `feat(ui): ampliacion de clientes y usuarios, reorganizacion de busqueda de facturas y dashboard corporativo en frmmain` |
+
+---
+
+## 8. Refinamiento Visual y Optimización de Experiencia de Usuario (Fase 7.1)
+
+- [x] **FrmClientes:**
+  - Ampliación de dimensiones a `1260 x 680 px` con `MinimumSize = 1080 x 550 px`.
+  - Configuración explícita de `AutoGenerateColumns = false` y visualización holgada de las 10 columnas (ID, Nombre/Razón Social, Cédula, Dirección, Teléfono, Email, Tipo, RNC, Estado, Fecha Creación) con formato de fecha `dd/MM/yyyy`.
+  - Caja de búsqueda ensanchada para comodidad de digitación.
+- [x] **FrmUsuarios:**
+  - Ampliación de dimensiones a `1220 x 660 px` con `MinimumSize = 1080 x 550 px`.
+  - Corrección de exposición de columnas sensibles/técnicas (`PasswordHash`, `PasswordSalt`, `IntentosFallidos`, etc.) mediante asignación estricta de columnas visibles (`ID`, `Usuario`, `Nombre Completo`, `Rol`, `Estado`, `Último Acceso`).
+  - Reubicación y ampliación del panel de detalle y botones de acción.
+- [x] **FrmBusquedaFacturas:**
+  - Reorganización total de la barra de filtros en una única fila alineada con separaciones proporcionales.
+  - Corrección del corte de texto en selectores de fecha (`DateTimePicker`) con `CustomFormat = "dd/MM/yyyy"`.
+  - Reubicación de los botones de búsqueda y limpieza alineados a la derecha de los filtros.
+  - Eliminación del espacio vacío en blanco en el `DataGridView` mediante `AutoSizeColumnsMode = Fill` y `FillWeight`s optimizados.
+- [x] **FrmMain (Rediseño Ejecutivo):**
+  - Reemplazo del diseño legacy por un Dashboard Ejecutivo con Slate Navy `#253959`.
+  - Encabezado superior con título del sistema, indicador del usuario activo y botón plano para cerrar sesión.
+  - Menú horizontal limpio en Segoe UI.
+  - Cuadrícula de 8 tarjetas interactivas accesibles (`Clientes`, `Productos`, `Facturación`, `Buscar Facturas`, `Cuentas por Cobrar`, `Reportes`, `Usuarios [Admin]`, `Configuración [Admin]`) con efectos visuales al pasar el cursor y navegación directa.
+  - Barra de estado profesional con usuario autenticado, tasa fiscal del 18% ITBIS y estado del servidor de base de datos.
+
 
 
 
