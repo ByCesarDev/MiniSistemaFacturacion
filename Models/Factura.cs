@@ -172,7 +172,7 @@ namespace MiniSistemaFacturacion.Models
         {
             Fecha = DateTime.Now;
             FechaCreacion = DateTime.Now;
-            PorcentajeImpuesto = 15.00m;
+            PorcentajeImpuesto = 18.00m;
             Estado = "Pendiente";
             TipoComprobante = "02"; // Por defecto Consumidor Final
             NCF = null; // Se generará al guardar
@@ -190,7 +190,7 @@ namespace MiniSistemaFacturacion.Models
             ID_Cliente = idCliente;
             Fecha = DateTime.Now;
             FechaCreacion = DateTime.Now;
-            PorcentajeImpuesto = 15.00m;
+            PorcentajeImpuesto = 18.00m;
             Estado = "Pendiente";
             TipoComprobante = "02"; // Por defecto Consumidor Final
             NCF = null; // Se generará al guardar
