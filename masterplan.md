@@ -54,17 +54,17 @@ MiniSistemaFacturacion/
 ├── Database/
 │   └── 04_Usuarios.sql                 [x] CREADO Y APLICADO (Fase 1)
 ├── Forms/
-│   ├── FrmLogin.cs                     [ ] PENDIENTE (Fase 3)
-│   ├── FrmLogin.Designer.cs            [ ] PENDIENTE (Fase 3)
-│   ├── FrmLogin.resx                   [ ] PENDIENTE (Fase 3)
+│   ├── FrmLogin.cs                     [x] CREADO (Fase 3)
+│   ├── FrmLogin.Designer.cs            [x] CREADO (Fase 3)
+│   ├── FrmLogin.resx                   [x] CREADO (Fase 3)
 │   ├── FrmUsuarios.cs                  [ ] PENDIENTE (Fase 4)
 │   ├── FrmUsuarios.Designer.cs         [ ] PENDIENTE (Fase 4)
 │   ├── FrmUsuarios.resx                [ ] PENDIENTE (Fase 4)
 │   ├── FrmMain.cs                      [ ] PENDIENTE MODIFICACIÓN (Fase 5)
 │   └── FrmMain.Designer.cs             [ ] PENDIENTE MODIFICACIÓN (Fase 5)
-├── Program.cs                          [ ] PENDIENTE MODIFICACIÓN (Fase 3 y 5)
+├── Program.cs                          [x] ACTUALIZADO (Fase 3)
 ├── App.config                          [x] ACTUALIZADO (Tasa 18%)
-└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2)
+└── MiniSistemaFacturacion.csproj       [x] ACTUALIZADO (Fase 2 y 3)
 ```
 
 ---
@@ -104,18 +104,18 @@ MiniSistemaFacturacion/
 
 ---
 
-### 🟡 Checkpoint 3: Interfaz de Autenticación (Próximo paso)
-- [ ] **UI-LOGIN-01:** Crear formulario visual `FrmLogin` (Diseñador, código y recursos).
-- [ ] **UI-LOGIN-02:** Elementos de UI: usuario, contraseña enmascarada, checkbox "Mostrar contraseña", botón Ingresar, botón Salir.
-- [ ] **UI-LOGIN-03:** Detección de primer uso: Si no existe ningún administrador activo, activar automáticamente el modo asistente para crear el primer Administrador de forma segura sin credenciales fijas.
-- [ ] **UI-LOGIN-04:** Manejo de advertencias visuales de bloqueo temporal y conteo de intentos fallidos.
-- [ ] **UI-LOGIN-05:** Conectar [Program.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Program.cs) para interceptar el arranque con `FrmLogin` antes de permitir abrir `FrmMain`.
-- [ ] **CSP-02:** Registrar `FrmLogin` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
-- [ ] **GIT-03:** Commit de la Fase 3.
+### 🟢 Checkpoint 3: Interfaz de Autenticación (Completado)
+- [x] **UI-LOGIN-01:** Crear formulario visual [FrmLogin.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Forms/FrmLogin.cs) (Diseñador, código y recursos).
+- [x] **UI-LOGIN-02:** Elementos de UI: usuario, contraseña enmascarada, checkbox "Mostrar contraseña", botón Ingresar, botón Salir.
+- [x] **UI-LOGIN-03:** Detección de primer uso: Si no existe ningún administrador activo, activar automáticamente el modo asistente para crear el primer Administrador de forma segura sin credenciales fijas.
+- [x] **UI-LOGIN-04:** Manejo de advertencias visuales de bloqueo temporal y conteo de intentos fallidos.
+- [x] **UI-LOGIN-05:** Conectar [Program.cs](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/Program.cs) para interceptar el arranque con `FrmLogin` antes de permitir abrir `FrmMain`.
+- [x] **CSP-02:** Registrar `FrmLogin` en [MiniSistemaFacturacion.csproj](file:///c:/Users/Usuario/Desktop/Proyectos/MiniSistemaFacturacion/MiniSistemaFacturacion.csproj).
+- [x] **GIT-03:** Commit de la Fase 3.
 
 ---
 
-### ⚪ Checkpoint 4: Interfaz de Administración de Usuarios
+### 🟡 Checkpoint 4: Interfaz de Administración de Usuarios (Próximo paso)
 - [ ] **UI-USR-01:** Crear formulario `FrmUsuarios` accesible únicamente por Administradores.
 - [ ] **UI-USR-02:** `DataGridView` con lista de usuarios (sin exponer contraseñas ni hashes).
 - [ ] **UI-USR-03:** Formulario/panel lateral para:

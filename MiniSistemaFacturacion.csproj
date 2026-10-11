@@ -245,6 +245,12 @@
     <Compile Include="Forms\FrmEditarCliente.Designer.cs">
       <DependentUpon>FrmEditarCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -297,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmVistaPreviaPdf.resx">
       <DependentUpon>FrmVistaPreviaPdf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
