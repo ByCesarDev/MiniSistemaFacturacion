@@ -161,6 +161,12 @@
     <Compile Include="Forms\FrmConfiguracionEmpresa.Designer.cs">
       <DependentUpon>FrmConfiguracionEmpresa.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmConfigurarConexion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmConfigurarConexion.Designer.cs">
+      <DependentUpon>FrmConfigurarConexion.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataAccess\ConfiguracionEmpresaDAL.cs" />
     <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
@@ -210,6 +216,7 @@
     <!-- DATA ACCESS -->
     <Compile Include="DataAccess\DbHelper.cs" />
     <Compile Include="DataAccess\ConnectionStringManager.cs" />
+    <Compile Include="DataAccess\DatabaseMigrationManager.cs" />
     <Compile Include="DataAccess\ClienteDAL.cs" />
     <Compile Include="DataAccess\ProductoDAL.cs" />
     <Compile Include="DataAccess\UsuarioDAL.cs" />

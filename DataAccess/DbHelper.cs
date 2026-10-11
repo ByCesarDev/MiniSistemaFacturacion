@@ -449,6 +449,25 @@ namespace MiniSistemaFacturacion.DataAccess
             return safeConnectionString;
         }
 
+        /// <summary>
+        /// Recarga la cadena de conexión desde App.config o asigna una nueva en caliente.
+        /// </summary>
+        /// <param name="newConnectionString">Opcional: nueva cadena. Si es null, lee de App.config.</param>
+        public void ReloadConnectionString(string newConnectionString = null)
+        {
+            lock (_lock)
+            {
+                if (!string.IsNullOrEmpty(newConnectionString))
+                {
+                    _connectionString = newConnectionString;
+                }
+                else
+                {
+                    _connectionString = GetConnectionString();
+                }
+            }
+        }
+
         #endregion
     }
 }

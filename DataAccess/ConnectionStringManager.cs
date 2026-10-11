@@ -208,36 +208,185 @@ namespace MiniSistemaFacturacion.DataAccess
 
         #endregion
 
-        #region Environment Detection
+        #region Persistence & Security (DPAPI)
 
         /// <summary>
-        /// Determina si estamos en entorno de desarrollo
+        /// Guarda la cadena de conexión en App.config y opcionalmente protege la sección con DPAPI.
         /// </summary>
-        /// <returns>True si es entorno de desarrollo</returns>
-        public static bool IsDevelopmentEnvironment()
+        /// <param name="connectionString">Cadena de conexión completa</param>
+        /// <param name="protectWithDpapi">True para cifrar con DataProtectionConfigurationProvider</param>
+        /// <param name="errorMessage">Mensaje de error en caso de fallo</param>
+        /// <returns>True si se guardó correctamente</returns>
+        public static bool SaveConnectionString(string connectionString, bool protectWithDpapi, out string errorMessage)
         {
-            #if DEBUG
-            return true;
-            #else
-            return false;
-            #endif
+            errorMessage = null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    errorMessage = "La cadena de conexión no puede ser nula o vacía.";
+                    return false;
+                }
+
+                System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                ConnectionStringsSection section = config.ConnectionStrings;
+
+                if (section.ConnectionStrings[DEFAULT_CONNECTION_NAME] != null)
+                {
+                    section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ConnectionString = connectionString;
+                    section.ConnectionStrings[DEFAULT_CONNECTION_NAME].ProviderName = "System.Data.SqlClient";
+                }
+                else
+                {
+                    section.ConnectionStrings.Add(new ConnectionStringSettings(DEFAULT_CONNECTION_NAME, connectionString, "System.Data.SqlClient"));
+                }
+
+                // Aplicar o remover protección DPAPI según se indique
+                if (protectWithDpapi)
+                {
+                    if (!section.SectionInformation.IsProtected)
+                    {
+                        section.SectionInformation.ProtectSection("DataProtectionConfigurationProvider");
+                    }
+                }
+                else
+                {
+                    if (section.SectionInformation.IsProtected)
+                    {
+                        section.SectionInformation.UnprotectSection();
+                    }
+                }
+
+                config.Save(System.Configuration.ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("connectionStrings");
+
+                // Actualizar la instancia de DbHelper activa
+                DbHelper.Instance.ReloadConnectionString(connectionString);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error al guardar la configuración: {ex.Message}";
+                return false;
+            }
         }
 
         /// <summary>
-        /// Obtiene la cadena de conexión apropiada según el entorno
+        /// Sanitiza una cadena de conexión para ocultar contraseñas sensibles en logs o interfaces.
         /// </summary>
-        /// <returns>Cadena de conexión del entorno actual</returns>
-        public static string GetEnvironmentConnectionString()
+        public static string SanitizeConnectionString(string connectionString)
         {
-            if (IsDevelopmentEnvironment())
+            if (string.IsNullOrWhiteSpace(connectionString)) return string.Empty;
+            try
             {
-                // En desarrollo, intentar usar SQL Server Express local
-                return BuildExpressConnectionString();
+                var builder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+                if (!string.IsNullOrEmpty(builder.Password))
+                {
+                    builder.Password = "********";
+                }
+                return builder.ConnectionString;
             }
-            else
+            catch
             {
-                // En producción, usar la configuración del archivo
-                return GetConnectionString();
+                return "Server=[Oculto];Database=[Oculto];";
+            }
+        }
+
+        /// <summary>
+        /// Prueba si el servidor SQL responde (conectándose a la base de datos master con timeout corto).
+        /// </summary>
+        public static bool TestServerConnection(string server, bool useIntegratedSecurity, string username, string password, int timeoutSeconds, out string errorMessage)
+        {
+            errorMessage = null;
+            try
+            {
+                var builder = new System.Data.SqlClient.SqlConnectionStringBuilder
+                {
+                    DataSource = server,
+                    InitialCatalog = "master",
+                    ConnectTimeout = timeoutSeconds,
+                    IntegratedSecurity = useIntegratedSecurity,
+                    TrustServerCertificate = true,
+                    ApplicationName = "MiniSistemaFacturacion_Setup"
+                };
+
+                if (!useIntegratedSecurity)
+                {
+                    builder.UserID = username;
+                    builder.Password = password;
+                }
+
+                using (var conn = new System.Data.SqlClient.SqlConnection(builder.ConnectionString))
+                {
+                    conn.Open();
+                    return true;
+                }
+            }
+            catch (System.Data.SqlClient.SqlException sqlEx)
+            {
+                errorMessage = $"Error de SQL Server ({sqlEx.Number}): {sqlEx.Message}";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Prueba conectividad completa hacia la base de datos de destino.
+        /// Verifica tanto el servidor como la existencia de la base de datos.
+        /// </summary>
+        public static bool TestDatabaseConnection(string connectionString, out bool databaseExists, out string errorMessage)
+        {
+            databaseExists = false;
+            errorMessage = null;
+
+            try
+            {
+                var builder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+                string targetDb = builder.InitialCatalog;
+
+                // 1. Probar conectividad al servidor usando master
+                var serverBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString)
+                {
+                    InitialCatalog = "master",
+                    ConnectTimeout = Math.Min(builder.ConnectTimeout, 10)
+                };
+
+                using (var connServer = new System.Data.SqlClient.SqlConnection(serverBuilder.ConnectionString))
+                {
+                    connServer.Open();
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand("SELECT DB_ID(@dbName)", connServer))
+                    {
+                        cmd.Parameters.AddWithValue("@dbName", targetDb);
+                        object result = cmd.ExecuteScalar();
+                        databaseExists = (result != null && result != DBNull.Value);
+                    }
+                }
+
+                if (databaseExists)
+                {
+                    using (var connDb = new System.Data.SqlClient.SqlConnection(connectionString))
+                    {
+                        connDb.Open();
+                    }
+                }
+
+                return true;
+            }
+            catch (System.Data.SqlClient.SqlException sqlEx)
+            {
+                errorMessage = $"Error de SQL ({sqlEx.Number}): {sqlEx.Message}";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
             }
         }
 

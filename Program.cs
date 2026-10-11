@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using MiniSistemaFacturacion.Configuration;
+using MiniSistemaFacturacion.DataAccess;
 using MiniSistemaFacturacion.Forms;
 
 namespace MiniSistemaFacturacion
@@ -8,7 +9,7 @@ namespace MiniSistemaFacturacion
     static class Program
     {
         /// <summary>
-        /// Punto de entrada principal para la aplicación con control de autenticación y sesiones.
+        /// Punto de entrada principal para la aplicación con control de conectividad, migraciones y autenticación.
         /// </summary>
         [STAThread]
         static void Main()
@@ -18,6 +19,13 @@ namespace MiniSistemaFacturacion
 
             try
             {
+                // 0. Barrera de Infraestructura: Verificar conectividad y esquema de base de datos
+                if (!AsegurarConexionYEsquemaValido())
+                {
+                    // Si el usuario canceló la configuración o no se logró conexión, salir ordenadamente
+                    return;
+                }
+
                 while (true)
                 {
                     // 1. Barrera de autenticación: El sistema exige iniciar sesión antes de abrir cualquier módulo
@@ -54,6 +62,58 @@ namespace MiniSistemaFacturacion
                               "Error del Sistema",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Comprueba silenciosamente si el servidor SQL y la base de datos están listos con todas las migraciones.
+        /// Si detecta fallas de conexión o esquema pendiente, abre FrmConfigurarConexion.
+        /// </summary>
+        private static bool AsegurarConexionYEsquemaValido()
+        {
+            while (true)
+            {
+                string connectionString = ConnectionStringManager.GetConnectionString();
+                bool requiereConfigurador = false;
+
+                if (string.IsNullOrWhiteSpace(connectionString) || !ConnectionStringManager.IsValidConnectionString(connectionString))
+                {
+                    requiereConfigurador = true;
+                }
+                else
+                {
+                    try
+                    {
+                        var migrador = new DatabaseMigrationManager(connectionString);
+                        var status = migrador.EvaluarEstado();
+
+                        if (!status.ServidorAccesible || !status.BaseDatosExiste || !status.EsquemaAlDia)
+                        {
+                            requiereConfigurador = true;
+                        }
+                    }
+                    catch
+                    {
+                        requiereConfigurador = true;
+                    }
+                }
+
+                // Si todo está perfectamente accesible y al día, continuar de inmediato
+                if (!requiereConfigurador)
+                {
+                    return true;
+                }
+
+                // Si falla la infraestructura o requiere migraciones, abrir el asistente corporativo
+                using (var frmConfig = new FrmConfigurarConexion())
+                {
+                    DialogResult resultado = frmConfig.ShowDialog();
+                    if (resultado != DialogResult.OK)
+                    {
+                        // El usuario canceló o cerró la ventana de configuración
+                        return false;
+                    }
+                }
             }
         }
     }

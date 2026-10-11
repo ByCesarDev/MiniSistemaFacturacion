@@ -33,8 +33,28 @@ namespace MiniSistemaFacturacion.Forms
             catch (Exception ex)
             {
                 lblError.Text = "Error al conectar con la base de datos.";
-                MessageBox.Show($"Error al verificar el estado del sistema:\n{ex.Message}\n\nVerifique que SQL Server esté ejecutándose.",
-                                "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var respuesta = MessageBox.Show(
+                    $"Error al conectar con la base de datos:\n{ex.Message}\n\n¿Desea abrir el Asistente de Configuración de Conexión?",
+                    "Error de Conexión", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                if (respuesta == DialogResult.Yes)
+                {
+                    using (var frmConfig = new FrmConfigurarConexion())
+                    {
+                        if (frmConfig.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                VerificarEstadoInicial();
+                                lblError.Text = "";
+                            }
+                            catch (Exception exReintento)
+                            {
+                                MessageBox.Show($"El reintento de conexión falló: {exReintento.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                }
             }
         }
 
