@@ -21,11 +21,56 @@ namespace MiniSistemaFacturacion.Forms
             InitializeComponent();
         }
 
+        private DateTime _ultimoDobleClick = DateTime.MinValue;
+
         private void frmCuentasPorCobrar_Load(object sender, EventArgs e)
         {
             UITheme.AplicarTemaFormulario(this);
             UITheme.EstilizarDataGridView(dgvPendientes);
+            UITheme.EstilizarBotonExito(btnRegistrarPago);
+            UITheme.EstilizarBotonCancelar(btnCerrar);
+            UITheme.EstilizarTextBox(txtBusqueda);
+
+            dgvPendientes.RowHeadersVisible = false;
+            dgvPendientes.MultiSelect = false;
+            dgvPendientes.Cursor = Cursors.Hand;
+            dgvPendientes.CellDoubleClick += dgvPendientes_CellDoubleClick;
+            dgvPendientes.DoubleClick += dgvPendientes_DoubleClick;
+            dgvPendientes.KeyDown += dgvPendientes_KeyDown;
+
             CargarFacturas();
+        }
+
+        private void dgvPendientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                EjecutarDobleClickSeguro();
+            }
+        }
+
+        private void dgvPendientes_DoubleClick(object sender, EventArgs e)
+        {
+            EjecutarDobleClickSeguro();
+        }
+
+        private void dgvPendientes_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                EjecutarDobleClickSeguro();
+            }
+        }
+
+        private void EjecutarDobleClickSeguro()
+        {
+            if ((DateTime.Now - _ultimoDobleClick).TotalMilliseconds < 500)
+                return;
+
+            _ultimoDobleClick = DateTime.Now;
+            AbrirRegistroPago();
         }
 
         private void CargarFacturas(string filtro = "")
@@ -100,16 +145,31 @@ namespace MiniSistemaFacturacion.Forms
 
         private void btnRegistrarPago_Click_1(object sender, EventArgs e)
         {
+            AbrirRegistroPago();
+        }
+
+        private void AbrirRegistroPago()
+        {
+            DataGridViewRow fila = null;
             if (dgvPendientes.SelectedRows.Count > 0)
             {
-                int idFactura = Convert.ToInt32(dgvPendientes.SelectedRows[0].Cells["ID_Factura"].Value);
-                string numFactura = dgvPendientes.SelectedRows[0].Cells["NumeroFactura"].Value.ToString();
-                decimal saldoActual = Convert.ToDecimal(dgvPendientes.SelectedRows[0].Cells["SaldoPendiente"].Value);
+                fila = dgvPendientes.SelectedRows[0];
+            }
+            else if (dgvPendientes.CurrentRow != null)
+            {
+                fila = dgvPendientes.CurrentRow;
+            }
+
+            if (fila != null && fila.Cells["ID_Factura"].Value != null && fila.Cells["ID_Factura"].Value != DBNull.Value)
+            {
+                int idFactura = Convert.ToInt32(fila.Cells["ID_Factura"].Value);
+                string numFactura = fila.Cells["NumeroFactura"].Value?.ToString() ?? "";
+                decimal saldoActual = Convert.ToDecimal(fila.Cells["SaldoPendiente"].Value);
 
                 // Abrimos el formulario modal pasando los datos
                 using (var frmPago = new frmRegistrarPago(idFactura, numFactura, saldoActual))
                 {
-                    if (frmPago.ShowDialog() == DialogResult.OK)
+                    if (frmPago.ShowDialog(this) == DialogResult.OK)
                     {
                         txtBusqueda.Clear();
                         CargarFacturas();

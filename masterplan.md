@@ -255,6 +255,12 @@ Progreso actual: **12 / 12 aprobadas (100% verificado contra SQL Server y ensamb
     - **Modo Personal (desde FrmMain):** Solicita contraseña actual, nueva contraseña (mínimo 6 caracteres), confirmación y opción para mostrar/ocultar contraseñas.
     - **Modo Administrativo (desde FrmUsuarios):** Permite a los administradores restablecer la contraseña de cualquier usuario sin requerir la contraseña anterior.
   - Validaciones de longitud, coincidencia y hashing seguro con PBKDF2-HMAC-SHA256.
+- [x] **frmCuentasPorCobrar (Doble Clic y Usabilidad):**
+  - Implementación de eventos `CellDoubleClick` y `DoubleClick` en `dgvPendientes` para abrir directamente la ventana modal `frmRegistrarPago` al hacer doble clic en cualquier celda o fila.
+  - Soporte para tecla `Enter` en la fila seleccionada para registrar abonos con el teclado.
+  - Mecanismo anti-rebote (`_ultimoDobleClick`) para prevenir aperturas duplicadas.
+  - Cursor de mano (`Cursors.Hand`) y ocultación de encabezados de fila sobrantes (`RowHeadersVisible = false`).
+
 
 
 
