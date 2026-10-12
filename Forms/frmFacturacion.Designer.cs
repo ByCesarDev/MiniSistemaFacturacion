@@ -100,9 +100,9 @@ namespace MiniSistemaFacturacion.Forms
             this.lblFacturaTag.AutoSize = true;
             this.lblFacturaTag.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFacturaTag.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(210)))), ((int)(((byte)(240)))));
-            this.lblFacturaTag.Location = new System.Drawing.Point(710, 14);
+            this.lblFacturaTag.Location = new System.Drawing.Point(804, 14);
             this.lblFacturaTag.Name = "lblFacturaTag";
-            this.lblFacturaTag.Size = new System.Drawing.Size(86, 13);
+            this.lblFacturaTag.Size = new System.Drawing.Size(90, 13);
             this.lblFacturaTag.TabIndex = 3;
             this.lblFacturaTag.Text = "FACTURA NÚM.";
             // 
@@ -125,7 +125,7 @@ namespace MiniSistemaFacturacion.Forms
             this.lblSubtitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(215)))), ((int)(((byte)(235)))));
             this.lblSubtitulo.Location = new System.Drawing.Point(18, 38);
             this.lblSubtitulo.Name = "lblSubtitulo";
-            this.lblSubtitulo.Size = new System.Drawing.Size(395, 15);
+            this.lblSubtitulo.Size = new System.Drawing.Size(378, 15);
             this.lblSubtitulo.TabIndex = 1;
             this.lblSubtitulo.Text = "Emisión de comprobantes fiscales, cobros y detalle de venta comercial";
             // 
@@ -136,7 +136,7 @@ namespace MiniSistemaFacturacion.Forms
             this.lblTitulo.ForeColor = System.Drawing.Color.White;
             this.lblTitulo.Location = new System.Drawing.Point(16, 11);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(211, 25);
+            this.lblTitulo.Size = new System.Drawing.Size(207, 25);
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Módulo de Facturación";
             // 
@@ -192,7 +192,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(448, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 15);
+            this.label2.Size = new System.Drawing.Size(118, 15);
             this.label2.TabIndex = 4;
             this.label2.Text = "Nombre del Cliente:";
             // 
@@ -446,7 +446,7 @@ namespace MiniSistemaFacturacion.Forms
             this.chkEnviarEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkEnviarEmail.Location = new System.Drawing.Point(232, 78);
             this.chkEnviarEmail.Name = "chkEnviarEmail";
-            this.chkEnviarEmail.Size = new System.Drawing.Size(155, 19);
+            this.chkEnviarEmail.Size = new System.Drawing.Size(156, 19);
             this.chkEnviarEmail.TabIndex = 4;
             this.chkEnviarEmail.Text = "Enviar factura por correo";
             this.chkEnviarEmail.UseVisualStyleBackColor = true;
@@ -457,7 +457,7 @@ namespace MiniSistemaFacturacion.Forms
             this.chkImprimirDirecto.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkImprimirDirecto.Location = new System.Drawing.Point(16, 78);
             this.chkImprimirDirecto.Name = "chkImprimirDirecto";
-            this.chkImprimirDirecto.Size = new System.Drawing.Size(183, 19);
+            this.chkImprimirDirecto.Size = new System.Drawing.Size(179, 19);
             this.chkImprimirDirecto.TabIndex = 3;
             this.chkImprimirDirecto.Text = "Imprimir directo al confirmar";
             this.chkImprimirDirecto.UseVisualStyleBackColor = true;
@@ -469,7 +469,7 @@ namespace MiniSistemaFacturacion.Forms
             this.chkCredito.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(170)))));
             this.chkCredito.Location = new System.Drawing.Point(232, 38);
             this.chkCredito.Name = "chkCredito";
-            this.chkCredito.Size = new System.Drawing.Size(107, 19);
+            this.chkCredito.Size = new System.Drawing.Size(110, 19);
             this.chkCredito.TabIndex = 2;
             this.chkCredito.Text = "Venta a crédito";
             this.chkCredito.UseVisualStyleBackColor = true;
@@ -492,7 +492,7 @@ namespace MiniSistemaFacturacion.Forms
             this.lblFormaPago.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFormaPago.Location = new System.Drawing.Point(13, 18);
             this.lblFormaPago.Name = "lblFormaPago";
-            this.lblFormaPago.Size = new System.Drawing.Size(91, 15);
+            this.lblFormaPago.Size = new System.Drawing.Size(92, 15);
             this.lblFormaPago.TabIndex = 0;
             this.lblFormaPago.Text = "Forma de pago:";
             this.lblFormaPago.Click += new System.EventHandler(this.label10_Click);
@@ -539,7 +539,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(80)))), ((int)(((byte)(0)))));
             this.label9.Location = new System.Drawing.Point(18, 131);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(101, 15);
+            this.label9.Size = new System.Drawing.Size(100, 15);
             this.label9.TabIndex = 6;
             this.label9.Text = "Saldo Pendiente:";
             // 
@@ -564,7 +564,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(57)))), ((int)(((byte)(89)))));
             this.label8.Location = new System.Drawing.Point(18, 93);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(102, 19);
+            this.label8.Size = new System.Drawing.Size(94, 19);
             this.label8.TabIndex = 4;
             this.label8.Text = "TOTAL NETO:";
             // 
@@ -588,7 +588,7 @@ namespace MiniSistemaFacturacion.Forms
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
             this.label7.Location = new System.Drawing.Point(18, 59);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(76, 15);
+            this.label7.Size = new System.Drawing.Size(75, 15);
             this.label7.TabIndex = 2;
             this.label7.Text = "ITBIS (18%):";
             // 
