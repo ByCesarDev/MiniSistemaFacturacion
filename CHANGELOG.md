@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/ByCesarDev/MiniSistemaFacturacion/compare/v1.2.0...v1.3.0) (2026-10-12)
+
+
+### Features
+
+* **installer:** actualizar imagenes del asistente de instalacion ([a410c33](https://github.com/ByCesarDev/MiniSistemaFacturacion/commit/a410c337c854c81f8cf56021d02a271b386bbcb2))
+
 ## [1.2.0](https://github.com/ByCesarDev/MiniSistemaFacturacion/compare/v1.1.0...v1.2.0) (2026-10-11)
 
 
